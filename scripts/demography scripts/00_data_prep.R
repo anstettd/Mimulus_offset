@@ -1,5 +1,5 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
-#### PURPOSE OF THIS SCRIPT: Prepare raw demographic vital rate data for IPM analyses 
+#### PURPOSE OF THIS SCRIPT: Tidy raw demographic vital rate data in preparation for IPM analyses 
 #### AUTHOR: Seema Sheth and Amy Angert
 #### DATE LAST MODIFIED: 20230202
 
@@ -74,7 +74,7 @@ data_2015.2016 = read.csv("data/demography data/SS_Horizontal_2016_Notes.csv") %
          Surv = SurvPYCY) %>% 
   mutate(Year = 2015) #add year at time t (=2015) column)
 # Note: this file was queried from the database on 2023-02-01
-# We will tidy it based on the same decision rules as above for 2010-14 data, but scripted here instead of done manually in excel
+# We script the creation of NotARecruit and NotAnIndividual columns here (instead of  manually in excel)
 
 # Combine 2014-16 data into one data frame 
 data_2014.2016 = rbind(data_2014.2015,data_2015.2016)
@@ -109,8 +109,9 @@ data_2014.2016 <- data_2014.2016 %>%
                        ifelse(str_detect(OtherNotesCY, "missed"), 2,
                        ifelse(str_detect(OtherNotesCY, "14?"), 2, 
                        ifelse(str_detect(OtherNotesCY, "15?"), 2, 
-                       ifelse(!is.na(Size), NA, 0)))))))
-# TO DO: Consult other queries (e.g., skipped in) to identify rows that should be coded as level 1
+                       ifelse(!is.na(Size), NA, 
+                       ifelse(NewPlot_CY==TRUE, 1, 0))))))))
+# TO DO: Consult other queries (e.g., skipped in, exclusion areas) to identify rows that should be coded as level 1
 # TO DO: Inspect resulting dataframe to make sure this is working as expected
 # Note: this is lacking level=3 (=size range of other recruits), which is not reliable
 
@@ -139,15 +140,18 @@ data_2014.2016 <- data_2014.2016 %>% select(colnames(data_2010.2014))
 # Combine all years
 data <- rbind(data_2010.2014, data_2014.2016)
 
+# Make site x year variable
+data$SiteYear = paste(data$Site, data$Year, sep=":") %>% factor()
+
 #*******************************************************************************
 #### 2. Remove unwanted data
 #*******************************************************************************
 
 # Remove plants that do not have site info
-data <- filter(data, Site!="")
+data <- filter(data, Site!="") 
 
-# Remove plants that were dead in previous year (Class_PY=="D") 
-data <- subset(data, Class!="D"|is.na(Class))
+# Remove plants that were dead in previous year (Class=="D") 
+data <- subset(data, Class!="D" | is.na(Class))
 
 # Remove plants with Class=? or Class=excluded
 data <- subset(data, Class != "E" & Class != "?" | is.na(Class))
@@ -161,12 +165,14 @@ data <- subset(data, !(!is.na(Class) & is.na(logSize)))
 # Remove plants that were recorded as having a class at time t but have no survival recorded from t to t+1 (were either excluded in current year, recorded as "?" in Class field, or recorded as "NA" in Class field)
 data <- subset(data, !(!is.na(Class) & is.na(Surv)))
 
-# Remove data where TotFr_PY either equal “#Num!” or “#Div/0!”
-data <- subset(data, Fec1 != "#Num!" | Fec1 != "#Div/0!" | is.na(Fec1)
+# Make Fec1 numeric and round fruit # to nearest integer
+data$Fec1 <- round(as.numeric(data$Fec1, digits=0)) 
 
+# Remove data where fruit # has errors resulting from 0s in denominator
+data <- subset(data, Fec1 != "#Num!" | Fec1 != "#Div/0!" | is.na(Fec1)) # this might be unnecessary because they are forced to NA by conversion to numeric?
 
-# Remove data from plots that were new in current year (CY)
-data <- subset(data, NewPlot_CY==FALSE) 
+# Only include seed counts for plants that produced at least one fruit
+data$SeedCt[data$Fec1 < 1 | is.na(data$Fec1)]=NA
 
 
 #*******************************************************************************
@@ -177,38 +183,31 @@ data <- subset(data, NewPlot_CY==FALSE)
 names(data)
 str(data)
 
-# Make Fec1 numeric and round fruit # to nearest integer
-data$Fec1 <- round(as.numeric(data$Fec1, digits=0)) 
+# Check site names to be sure no discrepancies
+unique(data$Site)
 
-# Only include seed counts for plants that produced at least one fruit
-data$SeedCt[data$Fec1<1|is.na(data$Fec1)]=NA
+# Check classes to be sure no discrepancies
+unique(data$Class)
+unique(data$ClassNext)
 
 # Make appropriate columns of data frame a factor
 data$Site=factor(data$Site)
 data$Region=factor(data$Region)
+data$Year=factor(data$Year)
+data$ID=factor(data$ID)
+data$NotARecruit=factor(data$NotARecruit)
+data$NotAnIndividual=factor(data$NotAnIndividual)
 
-# 2016 and 2017 and 2018 and 2019 data do not have spaces between words in site names; fix this across the dataset
-unique(data$Site)
-data$Site[data$Year==2016|data$Year==2017|data$Year==2018|data$Year==2019]=gsub("(?!^)(?=[[:upper:]])", " ", data$Site[data$Year==2016|data$Year==2017|data$Year==2018|data$Year==2019], perl=T)
-unique(data$Site) # Coast Forkof Williamette and O' Neil Creek need to be corrected
-data$Site[data$Site=="Coast Forkof Williamette"]="Coast Fork of Williamette" 
-data$Site[data$Site=="O' Neil Creek"]="O'Neil Creek" 
-
-# check site names one more time
-unique(data$Site)
-
-
-# examine data
+# Examine data
 names(data)
 head(data)
 tail(data)
 
-# sort data by latitude
+# Sort data by latitude
 data=data[order(-data$Latitude,data$Year),]
 
-
 # write to .csv
-write.csv(data,"output/vital_rates/Mcard_demog_data_2010-2018.csv",row.names=FALSE)
+write.csv(data,"data/demography data/Mcard_demog_data_2010-2016.csv",row.names=FALSE)
 
 
 #*******************************************************************************
