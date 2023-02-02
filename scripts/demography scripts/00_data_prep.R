@@ -20,12 +20,13 @@ for (i in 1:length(packages_needed)){
 }
 
 #*******************************************************************************
-#### 1. Bring in and combine M. cardinalis demography data from 2010-2014; in all files, PY=previous year, CY=current year; ignore PPY
+#### 1. Bring in and combine M. cardinalis demography data from 2010-2016
+# Note: in all files, PY=previous year (time t), CY=current year (time t+1); ignore PPY
 #*******************************************************************************
 
-# read in transition data for 2010-11, 2011-12, 2012-13, 2013-14  
+# Read in transition data for 2010-11, 2011-12, 2012-13, 2013-14  
 data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv")
-# Note: this file was created for the analyses published in Sheth and Angert 2018 PNAS paper
+# Note: this file was created for the analyses published in Sheth and Angert 2018 PNAS 
 # It results from Amy Angert's work in July 2016 (original file: "Mcard_demog_data_2010-2013_ALA.xlsx") to scan datasheet notes to identify individuals to exclude, based on these columns:
 # Column 'NotAnIndividual': 
 # 0 = ok, definitely include (includes "scattered" as long as nothing else noted)
@@ -39,13 +40,13 @@ data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv")
 # NA = size measures at year t
 
 
-# read in transition data for 2014-15 and add year at time = t (2014) column
+# Read in transition data for 2014-15 and add year at time = t (2014) column
 data.2014.2015=read.csv("data/demography data/SS_Horizontal_2015_Notes.csv")
 data.2014.2015$Year=rep("2014",times=length(data.2014.2015$ID))
-# note: this file was queried from the database on 2023-02-01
-# we will tidy it based on the decision rules as above for 2010-14 data, but scripted here instead of done manually in excel. 
+# Note: this file was queried from the database on 2023-02-01
+# We will tidy it based on the decision rules as above for 2010-14 data, but scripted here instead of done manually in excel. 
 
-# add 'NotAnIndividual' column
+# Add 'NotAnIndividual' column
 data.2014.2015 <- data.2014.2015 %>% 
   mutate(NotAnIndividual=ifelse(str_detect(OtherNotesCY, "lump"), 1, 
                          ifelse(str_detect(OtherNotesCY, "Lump"), 1,
@@ -64,24 +65,26 @@ data.2014.2015 <- data.2014.2015 %>%
                          ifelse(str_detect(OtherNotesPY, "Merge"), 1,
                          ifelse(str_detect(OtherNotesPY, "part of"), 1,       
                                 0))))))))))))))))) 
-# Note: this is lacking level=2 (=maybe), so is possibly more restrictive than 2010-14 filter
+# Note: this is lacking level 2 (=maybe), so is possibly more restrictive than 2010-14 filter
+# TO DO: repeat this automatic coding for 2010-2014 as a sensitivity analysis
 
-# add 'NotARecruit' column
+# Add 'NotARecruit' column
 data.2014.2015 <- data.2014.2015 %>% 
-  mutate(NotARecruit=ifelse(str_detect(OtherNotesCY, "old"), 1, 
-                     ifelse(str_detect(OtherNotesCY, "Old"), 1,
-                     ifelse(str_detect(OtherNotesCY, "missed"), 1,
-                     ifelse(str_detect(OtherNotesCY, "14?"), 1, 
-                     ifelse(TotStLn_PY, 1)
-                            0)))))
+  mutate(NotARecruit=ifelse(str_detect(OtherNotesCY, "old"), 2, 
+                     ifelse(str_detect(OtherNotesCY, "Old"), 2,
+                     ifelse(str_detect(OtherNotesCY, "missed"), 2,
+                     ifelse(str_detect(OtherNotesCY, "14?"), 2, 
+                     ifelse(!is.na(TotStLn_PY), NA, 0))))))
+# TO DO: Consult other queries (e.g., skipped in) to identify rows that should be coded as level 1
+# Note: this is lacking level=3 (=size range of other recruits), which is not reliable
 
-# read in 2015-2016 data and year at time = t (2015) column
+# Read in 2015-2016 data and year at time = t (2015) column
 data.2015.2016=read.csv("data/demography data/SS_Horizontal_2016_Notes.csv")
 data.2015.2016$Year=rep("2015",times=length(data.2015.2016$ID))
-# note: this file was queried from the database on 2023-02-01
-# we will tidy it based on the same decision rules as above for 2010-14 data, but scripted here instead of done manually in excel
+# Note: this file was queried from the database on 2023-02-01
+# We will tidy it based on the same decision rules as above for 2010-14 data, but scripted here instead of done manually in excel
 
-# add 'NotAnIndividual' column
+# Add 'NotAnIndividual' column
 data.2015.2016 <- data.2015.2016 %>% 
   mutate(NotAnIndividual=ifelse(str_detect(OtherNotesCY, "lump"), 1, 
                                 ifelse(str_detect(OtherNotesCY, "Lump"), 1,
@@ -101,6 +104,16 @@ data.2015.2016 <- data.2015.2016 %>%
                                 ifelse(str_detect(OtherNotesPY, "part of"), 1, 
                                        0))))))))))))))))) 
 # Note: this is lacking the level=2 (=maybe), so is possibly more restrictive than 2010-14 filter
+
+# Add 'NotARecruit' column
+data.2015.2016 <- data.2015.2016 %>% 
+  mutate(NotARecruit=ifelse(str_detect(OtherNotesCY, "old"), 2, 
+                     ifelse(str_detect(OtherNotesCY, "Old"), 2,
+                     ifelse(str_detect(OtherNotesCY, "missed"), 2,
+                     ifelse(str_detect(OtherNotesCY, "14?"), 2, 
+                     ifelse(!is.na(TotStLn_PY), NA, 0))))))
+# TO DO: Consult other queries (e.g., skipped in) to identify rows that should be coded as level 1
+# Note: this is lacking level=3 (=size range of other recruits), which is not reliable
 
 
 # combine data from all years into one data frame 
@@ -132,7 +145,7 @@ data=subset(data,NewPlot_CY==FALSE)
 # get rid of plants with Class_PY=? or Class_PY= excluded
 data=subset(data, Class_PY!="E"&Class_PY!="?"|is.na(Class_PY))
 
-# get rid of plants that were recorded as having a class  in previous year (PY) but have no size measurements in previous year (PY)
+# get rid of plants that were recorded as having a class in previous year (PY) but have no size measurements in previous year (PY)
 data=subset(data,!(!is.na(Class_PY)&is.na(TotStLn_PY)))
 
 # get rid of plants that were recorded as having a class in previous year (PY) but have no survival recorded from previous to current year (were either excluded in current year, recorded as "?" in Class_CY field, or recorded as "NA" in Class_CY field)
