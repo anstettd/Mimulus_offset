@@ -20,12 +20,20 @@ for (i in 1:length(packages_needed)){
 }
 
 #*******************************************************************************
-#### 1. Bring in and combine M. cardinalis demography data from 2010-2016
+#### 1. Bring in M. cardinalis vital rate data from 2010-2016
 # Note: in all files, PY=previous year (time t), CY=current year (time t+1); ignore PPY
 #*******************************************************************************
 
-# Read in transition data for 2010-11, 2011-12, 2012-13, 2013-14  
-data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv")
+# Read in seed count per fruit data, select and rename relevant columns, and round to nearest integer
+seed.ct <- read.csv("data/demography data/fec2.seed.per.fruit.2010.2011.2012.csv")
+seed.ct <- subset(seed.ct,select=c(site,newgrandmean))
+colnames(seed.ct) = c("Site","SeedCt")
+seed.ct$SeedCt = round(seed.ct$SeedCt,digits=0) # round seed count to nearest integer
+seed.ct$Site = factor(seed.ct$Site) # make site column a factor to streamline joining
+# TO DO: update with more recent years' collections
+
+# Read in vital rate data for 2010-11, 2011-12, 2012-13, 2013-14 transitions 
+data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv") %>% select(-Reasoning, -Reasoning.1) #remove unwanted columns
 # Note: this file was created for the analyses published in Sheth and Angert 2018 PNAS 
 # It results from Amy Angert's work in July 2016 (original file: "Mcard_demog_data_2010-2013_ALA.xlsx") to scan datasheet notes to identify individuals to exclude, based on these columns:
 # Column 'NotAnIndividual': 
@@ -40,91 +48,90 @@ data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv")
 # NA = size measures at year t
 
 
-# Read in transition data for 2014-15 and add year at time = t (2014) column
-data.2014.2015=read.csv("data/demography data/SS_Horizontal_2015_Notes.csv")
-data.2014.2015$Year=rep("2014",times=length(data.2014.2015$ID))
+# Read in vital rate data for 2014-15 transition 
+data_2014.2015=read.csv("data/demography data/SS_Horizontal_2015_Notes.csv") %>% 
+  rename(Site = SiteID, #rename to match 2010-2014 data
+         Class = Class_PY,
+         ClassNext = Class_CY,
+         Fec1 = TotFr_PY,
+         Size = TotStLn_PY,
+         SizeNext = TotStLn_CY,
+         Surv = SurvPYCY) %>% 
+  mutate(Year = 2014) #add year at time t (=2014) column
 # Note: this file was queried from the database on 2023-02-01
 # We will tidy it based on the decision rules as above for 2010-14 data, but scripted here instead of done manually in excel. 
 
+# Read in vital rate data for 2015-16 transition
+data_2015.2016 = read.csv("data/demography data/SS_Horizontal_2016_Notes.csv") %>% 
+  rename(Site = SiteID,
+         Class = Class_PY,
+         ClassNext = Class_CY,
+         Fec1 = TotFr_PY,
+         Size = TotStLn_PY,
+         SizeNext = TotStLn_CY,
+         Surv = SurvPYCY) %>% 
+  mutate(Year = 2015) #add year at time t (=2015) column)
+# Note: this file was queried from the database on 2023-02-01
+# We will tidy it based on the same decision rules as above for 2010-14 data, but scripted here instead of done manually in excel
+
+# Combine 2014-16 data into one data frame 
+data_2014.2016 = rbind(data_2014.2015,data_2015.2016)
+
 # Add 'NotAnIndividual' column
-data.2014.2015 <- data.2014.2015 %>% 
-  mutate(NotAnIndividual=ifelse(str_detect(OtherNotesCY, "lump"), 1, 
-                         ifelse(str_detect(OtherNotesCY, "Lump"), 1,
-                         ifelse(str_detect(OtherNotesCY, "split"), 1,
-                         ifelse(str_detect(OtherNotesCY, "Split"), 1,
-                         ifelse(str_detect(OtherNotesCY, "same as"), 1,
-                         ifelse(str_detect(OtherNotesCY, "merge"), 1,
-                         ifelse(str_detect(OtherNotesCY, "Merge"), 1,
-                         ifelse(str_detect(OtherNotesPY, "part of"), 1, 
-                         ifelse(str_detect(OtherNotesPY, "lump"), 1, 
-                         ifelse(str_detect(OtherNotesPY, "Lump"), 1,
-                         ifelse(str_detect(OtherNotesPY, "split"), 1,
-                         ifelse(str_detect(OtherNotesPY, "Split"), 1,
-                         ifelse(str_detect(OtherNotesPY, "same as"), 1,
-                         ifelse(str_detect(OtherNotesPY, "merge"), 1,
-                         ifelse(str_detect(OtherNotesPY, "Merge"), 1,
-                         ifelse(str_detect(OtherNotesPY, "part of"), 1,       
+data_2014.2016 <- data_2014.2016 %>% 
+  mutate(NotAnIndividual = ifelse(str_detect(OtherNotesCY, "lump"), 1, 
+                           ifelse(str_detect(OtherNotesCY, "Lump"), 1,
+                           ifelse(str_detect(OtherNotesCY, "split"), 1,
+                           ifelse(str_detect(OtherNotesCY, "Split"), 1,
+                           ifelse(str_detect(OtherNotesCY, "same as"), 1,
+                           ifelse(str_detect(OtherNotesCY, "merge"), 1,
+                           ifelse(str_detect(OtherNotesCY, "Merge"), 1,
+                           ifelse(str_detect(OtherNotesPY, "part of"), 1, 
+                           ifelse(str_detect(OtherNotesPY, "lump"), 1, 
+                           ifelse(str_detect(OtherNotesPY, "Lump"), 1,
+                           ifelse(str_detect(OtherNotesPY, "split"), 1,
+                           ifelse(str_detect(OtherNotesPY, "Split"), 1,
+                           ifelse(str_detect(OtherNotesPY, "same as"), 1,
+                           ifelse(str_detect(OtherNotesPY, "merge"), 1,
+                           ifelse(str_detect(OtherNotesPY, "Merge"), 1,
+                           ifelse(str_detect(OtherNotesPY, "part of"), 1,       
                                 0))))))))))))))))) 
 # Note: this is lacking level 2 (=maybe), so is possibly more restrictive than 2010-14 filter
 # TO DO: repeat this automatic coding for 2010-2014 as a sensitivity analysis
 
 # Add 'NotARecruit' column
-data.2014.2015 <- data.2014.2015 %>% 
-  mutate(NotARecruit=ifelse(str_detect(OtherNotesCY, "old"), 2, 
-                     ifelse(str_detect(OtherNotesCY, "Old"), 2,
-                     ifelse(str_detect(OtherNotesCY, "missed"), 2,
-                     ifelse(str_detect(OtherNotesCY, "14?"), 2, 
-                     ifelse(!is.na(TotStLn_PY), NA, 0))))))
+data_2014.2016 <- data_2014.2016 %>% 
+  mutate(NotARecruit = ifelse(str_detect(OtherNotesCY, "old"), 2, 
+                       ifelse(str_detect(OtherNotesCY, "Old"), 2,
+                       ifelse(str_detect(OtherNotesCY, "missed"), 2,
+                       ifelse(str_detect(OtherNotesCY, "14?"), 2, 
+                       ifelse(str_detect(OtherNotesCY, "15?"), 2, 
+                       ifelse(!is.na(Size), NA, 0)))))))
 # TO DO: Consult other queries (e.g., skipped in) to identify rows that should be coded as level 1
 # Note: this is lacking level=3 (=size range of other recruits), which is not reliable
 
-# Read in 2015-2016 data and year at time = t (2015) column
-data.2015.2016=read.csv("data/demography data/SS_Horizontal_2016_Notes.csv")
-data.2015.2016$Year=rep("2015",times=length(data.2015.2016$ID))
-# Note: this file was queried from the database on 2023-02-01
-# We will tidy it based on the same decision rules as above for 2010-14 data, but scripted here instead of done manually in excel
+# Create columns of log-transformed sizes
+data_2014.2016$logSize = log(data_2014.2016$Size)
+data_2014.2016$logSizeNext = log(data_2014.2016$SizeNext)
 
-# Add 'NotAnIndividual' column
-data.2015.2016 <- data.2015.2016 %>% 
-  mutate(NotAnIndividual=ifelse(str_detect(OtherNotesCY, "lump"), 1, 
-                                ifelse(str_detect(OtherNotesCY, "Lump"), 1,
-                                ifelse(str_detect(OtherNotesCY, "split"), 1,
-                                ifelse(str_detect(OtherNotesCY, "Split"), 1,
-                                ifelse(str_detect(OtherNotesCY, "same as"), 1,
-                                ifelse(str_detect(OtherNotesCY, "merge"), 1,
-                                ifelse(str_detect(OtherNotesCY, "Merge"), 1,
-                                ifelse(str_detect(OtherNotesPY, "part of"), 1, 
-                                ifelse(str_detect(OtherNotesPY, "lump"), 1, 
-                                ifelse(str_detect(OtherNotesPY, "Lump"), 1,
-                                ifelse(str_detect(OtherNotesPY, "split"), 1,
-                                ifelse(str_detect(OtherNotesPY, "Split"), 1,
-                                ifelse(str_detect(OtherNotesPY, "same as"), 1,
-                                ifelse(str_detect(OtherNotesPY, "merge"), 1,
-                                ifelse(str_detect(OtherNotesPY, "Merge"), 1,
-                                ifelse(str_detect(OtherNotesPY, "part of"), 1, 
-                                       0))))))))))))))))) 
-# Note: this is lacking the level=2 (=maybe), so is possibly more restrictive than 2010-14 filter
+# Add a column ranking regions from south to north
+data_2014.2016$RegionRank[data_2014.2016$Region=="S1"]=1
+data_2014.2016$RegionRank[data_2014.2016$Region=="S2"]=2
+data_2014.2016$RegionRank[data_2014.2016$Region=="C1"]=3
+data_2014.2016$RegionRank[data_2014.2016$Region=="C2"]=4
+data_2014.2016$RegionRank[data_2014.2016$Region=="C3"]=5
+data_2014.2016$RegionRank[data_2014.2016$Region=="N1"]=6
+data_2014.2016$RegionRank[data_2014.2016$Region=="N2"]=7
 
-# Add 'NotARecruit' column
-data.2015.2016 <- data.2015.2016 %>% 
-  mutate(NotARecruit=ifelse(str_detect(OtherNotesCY, "old"), 2, 
-                     ifelse(str_detect(OtherNotesCY, "Old"), 2,
-                     ifelse(str_detect(OtherNotesCY, "missed"), 2,
-                     ifelse(str_detect(OtherNotesCY, "14?"), 2, 
-                     ifelse(!is.na(TotStLn_PY), NA, 0))))))
-# TO DO: Consult other queries (e.g., skipped in) to identify rows that should be coded as level 1
-# Note: this is lacking level=3 (=size range of other recruits), which is not reliable
+# Create column for probability of flowering
+data_2014.2016$Fec0 = (ifelse(data_2014.2016$Class=="A", 1, 
+                              ifelse(data_2014.2016$Class=="J",0 , NA))) 
 
+# Merge transition data with seed count data
+data_2014.2016 <- merge(data_2014.2016,seed.ct,by="Site",all.x=TRUE,all.y=FALSE)
 
-# combine data from all years into one data frame 
-data=rbind(data.2014.2015,data.2015.2016,data.2016.2017,data.2017.2018, data.2018.2019)
+data_2014.2016 <- data_2014.2016 %>% select(colnames(data_2010.2014))
 
-# Read in seed count per fruit data, select and rename relevant columns, and round to nearest integer
-seed.ct=read.csv("data/vital_rates/fec2.seed.per.fruit.2010.2011.2012.csv")
-seed.ct=subset(seed.ct,select=c(site,newgrandmean))
-colnames(seed.ct)=c("Site","SeedCt")
-seed.ct$SeedCt=round(seed.ct$SeedCt,digits=0) # round seed count to nearest integer
-seed.ct$Site=factor(seed.ct$Site) # make site column a factor to streamline joining
 
 #*******************************************************************************
 #### 2. Remove unwanted data
@@ -167,31 +174,18 @@ data=subset(data,TotFr_PY!="#Num!"|TotFr_PY!="#Div/0!"|is.na(TotFr_PY))
 names(data)
 str(data)
 
+# make Fec1 numeric
+data$Fec1=round(as.numeric(data$Fec1,digits=0)) #round total fruit # to nearest integer
+## WARNING: I ORIGINALLY GOT AN ERROR HERE BECAUSE SOME VALUES = "#Num!" AND OTHERS = "#Div/0!" SO COLUMN WAS READ AS CHARACTER
+
 # select certain columns
 data=subset(data,select=c("SiteID","ID","Region","Latitude","Longitude","Elevation","Class_PY","TotFr_PY","TotStLn_PY","Class_CY","TotStLn_CY","SurvPYCY","Year"))
 
 # rename column names to IPM friendly names
 colnames(data)=c("Site","ID","Region","Latitude","Longitude","Elevation","Class","Fec1","logSize","ClassNext","logSizeNext","Surv","Year")
 
-# create additional  vectors for analysis (see descriptions below)
-data$Fec0=(ifelse(data$Class=="A",1,ifelse(data$Class=="J",0,NA))) #create vector for probability of flowering, where if adult, probability of flowering is 1, if juvenile, probability of flowering is 0, otherwise probability of flowering is NA
 
-# make Fec1 numeric
-data$Fec1=round(as.numeric(data$Fec1,digits=0)) #round total fruit # to nearest integer
-## WARNING: I ORIGINALLY GOT AN ERROR HERE BECAUSE SOME VALUES = "#Num!" AND OTHERS = "#Div/0!" SO COLUMN WAS READ AS CHARACTER
 
-# log transform size and sizeNext
-data$logSize=log(data$logSize)
-data$logSizeNext=log(data$logSizeNext)
-
-# Add a column ranking regions from south to north
-data$RegionRank[data$Region=="S1"]=1
-data$RegionRank[data$Region=="S2"]=2
-data$RegionRank[data$Region=="C1"]=3
-data$RegionRank[data$Region=="C2"]=4
-data$RegionRank[data$Region=="C3"]=5
-data$RegionRank[data$Region=="N1"]=6
-data$RegionRank[data$Region=="N2"]=7
 
 # 2016 and 2017 and 2018 and 2019 data do not have spaces between words in site names; fix this across the dataset
 unique(data$Site)
@@ -204,8 +198,6 @@ data$Site[data$Site=="O' Neil Creek"]="O'Neil Creek"
 data$Site=factor(data$Site)
 data$Region=factor(data$Region)
 
-# Merge data with seed count data
-data=merge(data,seed.ct,by="Site",all.x=TRUE,all.y=FALSE)
 
 # Only include seed counts for plants that produced at least one fruit
 data$SeedCt[data$Fec1<1|is.na(data$Fec1)]=NA
