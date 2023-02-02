@@ -143,55 +143,49 @@ data <- rbind(data_2010.2014, data_2014.2016)
 #### 2. Remove unwanted data
 #*******************************************************************************
 
-# omit plants that do not have site info
-data=filter(data,SiteID!="")
+# Remove plants that do not have site info
+data <- filter(data, Site!="")
 
-# omit plants that were dead in previous year (Class_PY=="D") 
-data=subset(data,Class_PY!="D"|is.na(Class_PY))
+# Remove plants that were dead in previous year (Class_PY=="D") 
+data <- subset(data, Class!="D"|is.na(Class))
 
-# remove data for which size in previous year (PY) AND size in current year (CY) is NA
-data=data[!(is.na(data$TotStLn_PY)&is.na(data$TotStLn_CY)),]
+# Remove plants with Class=? or Class=excluded
+data <- subset(data, Class != "E" & Class != "?" | is.na(Class))
 
-# remove data from plots that were new in current year (CY)
-data=subset(data,NewPlot_CY==FALSE) 
+# Remove rows for which size at time t AND size at t+1 is NA
+data <- data[!(is.na(data$logSize) & is.na(data$logSizeNext)),]
 
-# get rid of plants with Class_PY=? or Class_PY= excluded
-data=subset(data, Class_PY!="E"&Class_PY!="?"|is.na(Class_PY))
+# Remove plants that were recorded as having a class at time t but have no size measurements in that year
+data <- subset(data, !(!is.na(Class) & is.na(logSize)))
 
-# get rid of plants that were recorded as having a class in previous year (PY) but have no size measurements in previous year (PY)
-data=subset(data,!(!is.na(Class_PY)&is.na(TotStLn_PY)))
+# Remove plants that were recorded as having a class at time t but have no survival recorded from t to t+1 (were either excluded in current year, recorded as "?" in Class field, or recorded as "NA" in Class field)
+data <- subset(data, !(!is.na(Class) & is.na(Surv)))
 
-# get rid of plants that were recorded as having a class in previous year (PY) but have no survival recorded from previous to current year (were either excluded in current year, recorded as "?" in Class_CY field, or recorded as "NA" in Class_CY field)
-data=subset(data,!(!is.na(Class_PY)&is.na(SurvPYCY)))
+# Remove data where TotFr_PY either equal “#Num!” or “#Div/0!”
+data <- subset(data, Fec1 != "#Num!" | Fec1 != "#Div/0!" | is.na(Fec1)
 
-# ID 75412 from Rainbow Pool in 2017 has TotStLn_CY = 0. This must be a typo and we will exclude for now
-data=subset(data,TotStLn_CY!=0|is.na(TotStLn_CY))
 
-# Remove data whereTotFr_PY either equal “#Num!” or “#Div/0!”
-data=subset(data,TotFr_PY!="#Num!"|TotFr_PY!="#Div/0!"|is.na(TotFr_PY))
-## WARNING: THIS NEEDS TO BE FIXED!!! arises when Per_PY = 0
-# there are similar issues with TotFr_CY but this column is irrelevant
+# Remove data from plots that were new in current year (CY)
+data <- subset(data, NewPlot_CY==FALSE) 
+
 
 #*******************************************************************************
 #### 3. Prepare data for IPMs and write to new .csv file
 #*******************************************************************************
 
-# examine column names and classes of data
+# Examine column names and classes of data
 names(data)
 str(data)
 
-# make Fec1 numeric
-data$Fec1=round(as.numeric(data$Fec1,digits=0)) #round total fruit # to nearest integer
-## WARNING: I ORIGINALLY GOT AN ERROR HERE BECAUSE SOME VALUES = "#Num!" AND OTHERS = "#Div/0!" SO COLUMN WAS READ AS CHARACTER
+# Make Fec1 numeric and round fruit # to nearest integer
+data$Fec1 <- round(as.numeric(data$Fec1, digits=0)) 
 
-# select certain columns
-data=subset(data,select=c("SiteID","ID","Region","Latitude","Longitude","Elevation","Class_PY","TotFr_PY","TotStLn_PY","Class_CY","TotStLn_CY","SurvPYCY","Year"))
+# Only include seed counts for plants that produced at least one fruit
+data$SeedCt[data$Fec1<1|is.na(data$Fec1)]=NA
 
-# rename column names to IPM friendly names
-colnames(data)=c("Site","ID","Region","Latitude","Longitude","Elevation","Class","Fec1","logSize","ClassNext","logSizeNext","Surv","Year")
-
-
-
+# Make appropriate columns of data frame a factor
+data$Site=factor(data$Site)
+data$Region=factor(data$Region)
 
 # 2016 and 2017 and 2018 and 2019 data do not have spaces between words in site names; fix this across the dataset
 unique(data$Site)
@@ -200,33 +194,18 @@ unique(data$Site) # Coast Forkof Williamette and O' Neil Creek need to be correc
 data$Site[data$Site=="Coast Forkof Williamette"]="Coast Fork of Williamette" 
 data$Site[data$Site=="O' Neil Creek"]="O'Neil Creek" 
 
-# Make appropriate columns of data frame a factor
-data$Site=factor(data$Site)
-data$Region=factor(data$Region)
+# check site names one more time
+unique(data$Site)
 
-
-# Only include seed counts for plants that produced at least one fruit
-data$SeedCt[data$Fec1<1|is.na(data$Fec1)]=NA
-
-# Add columns so that 2014-2019 data can be combined with 2010-2013 data
-data$NotAnIndividual=""
-data$Reasoning=""
-data$NotARecruit=""
-data$Reasoning.1=""
 
 # examine data
 names(data)
 head(data)
 tail(data)
 
-# combine 2010-2013 data with 2014-2019 data
-data=rbind(data,data_2010.2013)
-
 # sort data by latitude
 data=data[order(-data$Latitude,data$Year),]
 
-# check site names one more time
-unique(data$Site)
 
 # write to .csv
 write.csv(data,"output/vital_rates/Mcard_demog_data_2010-2018.csv",row.names=FALSE)
