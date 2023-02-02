@@ -1,7 +1,7 @@
-#### PROJECT: Mimulus cardinalis demography LTREB proposal
-#### PURPOSE: Prepare raw Mimulus cardinalis demography data for IPM analyses 
-#### AUTHOR: Seema Sheth
-#### DATE LAST MODIFIED: 20220606
+#### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
+#### PURPOSE OF THIS SCRIPT: Prepare raw demographic vital rate data for IPM analyses 
+#### AUTHOR: Seema Sheth and Amy Angert
+#### DATE LAST MODIFIED: 20230201
 
 # Easy code for installing packages in R (if not installed) and calling their libraries
 # From: https://gist.github.com/DrK-Lo/a945a29d6606b899022d0f03109b9483
@@ -23,28 +23,85 @@ for (i in 1:length(packages_needed)){
 #### 1. Bring in and combine M. cardinalis demography data from 2010-2014; in all files, PY=previous year, CY=current year; ignore PPY
 #*******************************************************************************
 
-# read in 2010-2013 data 
-data_2010.2013=read.csv("data/vital_rates/Mcard_demog_data_2010-2013.csv")
+# read in transition data for 2010-11, 2011-12, 2012-13, 2013-14  
+data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv")
+# Note: this file was created for the analyses published in Sheth and Angert 2018 PNAS paper
+# It results from Amy Angert's work in July 2016 (original file: "Mcard_demog_data_2010-2013_ALA.xlsx") to scan datasheet notes to identify individuals to exclude, based on these columns:
+# Column 'NotAnIndividual': 
+# 0 = ok, definitely include (includes "scattered" as long as nothing else noted)
+# 1 = not ok, definitely exclude from survival, growth, and fecundity but ok for seed input denominator for recruitment (history of lumping/splitting/relumping; redundant IDs)
+# 2 = maybe (notes about difficult to distinguish, or merged once)
+# Column 'NotARecruit':
+# 0 = ok, definitely include
+# 1 = wrong, definitely exclude (reasons include new plot, site not visited in prior year, ID within prior years' ranges, coordinates well outside of prior year's search
+# 2 = plant noted as possibly missed in prior year (looks old, missed?, J-20xx?, could be [old ID], etc)
+# 3 = plant not noted as unusually old-looking, but is within size range of or larger than most plants that are in category 2
+# NA = size measures at year t
 
-# read in 2014-2015 data and year at time = t (2014) column
-data.2014.2015=read.csv("data/vital_rates/SS_Horizontal_2015.csv")
+
+# read in transition data for 2014-15 and add year at time = t (2014) column
+data.2014.2015=read.csv("data/demography data/SS_Horizontal_2015_Notes.csv")
 data.2014.2015$Year=rep("2014",times=length(data.2014.2015$ID))
+# note: this file was queried from the database on 2023-02-01
+# we will tidy it based on the decision rules as above for 2010-14 data, but scripted here instead of done manually in excel. 
+
+# add 'NotAnIndividual' column
+data.2014.2015 <- data.2014.2015 %>% 
+  mutate(NotAnIndividual=ifelse(str_detect(OtherNotesCY, "lump"), 1, 
+                         ifelse(str_detect(OtherNotesCY, "Lump"), 1,
+                         ifelse(str_detect(OtherNotesCY, "split"), 1,
+                         ifelse(str_detect(OtherNotesCY, "Split"), 1,
+                         ifelse(str_detect(OtherNotesCY, "same as"), 1,
+                         ifelse(str_detect(OtherNotesCY, "merge"), 1,
+                         ifelse(str_detect(OtherNotesCY, "Merge"), 1,
+                         ifelse(str_detect(OtherNotesPY, "part of"), 1, 
+                         ifelse(str_detect(OtherNotesPY, "lump"), 1, 
+                         ifelse(str_detect(OtherNotesPY, "Lump"), 1,
+                         ifelse(str_detect(OtherNotesPY, "split"), 1,
+                         ifelse(str_detect(OtherNotesPY, "Split"), 1,
+                         ifelse(str_detect(OtherNotesPY, "same as"), 1,
+                         ifelse(str_detect(OtherNotesPY, "merge"), 1,
+                         ifelse(str_detect(OtherNotesPY, "Merge"), 1,
+                         ifelse(str_detect(OtherNotesPY, "part of"), 1,       
+                                0))))))))))))))))) 
+# Note: this is lacking level=2 (=maybe), so is possibly more restrictive than 2010-14 filter
+
+# add 'NotARecruit' column
+data.2014.2015 <- data.2014.2015 %>% 
+  mutate(NotARecruit=ifelse(str_detect(OtherNotesCY, "old"), 1, 
+                     ifelse(str_detect(OtherNotesCY, "Old"), 1,
+                     ifelse(str_detect(OtherNotesCY, "missed"), 1,
+                     ifelse(str_detect(OtherNotesCY, "14?"), 1, 
+                     ifelse(TotStLn_PY, 1)
+                            0)))))
 
 # read in 2015-2016 data and year at time = t (2015) column
-data.2015.2016=read.csv("data/vital_rates/SS_Horizontal_2016.csv")
+data.2015.2016=read.csv("data/demography data/SS_Horizontal_2016_Notes.csv")
 data.2015.2016$Year=rep("2015",times=length(data.2015.2016$ID))
+# note: this file was queried from the database on 2023-02-01
+# we will tidy it based on the same decision rules as above for 2010-14 data, but scripted here instead of done manually in excel
 
-# read in 2016-2017 data and year at time = t (2016) column
-data.2016.2017=read.csv("data/vital_rates/database_queries_20220524/SS_Horizontal_2017.csv")
-data.2016.2017$Year=rep("2016",times=length(data.2016.2017$ID))
+# add 'NotAnIndividual' column
+data.2015.2016 <- data.2015.2016 %>% 
+  mutate(NotAnIndividual=ifelse(str_detect(OtherNotesCY, "lump"), 1, 
+                                ifelse(str_detect(OtherNotesCY, "Lump"), 1,
+                                ifelse(str_detect(OtherNotesCY, "split"), 1,
+                                ifelse(str_detect(OtherNotesCY, "Split"), 1,
+                                ifelse(str_detect(OtherNotesCY, "same as"), 1,
+                                ifelse(str_detect(OtherNotesCY, "merge"), 1,
+                                ifelse(str_detect(OtherNotesCY, "Merge"), 1,
+                                ifelse(str_detect(OtherNotesPY, "part of"), 1, 
+                                ifelse(str_detect(OtherNotesPY, "lump"), 1, 
+                                ifelse(str_detect(OtherNotesPY, "Lump"), 1,
+                                ifelse(str_detect(OtherNotesPY, "split"), 1,
+                                ifelse(str_detect(OtherNotesPY, "Split"), 1,
+                                ifelse(str_detect(OtherNotesPY, "same as"), 1,
+                                ifelse(str_detect(OtherNotesPY, "merge"), 1,
+                                ifelse(str_detect(OtherNotesPY, "Merge"), 1,
+                                ifelse(str_detect(OtherNotesPY, "part of"), 1, 
+                                       0))))))))))))))))) 
+# Note: this is lacking the level=2 (=maybe), so is possibly more restrictive than 2010-14 filter
 
-# read in 2017-2018 data and year at time = t (2017) column
-data.2017.2018=read.csv("data/vital_rates/database_queries_20220524/SS_Horizontal_2018.csv")
-data.2017.2018$Year=rep("2017",times=length(data.2017.2018$ID))
-
-# read in 2018-2019 data and year at time = t (2018) column
-data.2018.2019=read.csv("data/vital_rates/database_queries_20220524/SS_Horizontal_2019.csv")
-data.2018.2019$Year=rep("2018",times=length(data.2018.2019$ID))
 
 # combine data from all years into one data frame 
 data=rbind(data.2014.2015,data.2015.2016,data.2016.2017,data.2017.2018, data.2018.2019)
@@ -196,19 +253,7 @@ unique(data.focal$Site) #21
 write.csv(data.focal,"output/vital_rates/Mcard_demog_data_2010-2018_focal.csv",row.names=FALSE)
 
 
-# Note that a previous version of the output file including data from 2010-2013 only was modified manually by Amy Angert in July 2016 (original file: "Mcard_demog_data_2010-2013_ALA.xlsx"), and 2 new columns and 3 new rows were added: 
-# A .csv version of this final data file is now in: "Data/Mcard_demog_data_2010-2013.csv"
-# 1-2) NotAnIndividual, along with separate "Reasoning" column explaining justification
-# 0 = ok, definitely include (includes "scattered" as long as nothing else noted)
-# 1 = not ok, definitely exclude from survival, growth, and fecundity but ok for seed input denominator for recruitment (history of lumping/splitting/relumping; redundant IDs)
-# 2 = maybe (notes about difficult to distinguish, or merged once)
-# 3-4) NotARecruit, along with separate "Reasoning" column explaining justification
-# 0 = ok, definitely include
-# 1 = wrong, definitely exclude (reasons include new plot, site not visited in prior year, ID within prior years' ranges, coordinates well outside of prior year's search
-# 2 = plant noted as possibly missed in prior year (looks old, missed?, J-20xx?, could be [old ID], etc)
-# 3 = plant not noted as unusually old-looking, but is within size range of or larger than most plants that are in category 2
-# NA = size measures at year t
-# 3 new rows were added with ID = NA for Chino Creek Site in 2010; this is because on datasheet, "J x 4" was recorded for 4 juveniles, but only entered once
+
 
 #*******************************************************************************
 #### 4. Description of columns in new .csv file
