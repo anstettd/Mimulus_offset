@@ -1,27 +1,26 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Prepare raw demographic vital rate data for IPM analyses 
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230201
+#### DATE LAST MODIFIED: 20230202
 
 # Easy code for installing packages in R (if not installed) and calling their libraries
 # From: https://gist.github.com/DrK-Lo/a945a29d6606b899022d0f03109b9483
 
-# make vector of packages needed
+# Make vector of packages needed
 packages_needed <- c("tidyverse")
 
-# install packages needed (if not already installed)
+# Install packages needed (if not already installed)
 for (i in 1:length(packages_needed)){
   if(!(packages_needed[i] %in% installed.packages())){install.packages(packages_needed[i])}
 }
 
-# load packages needed
+# Load packages needed
 for (i in 1:length(packages_needed)){
   library( packages_needed[i], character.only = TRUE)
 }
 
 #*******************************************************************************
-#### 1. Bring in M. cardinalis vital rate data from 2010-2016
-# Note: in all files, PY=previous year (time t), CY=current year (time t+1); ignore PPY
+#### 1. Bring in and combine M. cardinalis vital rate data from 2010-2016
 #*******************************************************************************
 
 # Read in seed count per fruit data, select and rename relevant columns, and round to nearest integer
@@ -33,6 +32,7 @@ seed.ct$Site = factor(seed.ct$Site) # make site column a factor to streamline jo
 # TO DO: update with more recent years' collections
 
 # Read in vital rate data for 2010-11, 2011-12, 2012-13, 2013-14 transitions 
+# Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
 data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv") %>% select(-Reasoning, -Reasoning.1) #remove unwanted columns
 # Note: this file was created for the analyses published in Sheth and Angert 2018 PNAS 
 # It results from Amy Angert's work in July 2016 (original file: "Mcard_demog_data_2010-2013_ALA.xlsx") to scan datasheet notes to identify individuals to exclude, based on these columns:
@@ -49,6 +49,7 @@ data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv") %
 
 
 # Read in vital rate data for 2014-15 transition 
+# Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
 data_2014.2015=read.csv("data/demography data/SS_Horizontal_2015_Notes.csv") %>% 
   rename(Site = SiteID, #rename to match 2010-2014 data
          Class = Class_PY,
@@ -62,8 +63,9 @@ data_2014.2015=read.csv("data/demography data/SS_Horizontal_2015_Notes.csv") %>%
 # We will tidy it based on the decision rules as above for 2010-14 data, but scripted here instead of done manually in excel. 
 
 # Read in vital rate data for 2015-16 transition
+# Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
 data_2015.2016 = read.csv("data/demography data/SS_Horizontal_2016_Notes.csv") %>% 
-  rename(Site = SiteID,
+  rename(Site = SiteID, #rename to match 2010-2014 data
          Class = Class_PY,
          ClassNext = Class_CY,
          Fec1 = TotFr_PY,
@@ -97,6 +99,7 @@ data_2014.2016 <- data_2014.2016 %>%
                            ifelse(str_detect(OtherNotesPY, "part of"), 1,       
                                 0))))))))))))))))) 
 # Note: this is lacking level 2 (=maybe), so is possibly more restrictive than 2010-14 filter
+# TO DO: Inspect resulting dataframe to make sure this is working as expected
 # TO DO: repeat this automatic coding for 2010-2014 as a sensitivity analysis
 
 # Add 'NotARecruit' column
@@ -108,6 +111,7 @@ data_2014.2016 <- data_2014.2016 %>%
                        ifelse(str_detect(OtherNotesCY, "15?"), 2, 
                        ifelse(!is.na(Size), NA, 0)))))))
 # TO DO: Consult other queries (e.g., skipped in) to identify rows that should be coded as level 1
+# TO DO: Inspect resulting dataframe to make sure this is working as expected
 # Note: this is lacking level=3 (=size range of other recruits), which is not reliable
 
 # Create columns of log-transformed sizes
@@ -132,6 +136,8 @@ data_2014.2016 <- merge(data_2014.2016,seed.ct,by="Site",all.x=TRUE,all.y=FALSE)
 
 data_2014.2016 <- data_2014.2016 %>% select(colnames(data_2010.2014))
 
+# Combine all years
+data <- rbind(data_2010.2014, data_2014.2016)
 
 #*******************************************************************************
 #### 2. Remove unwanted data
