@@ -16,7 +16,7 @@ data=read.csv("data/demography data/Mcard_demog_data_2010-2016.csv")
 #*******************************************************************************
 
 # Remove plants that should not have been recorded as new recruits
-#### NOTE: these are plants that A. Angert noted as "wrong, definitely exclude (reasons include new plot, site not visited in prior year, ID within prior years' ranges, coordinates well outside of prior year's search)"
+# Note: These are plants that A. Angert noted as "wrong, definitely exclude (reasons include new plot, site not visited in prior year, ID within prior years' ranges, coordinates well outside of prior year's search)"
 
 data = subset(data, NotARecruit != 1 | is.na(NotARecruit))
 

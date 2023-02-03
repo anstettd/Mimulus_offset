@@ -174,9 +174,18 @@ data <- subset(data, Fec1 != "#Num!" | Fec1 != "#Div/0!" | is.na(Fec1)) # this m
 # Only include seed counts for plants that produced at least one fruit
 data$SeedCt[data$Fec1 < 1 | is.na(data$Fec1)]=NA
 
+# For recruitment estimations, remove individuals that should not be scored as new recruits
+data.recruit = subset(data, NotARecruit != 1 | is.na(NotARecruit))
+unique(data.recruit$NotARecruit) # check
+
+# Obtain total fruit and seed counts for each indivdiual at each site in each year, including monster plants
+site_fruit_count_data = subset(data.recruit, select=c(Site,Year,SiteYear,Region,Fec1,SeedCt)) 
+# For survival and growth transitions, remove monster plants where individuals were not distinguishable
+data.survgrowth = subset(data, NotAnIndividual != 1 | is.na(NotAnIndividual))
+unique(data.survgrowth$NotAnIndividual)
 
 #*******************************************************************************
-#### 3. Prepare data for IPMs and write to new .csv file
+#### 3. Prepare data for IPMs and write to new .csv files
 #*******************************************************************************
 
 # Examine column names and classes of data
@@ -253,18 +262,16 @@ write.csv(data.focal,"output/vital_rates/Mcard_demog_data_2010-2018_focal.csv",r
 #Region: latitudinal region that population is nested within
 #Latitude: latitude of population
 #Longitude: longitude of population
-#Elevation: elevation of population
+#Elevation: elevation of population in meters
 #Class: stage class (juvenile, adult, or NA) of plant at time = t (PY)
-#Fec1: TotFr (Total number of fruits per individual)   
-#logSize: total stem length of the individual
+#Fec1: TotFr (Total number of fruits per individual, rounded to nearest integer)   
+#logSize: total stem length of the individual, in log-transformed cm
 #ClassNext: stage class (juvenile, adult, dead, or NA) of plant at time = t+1 (CY)
 #logSizeNext: same as "size" above, for t+1
 #Surv: survival (1) or not (0) of individuals between time = t (PY) and time = t+1 (CY)
-#Year: annual transition of the long-term data at time = t (2010-2013)
+#Year: annual transition of the long-term data at time = t (2010-2015)
 #Fec0: Probability of flowering (1 if Class=="A" for adult, 0 if Class=="J" for juvenile)
 #RegionRank: ordinal rank of regions from south to north
 #SeedCt: mean seed count for each site
 #NotAnIndividual: see above
-#Reasoning: justification for NotAnIndividual
 #NotARecruit: see above
-#Reasoning.1: justification for NotARecruit
