@@ -60,7 +60,7 @@ data_2014.2015=read.csv("data/demography data/SS_Horizontal_2015_Notes.csv") %>%
          Surv = SurvPYCY) %>% 
   mutate(Year = 2014) #add year at time t (=2014) column
 # Note: this file was queried from the database on 2023-02-01
-# We will tidy it based on the decision rules as above for 2010-14 data, but scripted here instead of done manually in excel. 
+# We will tidy it below based on the decision rules as above for 2010-14 data, but scripted here instead of done manually in excel. 
 
 # Read in vital rate data for 2015-16 transition
 # Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
@@ -74,7 +74,7 @@ data_2015.2016 = read.csv("data/demography data/SS_Horizontal_2016_Notes.csv") %
          Surv = SurvPYCY) %>% 
   mutate(Year = 2015) #add year at time t (=2015) column)
 # Note: this file was queried from the database on 2023-02-01
-# We script the creation of NotARecruit and NotAnIndividual columns here (instead of  manually in excel)
+# We script the creation of NotARecruit and NotAnIndividual columns below (instead of  manually in excel)
 
 # Combine 2014-16 data into one data frame 
 data_2014.2016 = rbind(data_2014.2015,data_2015.2016)
@@ -162,8 +162,9 @@ data <- data[!(is.na(data$logSize) & is.na(data$logSizeNext)),]
 # Remove plants that were recorded as having a class at time t but have no size measurements in that year
 data <- subset(data, !(!is.na(Class) & is.na(logSize)))
 
-# Remove plants that were recorded as having a class at time t but have no survival recorded from t to t+1 (were either excluded in current year, recorded as "?" in Class field, or recorded as "NA" in Class field)
+# Remove plants that were recorded as having a class at time t but have no survival recorded from t to t+1 (were either excluded at time t+1, recorded as "?" in Class field, or recorded as "NA" in Class field) 
 data <- subset(data, !(!is.na(Class) & is.na(Surv)))
+# TO DO: check annotation; should it say ?/NA in Class or ClassNext? I'm not sure lin 166 is doing what the annotation describes
 
 # Make Fec1 numeric and round fruit # to nearest integer
 data$Fec1 <- round(as.numeric(data$Fec1, digits=0)) 
@@ -174,104 +175,73 @@ data <- subset(data, Fec1 != "#Num!" | Fec1 != "#Div/0!" | is.na(Fec1)) # this m
 # Only include seed counts for plants that produced at least one fruit
 data$SeedCt[data$Fec1 < 1 | is.na(data$Fec1)]=NA
 
-# For recruitment estimations, remove individuals that should not be scored as new recruits
-data.recruit = subset(data, NotARecruit != 1 | is.na(NotARecruit))
-unique(data.recruit$NotARecruit) # check
+# For most vital rate transitions, remove monster plants where individuals were not distinguishable 
+# Note: these should still be included when calculating seed input denominator for recruitment probability
+data.indivs = subset(data, NotAnIndividual != 1 | is.na(NotAnIndividual))
 
-# Obtain total fruit and seed counts for each indivdiual at each site in each year, including monster plants
-site_fruit_count_data = subset(data.recruit, select=c(Site,Year,SiteYear,Region,Fec1,SeedCt)) 
-# For survival and growth transitions, remove monster plants where individuals were not distinguishable
-data.survgrowth = subset(data, NotAnIndividual != 1 | is.na(NotAnIndividual))
-unique(data.survgrowth$NotAnIndividual)
+# For estimating size distribution of new recruits, also remove individuals that should not be scored as new recruits
+data.indivs = subset(data.indivs, NotARecruit != 1 | is.na(NotARecruit))
+# Note: because these rows are NA at time t, their exclusion has no bearing on survival, growth, and fecundity transitions
+
 
 #*******************************************************************************
 #### 3. Prepare data for IPMs and write to new .csv files
 #*******************************************************************************
 
+# Obtain total fruit and seed counts for each indivdiual at each site in each year, including monster plants
+site_fruit_count_data = subset(data, select=c(Site,Year,SiteYear,Region,Fec1,SeedCt)) 
+
 # Examine column names and classes of data
-names(data)
-str(data)
+names(data.indivs)
+str(data.indivs)
 
 # Check site names to be sure no discrepancies
-unique(data$Site)
+unique(data.indivs$Site)
 
 # Check classes to be sure no discrepancies
-unique(data$Class)
-unique(data$ClassNext)
+unique(data.indivs$Class)
+unique(data.indivs$ClassNext)
 
 # Make appropriate columns of data frame a factor
-data$Site=factor(data$Site)
-data$Region=factor(data$Region)
-data$Year=factor(data$Year)
-data$ID=factor(data$ID)
-data$NotARecruit=factor(data$NotARecruit)
-data$NotAnIndividual=factor(data$NotAnIndividual)
+data.indivs$Site=factor(data.indivs$Site)
+data.indivs$Region=factor(data.indivs$Region)
+data.indivs$Year=factor(data.indivs$Year)
+data.indivs$ID=factor(data.indivs$ID)
+data.indivs$NotARecruit=factor(data.indivs$NotARecruit)
+data.indivs$NotAnIndividual=factor(data.indivs$NotAnIndividual)
 
 # Examine data
-names(data)
-head(data)
-tail(data)
+names(data.indivs)
+head(data.indivs)
+tail(data.indivs)
 
 # Sort data by latitude
-data=data[order(-data$Latitude,data$Year),]
+data.indivs=data.indivs[order(-data.indivs$Latitude,data.indivs$Year),]
 
 # write to .csv
-write.csv(data,"data/demography data/Mcard_demog_data_2010-2016.csv",row.names=FALSE)
+write.csv(data.indivs,"data/demography data/Mcard_demog_data_2010-2016_cleanindivs.csv",row.names=FALSE)
+write.csv(site_fruit_count_data,"data/demography data/Mcard_demog_data_2010-2016_seedinput.csv",row.names=FALSE)
 
 
 #*******************************************************************************
-#### 4. Filter to 21 focal sites for LTREB
-#******************************************************************************
-
-focal.sites <- c("Coast Fork of Williamette",
-                 "Canton Creek",
-                 "Rock Creek",
-                 "Deer Creek",
-                 "O'Neil Creek",
-                 "Deep Creek",
-                 "Little Jameson Creek",
-                 "Oregon Creek",
-                 "Rainbow Pool",
-                 "Carlon",
-                 "Buck Meadows",
-                 "Wawona",
-                 "Redwood Creek",
-                 "North Fork Middle Fork Tule",
-                 "South Fork Middle Fork Tule",
-                 "West Fork Mojave River",
-                 "Mill Creek",
-                 "Whitewater Canyon",
-                 "Sweetwater River",
-                 "Kitchen Creek",
-                 "Hauser Creek")
-
-data.focal <- data %>% filter(Site%in%focal.sites) %>% droplevels()
-unique(data.focal$Site) #21
-
-write.csv(data.focal,"output/vital_rates/Mcard_demog_data_2010-2018_focal.csv",row.names=FALSE)
-
-
-
-
-#*******************************************************************************
-#### 4. Description of columns in new .csv file
+#### 4. Description of columns in _cleanindivs .csv file
 #*******************************************************************************
 
-#Site: population
-#ID: unique identifier for each individual
-#Region: latitudinal region that population is nested within
-#Latitude: latitude of population
-#Longitude: longitude of population
-#Elevation: elevation of population in meters
-#Class: stage class (juvenile, adult, or NA) of plant at time = t (PY)
-#Fec1: TotFr (Total number of fruits per individual, rounded to nearest integer)   
-#logSize: total stem length of the individual, in log-transformed cm
-#ClassNext: stage class (juvenile, adult, dead, or NA) of plant at time = t+1 (CY)
-#logSizeNext: same as "size" above, for t+1
-#Surv: survival (1) or not (0) of individuals between time = t (PY) and time = t+1 (CY)
-#Year: annual transition of the long-term data at time = t (2010-2015)
-#Fec0: Probability of flowering (1 if Class=="A" for adult, 0 if Class=="J" for juvenile)
-#RegionRank: ordinal rank of regions from south to north
-#SeedCt: mean seed count for each site
-#NotAnIndividual: see above
-#NotARecruit: see above
+# Site: population
+# ID: unique identifier for each individual
+# Region: latitudinal region that population is nested within
+# Latitude: latitude of population
+# Longitude: longitude of population
+# Elevation: elevation of population in meters
+# Class: stage class (juvenile, adult, or NA) of plant at time = t (PY)
+# Fec1: TotFr (Total number of fruits per individual, rounded to nearest integer)   
+# logSize: total stem length of the individual, in log-transformed cm
+# ClassNext: stage class (juvenile, adult, dead, or NA) of plant at time = t+1 (CY)
+# logSizeNext: same as "size" above, for t+1
+# Surv: survival (1) or not (0) of individuals between time = t (PY) and time = t+1 (CY)
+# Year: annual transition of the long-term data at time = t (2010-2015)
+# Fec0: Probability of flowering (1 if Class=="A" for adult, 0 if Class=="J" for juvenile)
+# RegionRank: ordinal rank of regions from south to north
+# SeedCt: mean seed count for each site
+# NotAnIndividual: see above
+# NotARecruit: see above
