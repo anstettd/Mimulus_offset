@@ -3,7 +3,11 @@
 #### AUTHOR: Seema Sheth and Amy Angert
 #### DATE LAST MODIFIED: 20230206
 
-# remove objects and clear workspace
+#*******************************************************************************
+#### 0. Clean workspace and load required packages
+#*******************************************************************************
+
+# Remove objects and clear workspace
 rm(list = ls(all=TRUE))
 
 # Make vector of packages needed
@@ -13,20 +17,23 @@ packages_needed <- c("lme4", "MuMIn", "MASS", "pscl", "tidyverse", "glmmTMB", "b
 for (i in 1:length(packages_needed)){
   if(!(packages_needed[i] %in% installed.packages())){install.packages(packages_needed[i])}
 }
+# Note: might need to install from source:
+# install.packages("glmmADMB", repos=c("http://glmmadmb.r-forge.r-project.org/repos",getOption("repos")),type="source")
 
 # Load packages needed
 for (i in 1:length(packages_needed)){
-  library( packages_needed[i], character.only = TRUE)
+  library(packages_needed[i], character.only = TRUE)
 }
-
-# Install GLMMADMB package following instructions here: http://glmmadmb.r-forge.r-project.org/
-# install.packages("R2admb")
-# install.packages("glmmADMB", repos=c("http://glmmadmb.r-forge.r-project.org/repos",getOption("repos")),type="source")
 
 
 
 #*******************************************************************************
-#### 1. Survival ###
+#### 2. Read in vital rate data ###
+#*******************************************************************************
+data <- read.csv("data/demography data/Mcard_demog_data_2010-2016_.csv")
+
+#*******************************************************************************
+#### 2. Survival models ###
 #*******************************************************************************
 
 # fixed effects model w/ and w/out size

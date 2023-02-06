@@ -37,7 +37,7 @@ seed.ct$Site = factor(seed.ct$Site) # make site column a factor to streamline jo
 
 # Read in vital rate data for 2010-11, 2011-12, 2012-13, 2013-14 transitions 
 # Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
-data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv") %>% select(-Reasoning, -Reasoning.1) #remove unwanted columns
+data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv") %>% dplyr::select(-Reasoning, -Reasoning.1) #remove unwanted columns
 # Note: this file was created for the analyses published in Sheth and Angert 2018 PNAS 
 # It results from Amy Angert's work in July 2016 (original file: "Mcard_demog_data_2010-2013_ALA.xlsx") to scan datasheet notes to identify individuals to exclude, based on these columns:
 # Column 'NotAnIndividual': 
