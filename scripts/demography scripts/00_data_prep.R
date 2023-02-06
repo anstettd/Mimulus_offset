@@ -3,6 +3,10 @@
 #### AUTHOR: Seema Sheth and Amy Angert
 #### DATE LAST MODIFIED: 20230202
 
+#*******************************************************************************
+#### 1. Load required packages
+#*******************************************************************************
+
 # Easy code for installing packages in R (if not installed) and calling their libraries
 # From: https://gist.github.com/DrK-Lo/a945a29d6606b899022d0f03109b9483
 
@@ -20,7 +24,7 @@ for (i in 1:length(packages_needed)){
 }
 
 #*******************************************************************************
-#### 1. Bring in and combine M. cardinalis vital rate data from 2010-2016
+#### 2. Bring in and combine M. cardinalis vital rate data from 2010-2016
 #*******************************************************************************
 
 # Read in seed count per fruit data, select and rename relevant columns, and round to nearest integer
@@ -144,7 +148,7 @@ data <- rbind(data_2010.2014, data_2014.2016)
 data$SiteYear = paste(data$Site, data$Year, sep=":") %>% factor()
 
 #*******************************************************************************
-#### 2. Remove unwanted data
+#### 3. Remove unwanted data
 #*******************************************************************************
 
 # Remove plants that do not have site info
@@ -185,7 +189,7 @@ data.indivs = subset(data.indivs, NotARecruit != 1 | is.na(NotARecruit))
 
 
 #*******************************************************************************
-#### 3. Prepare data for IPMs and write to new .csv files
+#### 4. Prepare data for IPMs and write to new .csv files
 #*******************************************************************************
 
 # Obtain total fruit and seed counts for each indivdiual at each site in each year, including monster plants
@@ -224,7 +228,7 @@ write.csv(site_fruit_count_data,"data/demography data/Mcard_demog_data_2010-2016
 
 
 #*******************************************************************************
-#### 4. Description of columns in _cleanindivs .csv file
+#### 5. Description of columns in _cleanindivs .csv file
 #*******************************************************************************
 
 # Site: population
