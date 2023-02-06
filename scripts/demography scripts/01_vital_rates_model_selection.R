@@ -1,77 +1,32 @@
-#### PROJECT: Mimulus cardinalis demography 2010-2014
-#### PURPOSE: Perform model selection for each vital rate for subsequent use in IPMs
-############# Vital rates include survival, growth, flowering, and fruit count
-############# Fixed effect: size; Random effects: site, year
-#### AUTHOR: Seema Sheth
-#### DATE LAST MODIFIED: 20180613
+#### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
+#### PURPOSE OF THIS SCRIPT: Perform model selection for each vital rate for subsequent use in IPMs
+#### AUTHOR: Seema Sheth and Amy Angert
+#### DATE LAST MODIFIED: 20230206
 
 # remove objects and clear workspace
 rm(list = ls(all=TRUE))
+
+# Make vector of packages needed
+packages_needed <- c("lme4", "MuMIn", "MASS", "pscl", "tidyverse", "glmmTMB", "bbmle", "R2admb", "glmmADMB")
+
+# Install packages needed (if not already installed)
+for (i in 1:length(packages_needed)){
+  if(!(packages_needed[i] %in% installed.packages())){install.packages(packages_needed[i])}
+}
+
+# Load packages needed
+for (i in 1:length(packages_needed)){
+  library( packages_needed[i], character.only = TRUE)
+}
 
 # Install GLMMADMB package following instructions here: http://glmmadmb.r-forge.r-project.org/
 # install.packages("R2admb")
 # install.packages("glmmADMB", repos=c("http://glmmadmb.r-forge.r-project.org/repos",getOption("repos")),type="source")
 
-#require packages
-require(lme4)
-#require(glmmADMB)
-require(MuMIn)
-require(MASS)
-require(pscl)
-require(tidyverse)
-require(glmmTMB)
-require(bbmle)
 
-# set working directory
-setwd("/Users/ssheth/Google Drive/2018_demography_climate")
 
 #*******************************************************************************
-#### 1. run data_prep.R script to clean up data ###
-#*******************************************************************************
-
-source("R_scripts/data_prep.R")
-
-# Variables are: 
-
-# Site: population
-# ID: unique identifier for each individual
-# Region: latitudinal region that population is nested within
-# Latitude: latitude of population
-# Longitude: longitude of population
-# Elevation: elevation of population
-# Class: stage class (juvenile, adult, or NA) of plant at time = t 
-# Fec1: Total number of fruits per individual   
-# logSize: total stem length of the individual
-# ClassNext: stage class (juvenile, adult, dead, or NA) of plant at time = t+1 
-# logSizeNext: same as "logSize" above, for t+1
-# Surv: survival (1) or not (0) of individuals between time = t and time = t+1 
-# Year: annual transition of the long-term data at time = t (2010-2013)
-# Fec0: Probability of flowering (1 if Class=="A" for adult, 0 if Class=="J" for juvenile)
-# RegionRank: ordinal rank of regions from south to north
-# SeedCt: mean seed count, rounded to the nearest integer, for each site
-
-#*******************************************************************************
-#### 2. Summarize sample sizes per site per year for each vital rate
-#*******************************************************************************
-
-# survival
-data_summary_surv=data %>% group_by(SiteYear) %>% filter(!is.na(Surv)) %>% summarise(nSurv=n())
-# growth
-data_summary_growth=data %>% group_by(SiteYear) %>% filter(!is.na(logSize)&!is.na(logSizeNext))  %>% summarise(nGrowth=n())
-# flowering
-data_summary_fl=data %>% group_by(SiteYear) %>% filter(!is.na(Fec0)) %>% summarise(nFl=n())
-# fruit #
-data_summary_fr=data %>% group_by(SiteYear) %>% filter(!is.na(Fec1))  %>% summarise(nFr=n())
-
-# create data frame of site info to join to sample size summary
-site.info=data %>% select(Site,Latitude,Year,SiteYear) %>% distinct()
-
-# join summaries together, sort by decreasing latitude, and write to .csv file
-data_summary=full_join(data_summary_surv,data_summary_growth,by="SiteYear") %>% full_join(data_summary_fl,by="SiteYear") %>% full_join(data_summary_fr,by="SiteYear") %>% full_join(site.info,by="SiteYear") %>% arrange (-Latitude,Year) %>% select(-Latitude)
-# write.csv(data_summary,"R_output/data_summary.csv",row.names = FALSE)
-
-#*******************************************************************************
-#### 3. Survival ###
+#### 1. Survival ###
 #*******************************************************************************
 
 # fixed effects model w/ and w/out size
@@ -105,10 +60,10 @@ g1=glm(logSizeNext~logSize,data=data[!is.na(data$logSize),])
 g2=glm(logSizeNext~1,data=data[!is.na(data$logSize),])
 model.sel(g1,g2) # model w/ size is preferred
 
-# A. random intercepts and slopes for Year; random intercepts & random slopes for Site nested within Year
+# random intercepts and slopes for Year; random intercepts & random slopes for Site nested within Year
 g3=lmer(logSizeNext~logSize+(logSize|Year/Site),data=data,control=lmerControl(optimizer = "bobyqa")) 
 
-# B. random intercepts and slopes for Year; random intercepts & constant slopes for Site nested within Year
+# random intercepts and slopes for Year; random intercepts & constant slopes for Site nested within Year
 g4=lmer(logSizeNext~logSize+(1|Year/Site),data=data,control=lmerControl(optimizer = "bobyqa")) 
 
 # Compare models
@@ -130,10 +85,10 @@ fl1=glm(Fec0~logSize,data=data,family=binomial)
 fl2=glm(Fec0~1,data=data,family=binomial)
 model.sel(fl1,fl2) # model w/ size is preferred
 
-# A. random intercepts and slopes for Year; random intercepts & slopes for Site nested within Year
+# random intercepts and slopes for Year; random intercepts & slopes for Site nested within Year
 fl3=glmer(Fec0~logSize+(logSize|Year/Site),data=data,family=binomial,control=glmerControl(optimizer = "bobyqa")) 
 
-# B. random intercepts and constant slopes for Year; random intercepts & constant slopes for Site nested within Year
+# random intercepts and constant slopes for Year; random intercepts & constant slopes for Site nested within Year
 fl4=glmer(Fec0~logSize+(1|Year/Site),data=data,family=binomial,control=glmerControl(optimizer = "bobyqa")) 
 
 # Compare models
@@ -172,10 +127,10 @@ save(fl3, file='R_output/flowering.reg.rda')
 	    ####### NOTE: I also ran same models with glmer.nb; computationally faster but less widely used in literature
 		#*******************************************************************************
 		
-	  	# A. random intercepts and slopes for Year; random intercepts & slopes for Site nested within Year
+	  	# random intercepts and slopes for Year; random intercepts & slopes for Site nested within Year
 	  	fr3=glmmadmb(Fec1~logSize+(logSize|Year/Site),data=data[!is.na(data$Fec1),],family="nbinom1",link="log") 
 	  	
-	  	# B. random intercepts and constant slopes for Year; random intercepts & constant slopes for Site nested within Year
+	  	# random intercepts and constant slopes for Year; random intercepts & constant slopes for Site nested within Year
 	  	fr4=glmmadmb(Fec1~logSize+(1|Year/Site),data=data[!is.na(data$Fec1),],family="nbinom",link="log") 
       
 	  	# Compare models
@@ -208,30 +163,3 @@ save(fl3, file='R_output/flowering.reg.rda')
 		
 		# Save top fruit # model to .rda file because it takes a long time to run
 		save(fr6, file='R_output/fruit.reg.rda')   
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-				
-### JUNK CODE
-		# random intercepts and random slopes for Site; random intercepts and slopes for Year; random intercepts & random slopes for Site nested within Year
-		s5=glmer(Surv~logSize+(logSize|Year/Site)+(logSize|Site),data=data,family=binomial,control=glmerControl(optimizer = "bobyqa")) 
-		
-		# random intercepts and constant slopes for Site; random intercepts and slopes for Year; random intercepts & random slopes for Site nested within Year
-		s6=glmer(Surv~logSize+(logSize|Year/Site)+(1|Site),data=data,family=binomial,control=glmerControl(optimizer = "bobyqa")) 
-		
-		# random intercepts and slopes for Site; random intercepts and constant slopes for Year; random intercepts & constant slopes for Site nested within Year
-		s7=glmer(Surv~logSize+(1|Year/Site)+(logSize|Site),data=data,family=binomial,control=glmerControl(optimizer = "bobyqa")) # did not converge
-		
-		# random intercepts and constant slopes for Site; random intercepts and constant slopes for Year; random intercepts & constant slopes for Site nested within Year
-		s8=glmer(Surv~logSize+(1|Year/Site)+(1|Site),data=data,family=binomial,control=glmerControl(optimizer = "bobyqa")) 
-		
