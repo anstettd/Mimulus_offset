@@ -41,16 +41,15 @@ data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv") %
 # Note: this file was created for the analyses published in Sheth and Angert 2018 PNAS 
 # It results from Amy Angert's work in July 2016 (original file: "Mcard_demog_data_2010-2013_ALA.xlsx") to scan datasheet notes to identify individuals to exclude, based on these columns:
 # Column 'NotAnIndividual': 
-# 0 = ok, definitely include (includes "scattered" as long as nothing else noted)
-# 1 = not ok, definitely exclude from survival, growth, and fecundity but ok for seed input denominator for recruitment (history of lumping/splitting/relumping; redundant IDs)
-# 2 = maybe (notes about difficult to distinguish, or merged once)
+#   0 = ok, definitely include (includes "scattered" as long as nothing else noted)
+#   1 = not ok, definitely exclude from survival, growth, and fecundity but ok for seed input denominator for recruitment (history of lumping/splitting/relumping; redundant IDs)
+#   2 = maybe (notes about difficult to distinguish, or merged once)
 # Column 'NotARecruit':
-# 0 = ok, definitely include
-# 1 = wrong, definitely exclude (reasons include new plot, site not visited in prior year, ID within prior years' ranges, coordinates well outside of prior year's search
-# 2 = plant noted as possibly missed in prior year (looks old, missed?, J-20xx?, could be [old ID], etc)
-# 3 = plant not noted as unusually old-looking, but is within size range of or larger than most plants that are in category 2
-# NA = size measures at year t
-
+#   0 = ok, definitely include
+#   1 = wrong, definitely exclude (reasons include new plot, site not visited in prior year, ID within prior years' ranges, coordinates well outside of prior year's search
+#   2 = plant noted as possibly missed in prior year (looks old, missed?, J-20xx?, could be [old ID], etc)
+#   3 = plant not noted as unusually old-looking, but is within size range of or larger than most plants that are in category 2
+#   NA = size measures at year t
 
 # Read in vital rate data for 2014-15 transition 
 # Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
@@ -103,7 +102,7 @@ data_2014.2016 <- data_2014.2016 %>%
                            ifelse(str_detect(OtherNotesPY, "part of"), 1,       
                                 0))))))))))))))))) 
 # Note: this is lacking level 2 (=maybe), so is possibly more restrictive than 2010-14 filter
-# TO DO: Inspect resulting dataframe to make sure this is working as expected
+# TO DO: Inspect resulting data frame to make sure this is working as expected
 # TO DO: repeat this automatic coding for 2010-2014 as a sensitivity analysis
 
 # Add 'NotARecruit' column
@@ -116,8 +115,8 @@ data_2014.2016 <- data_2014.2016 %>%
                        ifelse(!is.na(Size), NA, 
                        ifelse(NewPlot_CY==TRUE, 1, 0))))))))
 # TO DO: Consult other queries (e.g., skipped in, exclusion areas) to identify rows that should be coded as level 1
-# TO DO: Inspect resulting dataframe to make sure this is working as expected
-# Note: this is lacking level=3 (=size range of other recruits), which is not reliable
+# TO DO: Inspect resulting data frame to make sure this is working as expected
+# Note: this is lacking level 3 (=size range of other recruits), which is not reliable
 
 # Create columns of log-transformed sizes
 data_2014.2016$logSize = log(data_2014.2016$Size)
@@ -154,7 +153,7 @@ data$SiteYear = paste(data$Site, data$Year, sep=":") %>% factor()
 # Remove plants that do not have site info
 data <- filter(data, Site!="") 
 
-# Remove plants that were dead in previous year (Class=="D") 
+# Remove plants that were dead at time t (Class=="D") 
 data <- subset(data, Class!="D" | is.na(Class))
 
 # Remove plants with Class=? or Class=excluded
@@ -168,13 +167,14 @@ data <- subset(data, !(!is.na(Class) & is.na(logSize)))
 
 # Remove plants that were recorded as having a class at time t but have no survival recorded from t to t+1 (were either excluded at time t+1, recorded as "?" in Class field, or recorded as "NA" in Class field) 
 data <- subset(data, !(!is.na(Class) & is.na(Surv)))
-# TO DO: check annotation; should it say ?/NA in Class or ClassNext? I'm not sure lin 166 is doing what the annotation describes
+# TO DO: check annotation; should it say ?/NA in Class or ClassNext? We have already removed ? and E at time t (lines 159-160). 
 
 # Make Fec1 numeric and round fruit # to nearest integer
 data$Fec1 <- round(as.numeric(data$Fec1, digits=0)) 
 
 # Remove data where fruit # has errors resulting from 0s in denominator
-data <- subset(data, Fec1 != "#Num!" | Fec1 != "#Div/0!" | is.na(Fec1)) # this might be unnecessary because they are forced to NA by conversion to numeric?
+data <- subset(data, Fec1 != "#Num!" | Fec1 != "#Div/0!" | is.na(Fec1)) 
+# TO DO: Remove? I think this is unnecessary because they are forced to NA by conversion to numeric.
 
 # Only include seed counts for plants that produced at least one fruit
 data$SeedCt[data$Fec1 < 1 | is.na(data$Fec1)]=NA
@@ -185,14 +185,15 @@ data.indivs = subset(data, NotAnIndividual != 1 | is.na(NotAnIndividual))
 
 # For estimating size distribution of new recruits, also remove individuals that should not be scored as new recruits
 data.indivs = subset(data.indivs, NotARecruit != 1 | is.na(NotARecruit))
-# Note: because these rows are NA at time t, their exclusion has no bearing on survival, growth, and fecundity transitions
+# Note: because these rows are NA at time t, their exclusion has no bearing on survival, growth, and fecundity transitions. Confirmed:
+summary(data.indivs$logSize[data.indivs$NotARecruit==1])
 
 
 #*******************************************************************************
 #### 4. Prepare data for IPMs and write to new .csv files
 #*******************************************************************************
 
-# Obtain total fruit and seed counts for each indivdiual at each site in each year, including monster plants
+# Obtain total fruit and seed counts for each individual at each site in each year, including monster plants
 site_fruit_count_data = subset(data, select=c(Site,Year,SiteYear,Region,Fec1,SeedCt)) 
 
 # Examine column names and classes of data
@@ -200,6 +201,7 @@ names(data.indivs)
 str(data.indivs)
 
 # Check site names to be sure no discrepancies
+unique(site_fruit_count_data$Site)
 unique(data.indivs$Site)
 
 # Check classes to be sure no discrepancies
@@ -207,9 +209,12 @@ unique(data.indivs$Class)
 unique(data.indivs$ClassNext)
 
 # Make appropriate columns of data frame a factor
+site_fruit_count_data$Site=factor(site_fruit_count_data$Site)
+site_fruit_count_data$Year=factor(site_fruit_count_data$Year)
+site_fruit_count_data$Region=factor(site_fruit_count_data$Region)
 data.indivs$Site=factor(data.indivs$Site)
-data.indivs$Region=factor(data.indivs$Region)
 data.indivs$Year=factor(data.indivs$Year)
+data.indivs$Region=factor(data.indivs$Region)
 data.indivs$ID=factor(data.indivs$ID)
 data.indivs$NotARecruit=factor(data.indivs$NotARecruit)
 data.indivs$NotAnIndividual=factor(data.indivs$NotAnIndividual)
