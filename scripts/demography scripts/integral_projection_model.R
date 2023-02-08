@@ -33,7 +33,7 @@ f.yx=function(xp,x,params1) {
     exp(params1$fruit.int+params1$fruit.slope*x)*
     params1$seed.ct*
     params1$establishment.prob*
-    dnorm(xp,mean=params1$recruit.logSize.mean,sd=params1$recruit.logSize.sd) }
+    dnorm(xp,mean=params1$recruit.size.mean,sd=params1$recruit.size.sd) }
 
 #*******************************************************************************
 ### 2. Combine vital rate functions to build discretized IPM kernel 
