@@ -13,6 +13,7 @@ rm(list = ls(all=TRUE))
 # Make vector of packages needed
 packages_needed <- c("lme4", "MuMIn", "MASS", "pscl", "tidyverse", "glmmTMB", "bbmle", "R2admb") #"glmmADMB"
 # NOTE: glmmADMB is not available for current version of R
+# NOTE: are all of these packages needed? pscl? bbmle?
 
 # Install packages needed (if not already installed)
 for (i in 1:length(packages_needed)){
