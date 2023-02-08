@@ -1,14 +1,19 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Create data frame of vital rate parameters and build integral projection models to obtain estimates of annual lambdas for each population
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230206
+#### DATE LAST MODIFIED: 20230207
 
-# remove objects and clear workspace
+
+#*******************************************************************************
+#### 0. Clean workspace and load required packages
+#*******************************************************************************
+
+# Remove objects and clear workspace
 rm(list = ls(all=TRUE))
 
-# require packages
+# Make vector of packages needed
+packages_needed <- c("lme4", "glmmTMB", "tidyverse")
 require(lme4)
-#require(glmmADMB)
 require(glmmTMB)
 require(plyr)
 require(dplyr)
@@ -16,25 +21,51 @@ require(ggplot2)
 require(tidyr)
 require(gridExtra)
 
+# Install packages needed (if not already installed)
+for (i in 1:length(packages_needed)){
+  if(!(packages_needed[i] %in% installed.packages())){install.packages(packages_needed[i])}
+}
+
+# Load packages needed
+for (i in 1:length(packages_needed)){
+  library(packages_needed[i], character.only = TRUE)
+}
+
+
+#*******************************************************************************
+#### 2. Read in vital rate data frames ###
+#*******************************************************************************
+
+data <- read.csv("data/demography data/Mcard_demog_data_2010-2016_cleanindivs.csv")
+data$Site = factor(data$Site)
+data$Year = factor(data$Year)
+data$Year = factor(data$Year)
+data$SiteYear = factor(data$SiteYear)
+
+site_fruit_count_data <- read.csv("data/demography data/Mcard_demog_data_2010-2016_seedinput.csv")
+site_fruit_count_data$Site = factor(site_fruit_count_data$Site)
+site_fruit_count_data$Year = factor(site_fruit_count_data$Year)
+site_fruit_count_data$Year = factor(site_fruit_count_data$Year)
+site_fruit_count_data$SiteYear = factor(site_fruit_count_data$SiteYear)
 
 #*******************************************************************************
 #### 1. Create global survival, growth and fecundity models using data from all sites ###
 #*******************************************************************************
 
 # Create a vector of unique Site x Year for subsetting; note this is sorted by decreasing latitude 
-siteYear=unique(data$SiteYear)
+SiteYear <- unique(data$SiteYear)
 
 # Set up data frame of model parameters
 params=c()
 growth=c()
 fruit=c()
 
-#*******************************************************************************
+  #*******************************************************************************
   ### 1A. Survival ###
   #*******************************************************************************
 
   # Read in top survival model output (Formula: Surv ~ logSize + (logSize | Year/Site))
-  surv.reg=load("R_output/surv.reg.rda")
+  surv.reg <- load("data/demography data/surv.reg.rda")
 
   # Store model coefficients
   params$SiteYear=rownames(coefficients(s3)$'Site:Year')
@@ -47,13 +78,14 @@ fruit=c()
   #*******************************************************************************
   
   # Read in top growth model output (Formula: logSizeNext ~ logSize + (logSize|Year/Site))
-  growth.reg=load("R_output/growth.reg.rda")
+  growth.reg <- load("data/demography data/growth.reg.rda")
   
   # Store model coefficients
   growth$SiteYear=rownames(coefficients(g3)$'Site:Year')
   growth$growth.int=coefficients(g3)$'Site:Year'[,1] 
   growth$growth.slope=coefficients(g3)$'Site:Year'[,2] 
-  growth$growth.sd=rep(sigma(g3),times=length(coefficients(g3)$'Site:Year'[,2])) # WARNING! I'M UNCERTAIN THAT THIS IS BEST METHOD!
+  growth$growth.sd=rep(sigma(g3), times=length(coefficients(g3)$'Site:Year'[,2])) 
+  # TO DO: Address Seema's comment about growth.sd: "WARNING! I'M UNCERTAIN THAT THIS IS BEST METHOD!"
   
   # make a data frame
   growth=data.frame(growth)
@@ -62,8 +94,8 @@ fruit=c()
   ### 1C. Flowering ###
   #*******************************************************************************
   
-  # Read in top flowering model output (Formula: Fec0 ~ logSize + (logSize | Site) + (1 | Year) + (logSize | Site:Year))
-  flowering.reg=load("R_output/flowering.reg.rda")
+  # Read in top flowering model output (Formula: Fec0 ~ logSize + (logSize|Year/Site))
+  flowering.reg=load("data/demography data/flowering.reg.rda")
 
   # Store model coefficients
   params$flowering.int=coefficients(fl3)$'Site:Year'[,1] 
@@ -73,69 +105,90 @@ fruit=c()
   ### 1D. Fruit number (untransformed) using negative binomial regression ###
   #*******************************************************************************
   
-  # Read in top model output for fruit.reg (Formula: Fec1 ~ logSize + (logSize | Site) + (logSize | Year) + (1 | Year:Site))   
-  fruit.reg=load("R_output/fruit.reg.rda")
+  # Read in top model output for fruit.reg (Formula: Fec1 ~ logSize + (logSize|Year/Site))   
+  fruit.reg=load("data/demography data/fruit.reg.rda")
 
-  # Store model coefficients (fr6 from glmmTMB)
-  fruit$SiteYear=rownames(ranef(fr6)$cond$'Site:Year')
-  fruit$fruit.int=fixef(fr6)$cond[1]+ranef(fr6)$cond$'Site:Year'[,1] 
-  fruit$fruit.slope=fixef(fr6)$cond[2]+ranef(fr6)$cond$'Site:Year'[,2] 
+  # Store model coefficients (fr3 from glmmTMB)
+  fruit$SiteYear=rownames(ranef(fr3)$cond$'Site:Year')
+  fruit$fruit.int=fixef(fr3)$cond[1]+ranef(fr3)$cond$'Site:Year'[,1] 
+  fruit$fruit.slope=fixef(fr3)$cond[2]+ranef(fr3)$cond$'Site:Year'[,2] 
   
-  # Store model coefficients (fr3 from glmmADMB)
-  # fruit$SiteYear=rownames(ranef(fr3)$'Year:Site')
-  # fruit$fruit.int=fixef(fr3)[1]+ranef(fr3)$'Year:Site'[,1] 
-  # fruit$fruit.slope=fixef(fr3)[2]+ranef(fr3)$'Year:Site'[,2] 
-
-  # make data frame and reverse order of site and year (year should be first)
-  fruit=data.frame(fruit) # %>% separate(SiteYear,c("Site","Year"),":") 
-  
-  # reverse order of site and year (year should be first)
-  # fruit=fruit %>% unite("SiteYear",Year,Site,sep=":")
+  # make data frame
+  fruit=data.frame(fruit) 
   
   #*******************************************************************************
   ### 1E. Size distribution of recruits ###
   #*******************************************************************************
-  recruit.size.mean=tapply(data$logSizeNext[is.na(data$logSize)],data$SiteYear[is.na(data$logSize)],FUN="mean") %>% data.frame()
-  recruit.size.sd=tapply(data$logSizeNext[is.na(data$logSize)],data$SiteYear[is.na(data$logSize)],FUN="sd") %>% data.frame()
   
-  recruit_size=data.frame(rownames(recruit.size.mean),recruit.size.mean,recruit.size.sd)
-  recruit_size=rename(recruit_size,SiteYear="rownames.recruit.size.mean.",recruit.logSize.mean=".",recruit.logSize.sd="..1")
+  # Calculate mean size in year t+1 of plants that were new that year (unmeasured at time t)
+  recruit.size.mean <- tapply(data$logSizeNext[is.na(data$logSize)], data$SiteYear[is.na(data$logSize)], FUN="mean") %>% data.frame()
   
-  recruit_size$recruit.logSize.mean[is.na(recruit_size$recruit.logSize.mean)]=0 # WARNING! MAY NEED TO MODIFY THIS!
-  recruit_size$recruit.logSize.sd[is.na(recruit_size$recruit.logSize.sd)]=0 # WARNING! MAY NEED TO MODIFY THIS!
+  # Calculate st dev of size in year t+1 of plants that were new that year (unmeasured at time t)
+  recruit.size.sd <- tapply(data$logSizeNext[is.na(data$logSize)], data$SiteYear[is.na(data$logSize)], FUN="sd") %>% data.frame()
+  
+  # Assemble mean and sd into same data frame
+  recruit_size <- data.frame(rownames(recruit.size.mean), recruit.size.mean, recruit.size.sd)
+  recruit_size <- rename(recruit_size, SiteYear="rownames.recruit.size.mean.", recruit.logSize.mean=".",recruit.logSize.sd="..1")
+  
+  # Assign 0 values to sites with no recruitment (mean & SD = NA) or only 1 recruit (mean = value but SD= A)
+  recruit_size$recruit.logSize.mean[is.na(recruit_size$recruit.logSize.mean)]=0 
+  recruit_size$recruit.logSize.sd[is.na(recruit_size$recruit.logSize.sd)]=0 
+  # TO DO: Address Seema's comment about assigning 0s: "WARNING! MAY NEED TO MODIFY THIS!"
 
   #*******************************************************************************
   ### 1F. Create data frame of site-specific parameter estimates and join all estimates ###
   #*******************************************************************************
   
-  params=data.frame(params)
-  params=full_join(params,growth) %>% full_join(fruit) %>% full_join(recruit_size)
+  params <- data.frame(params)
+  params <- full_join(params,growth) %>% full_join(fruit) %>% full_join(recruit_size)
   
   #*******************************************************************************
   ### 1G. Number of seeds per fruit ###
   #*******************************************************************************
   
-  seeds.per.site=tapply(data$SeedCt,data$SiteYear,FUN=min,na.rm=T) # obtain mean seed counts per fruit per site
-  seeds.per.site=data.frame(seeds.per.site,rownames(seeds.per.site)) # make into a data frame
-  colnames(seeds.per.site)=c("seed.ct","SiteYear") # define column names for merging
+  # Note: these are site-specific, but not site-by-year-specific, values
+  
+  # obtain mean seed counts per fruit per site
+  seeds.per.site <- data %>% 
+    group_by(Site) %>% 
+    summarize(SeedCt = mean(SeedCt, na.rm=T)) 
+  
+  #seeds.per.site = tapply(data$SeedCt, data$SiteYear, FUN=mean, na.rm=T) 
+  
+  # make into a data frame
+  seeds.per.site <- data.frame(seeds.per.site, rownames(seeds.per.site)) 
+  
+  # define column names for merging
+  colnames(seeds.per.site)=c("seed.ct","SiteYear") 
+  
+  # replace missing values with NA
   seeds.per.site$seed.ct[seeds.per.site$seed.ct=="Inf"]=NA
-  params=merge(params,seeds.per.site,by.x="SiteYear",by.y="SiteYear") # site-specific seed counts but not year-specific; note that this only works because both data frames are ordered in the same way!
-
+  
+  # join seeds per fruit to other parameters
+  params <- left_join(params, seeds.per.site)
+                      
   #*******************************************************************************
   ### 1H. Establishment probability ###
   #*******************************************************************************
   
   # Obtain number of new recruits per site at year = t+1
-  recruit.number=tapply(data$logSizeNext[is.na(data$logSize)],data$SiteYear[is.na(data$logSize)],FUN="length") %>% data.frame()
-  colnames(recruit.number)="recruit.number"
-  
-  # Alternative tidyverse way of obtaining recruit #
-  # recruit.number=data %>% filter(is.na(logSize)&!is.na(logSizeNext)) %>% group_by(SiteYear) %>% summarize(recruit.number=n())
-  
+  recruit.number <- data %>% 
+    dplyr::filter(is.na(logSize)) %>% 
+    group_by(SiteYear) %>% 
+    summarise(recruit.number = n())
+    
   # Obtain total fruit count per site at year = t
-  fruits.per.site=tapply(site_fruit_count_data$Fec1[!is.na(site_fruit_count_data$Fec1)],site_fruit_count_data$SiteYear[!is.na(site_fruit_count_data$Fec1)],sum)
+  fruits.per.site <- site_fruit_count_data %>% 
+    filter(!is.na(Fec1)) %>% 
+    group_by(SiteYear) %>% 
+    summarise(fruits.per.site = sum(Fec1))
   
+  # Join recruit # and fruits per site into one frame
   # Obtain total seed count per site (= # fruits per site * # seeds per fruit per site) at year = t
+  total.seeds.per.site <- full_join(recruit.number, fruits.per.site) %>% full_join(seeds.per.site)
+    mutate(total.seeds.per.site = )
+  
+  # 
   total.seeds.per.site=fruits.per.site*seeds.per.site$seed.ct	
   
   # Estimate establishment probability as # of new recruits at year = t+1/# of seeds at year = t
@@ -147,11 +200,6 @@ fruit=c()
   # Add separate columns for year and site
   params=params %>% separate(SiteYear,c("Site","Year"),":",remove=FALSE)
   
-  # remove rows of parameters with NA
-  params=params[complete.cases(params),]
-  
-  # Store parameters in .csv file for later use
-  #write.csv(params,"R_output/vital_rate_coefficients.csv",row.names=FALSE)
   
 #*******************************************************************************
 ### 2. Create site-specific IPMs parameterized by site-specific parameters derived from global vital rates models 
@@ -160,6 +208,12 @@ fruit=c()
   #*******************************************************************************
   ### 2A. Subset data for site f
   #*******************************************************************************
+  
+  # remove rows of parameters with NA
+  params=params[complete.cases(params),]
+  
+  # Store parameters in .csv file for later use
+  #write.csv(params,"R_output/vital_rate_coefficients.csv",row.names=FALSE)
   
   # remove site x year combinations without parameter estimates
   siteYear=siteYear[siteYear %in% params$SiteYear]
