@@ -46,7 +46,7 @@ site_fruit_count_data$SiteYear = factor(site_fruit_count_data$SiteYear)
 #*******************************************************************************
 
 # Create a vector of unique Site x Year for subsetting; note this is sorted by decreasing latitude 
-SiteYear <- unique(data$SiteYear)
+#SiteYear <- unique(data$SiteYear)
 
 # Set up data frame of model parameters
 params=c()
@@ -145,9 +145,7 @@ fruit=c()
     group_by(Site) %>% 
     summarize(seed.ct = mean(SeedCt, na.rm=T)) 
   
-  seeds.per.site <- left_join(seeds.per.siteyear, seeds.per.site) %>% select(SiteYear, seed.ct)
-  
-  seeds.per.site <- data.frame(seeds.per.site, rownames(seeds.per.site)) 
+  seeds.per.site <- left_join(seeds.per.siteyear, seeds.per.site) %>% dplyr::select(SiteYear, seed.ct)
   
   # join seeds per fruit to other parameters
   params <- left_join(params, seeds.per.site)
@@ -176,8 +174,9 @@ fruit=c()
     replace_na(list(recruit.number=0, fruits.per.site=0)) %>% # assign 0s to sites with no recruitment or no fertility
     # NOTE: Amy added this in 2023. Ok?
     mutate(total.seeds.per.site = fruits.per.site*seed.ct,
-           establishment.prob = ifelse(recruit.number==0, 0, recruit.number/total.seeds.per.site)) 
-    # TO DO: there are a handful of site-years where recruit.number>0 but fruits.per.site=0, resulting in Inf for establishment.prob. Since establishment is non-zero in these site-years, we need a reasonable number for fruits.per.site. Ideas: (a) replace fruits.per.site with mean across other years or (b) replace fruits.per.site with value of 1 because fecundity was very low that year?
+           establishment.prob = ifelse(recruit.number==0, 0, 
+                                  ifelse(recruit.number>0 & fruits.per.site==0, recruit.number/seed.ct,                                          recruit.number/total.seeds.per.site))) 
+    # TO DO: there are a handful of site-years where recruit.number>0 but fruits.per.site=0, resulting in Inf for establishment.prob. Since establishment is non-zero in these site-years, we need a reasonable number for fruits.per.site. Ideas: (a) replace fruits.per.site with mean across other years or (b) replace fruits.per.site with value of 1 because fecundity was very low that year? Currently using (b)
   
   # Join with params frame
     params <- left_join(params, establishment)
@@ -196,27 +195,27 @@ fruit=c()
   ### 2A. Subset data for site f
   #*******************************************************************************
   
-  # remove rows of parameters with NA
+  # Remove rows of parameters with NA
   params <- params[complete.cases(params), ]
   
   
-  # remove site x year combinations without parameter estimates
-  siteYear=siteYear[siteYear %in% params$SiteYear]
+  # Remove site x year combinations without parameter estimates
+  siteYear <- params$SiteYear
   
-  # create empty vectors for lambda and site to be filled
+  # Create empty vectors for lambda and site to be filled
   lambda=c()
   SiteYear=character()
   
   for (f in 1:length(siteYear)) {
-    data1=subset(data,SiteYear==siteYear[f])
-    params1=subset(params,SiteYear==siteYear[f])
-    params1=subset(params1,select=-SiteYear)
+    data1 = subset(data, SiteYear==siteYear[f])
+    params1 = subset(params, SiteYear==siteYear[f])
+    params1 = subset(params1, select=-SiteYear)
     
     #*******************************************************************************
     ### 2B. Create survival, growth, and fecundity functions and build IPM by running integral_projection_model.R script
     #*******************************************************************************
     
-    source("R_scripts/integral_projection_model.R")
+    source("scripts/demography scripts/integral_projection_model.R")
     
     #*******************************************************************************
     ### 2C. Obtain lambda estimate for site f
@@ -233,22 +232,119 @@ fruit=c()
 ### 3. Merge site information with lambda estimates and save to .csv file
 #*******************************************************************************
 
-# Create data frame of Site, Latitude, Longitude, Region, and Elevation for hypothesis testing
-site.info=subset(data,select=c(Site,Year,SiteYear,Latitude,Longitude,Elevation,Region,RegionRank)) %>% unique() %>% arrange(-Latitude)
+# Create data frame of Site, Latitude, Longitude, Region, and Elevation 
+site.info <- subset(data, select=c(Site,Year,SiteYear,Latitude,Longitude,Elevation,Region,RegionRank)) %>% unique() %>% arrange(-Latitude)
     
-# merge site info with lambda estimates
-site.info=join(site.info,siteYear.lambda)
+# Merge site info with lambda estimates
+site.info <- full_join(site.info, siteYear.lambda)
 
-# Manually add lambda = 0 for Hauser Creek in 2012 & 2013
-Hauser=filter(site.info,Site=="Hauser Creek"&Year==2011)
+# How many site-year combos are possible? 
+21*6 #126
+focal.sites <- c(rep("Coast Fork of Williamette",6),
+                 rep("Canton Creek",6),
+                 rep("Rock Creek",6),
+                 rep("Deer Creek",6),
+                 rep("O'Neil Creek",6),
+                 rep("Deep Creek",6),
+                 rep("Little Jameson Creek",6),
+                 rep("Oregon Creek",6),
+                 rep("Rainbow Pool",6),
+                 rep("Carlon",6),
+                 rep("Buck Meadows",6),
+                 rep("Wawona",6),
+                 rep("Redwood Creek",6),
+                 rep("North Fork Middle Fork Tule",6),
+                 rep("South Fork Middle Fork Tule",6),
+                 rep("West Fork Mojave River",6),
+                 rep("Mill Creek",6),
+                 rep("Whitewater Canyon",6),
+                 rep("Sweetwater River",6),
+                 rep("Kitchen Creek",6),
+                 rep("Hauser Creek",6)) 
+years <- rep(c("2010","2011","2012","2013","2014","2015"), 21) 
+
+site.years.max <- as.data.frame(cbind(focal.sites, years)) %>% mutate(SiteYear = paste(focal.sites,":", years, sep="")) %>% dplyr::select(SiteYear)
+
+# How many site-years have some observed data but are missing lambda estimates?
+length(unique(data$SiteYear)) #106
+site.years.obs <- as.data.frame(unique(data$SiteYear))
+colnames(site.years.obs) = "SiteYear"
+   
+# Which are missing, and why?
+missing.site.years <- anti_join(site.years.max, site.years.obs)
+
+# Deer Creek:2010 --> site established in 2011; this is a real NA
+# Mill Creek:2013 --> site inaccessible in 2014 due to flood; this is a real NA
+### TO DO: Figure out why Mill Creek:2014 doesn't show up on this scan for inestimable site-years
+# Note: Mill Creek:2014 has lambda=NA in site.info file
+# South Fork Middle Fork Tule:2010 --> site inaccessible in 2011; this is a real NA
+# South Fork Middle Fork Tule:2011 --> site inaccessible in 2011; this is a real NA
+# Carlon:2012 --> site inaccessible in 2013 due to fire; this is a real NA
+# Carlon:2013 --> site inaccessible in 2013 due to fire; this is a real NA
+# Rainbow Pool:2012 --> site inaccessible in 2013 due to fire; this is a real NA
+# Rainbow Pool:2013 --> site inaccessible in 2013 due to fire; this is a real NA
+# Buck Meadows:2012 --> site inaccessible in 2013 due to fire; this is a real NA
+# Buck Meadows:2013 --> site inaccessible in 2013 due to fire; this is a real NA
+# Rock Creek:2012 --> 2013 data folder lost; this is a real NA 
+# Rock Creek:2013 --> 2013 data folder lost; this is a real NA 
+
+# Redwood Creek:2015
+
+# Sites visited but no plants --> manually set lambda=0
+# Hauser Creek:2012
+# Hauser Creek:2013
+# Hauser Creek:2014
+# Hauser Creek:2015
+# Kitchen Creek:2014
+# Kitchen Creek:2015
+# Whitewater Canyon:2015
+
+Hauser=filter(site.info, Site=="Hauser Creek" & Year==2011)
 Hauser$Year=2012 %>% factor()
 Hauser$SiteYear="Hauser Creek:2012" %>% factor()
 Hauser$lambda=0
-site.info=bind_rows(site.info,Hauser) 
+site.info=bind_rows(site.info, Hauser) 
 Hauser$Year=2013 %>% factor()
 Hauser$SiteYear="Hauser Creek:2013" %>% factor()
 Hauser$lambda=0
-site.info=bind_rows(site.info,Hauser) %>% mutate(Year=factor(Year),SiteYear=factor(SiteYear))
+site.info=bind_rows(site.info, Hauser) 
+Hauser$Year=2014 %>% factor()
+Hauser$SiteYear="Hauser Creek:2014" %>% factor()
+Hauser$lambda=0
+site.info=bind_rows(site.info, Hauser) 
+Hauser$Year=2015 %>% factor()
+Hauser$SiteYear="Hauser Creek:2015" %>% factor()
+Hauser$lambda=0
+site.info=bind_rows(site.info, Hauser) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
+Kitchen=filter(site.info, Site=="Kitchen Creek" & Year==2013)
+Kitchen$Year=2014 %>% factor()
+Kitchen$SiteYear="Kitchen Creek:2014" %>% factor()
+Kitchen$lambda=0
+site.info=bind_rows(site.info, Kitchen) 
+Kitchen$Year=2015 %>% factor()
+Kitchen$SiteYear="Kitchen Creek:2015" %>% factor()
+Kitchen$lambda=0
+site.info=bind_rows(site.info, Kitchen) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
+Whitewater=filter(site.info, Site=="Whitewater Canyon" & Year==2014)
+Whitewater$Year=2015 %>% factor()
+Whitewater$SiteYear="Whitewater Canyon:2015" %>% factor()
+Whitewater$lambda=0
+site.info=bind_rows(site.info, Whitewater) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
+
+# Which sites have lambda=NA, and why?
+lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::select(SiteYear)
+
+# Coast Fork of Willamette:2012
+# Canton Creek:2011
+# West Fork Mojave River:2013
+# Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; keep as NA
+# Mill Creek:2014 --> site not visited in 2013, so this makes sense; keep as NA
+# Whitewater Canyon:2014 --> all plants died, so set lambda to 0
+site.info$lambda[site.info$SiteYear=="Whitewater Canyon:2014"] = 0
+# Kitchen Creek:2013 --> only remaining plant died, so set lambda to 0
+site.info$lambda[site.info$SiteYear=="Kitchen Creek:2013"] = 0
+# Hauser Creek:2011 --> all plants dead on plots 1-2, many plants on plot 3 but individuals indistinguishable; keep as NA
+
 
 # view final data frame
 str(site.info)
