@@ -4,8 +4,11 @@
 #### DATE LAST MODIFIED: 20230202
 
 #*******************************************************************************
-#### 1. Load required packages
+#### 1. Clean worspace and load required packages
 #*******************************************************************************
+
+# Remove objects and clear workspace
+rm(list = ls(all=TRUE))
 
 # Easy code for installing packages in R (if not installed) and calling their libraries
 # From: https://gist.github.com/DrK-Lo/a945a29d6606b899022d0f03109b9483
@@ -150,8 +153,30 @@ data$SiteYear = paste(data$Site, data$Year, sep=":") %>% factor()
 #### 3. Remove unwanted data
 #*******************************************************************************
 
-# Remove plants that do not have site info
-data <- filter(data, Site!="") 
+# Remove sites that were not monitored after 2014; retain focal 21 populations
+focal.sites <- c("Coast Fork of Williamette",
+                 "Canton Creek",
+                 "Rock Creek",
+                 "Deer Creek",
+                 "O'Neil Creek",
+                 "Deep Creek",
+                 "Little Jameson Creek",
+                 "Oregon Creek",
+                 "Rainbow Pool",
+                 "Carlon",
+                 "Buck Meadows",
+                 "Wawona",
+                 "Redwood Creek",
+                 "North Fork Middle Fork Tule",
+                 "South Fork Middle Fork Tule",
+                 "West Fork Mojave River",
+                 "Mill Creek",
+                 "Whitewater Canyon",
+                 "Sweetwater River",
+                 "Kitchen Creek",
+                 "Hauser Creek")
+
+data <- data %>% filter(Site %in% focal.sites) %>% droplevels()
 
 # Remove plants that were dead at time t (Class=="D") 
 data <- subset(data, Class!="D" | is.na(Class))
