@@ -270,7 +270,7 @@ length(unique(data$SiteYear)) #106
 site.years.obs <- as.data.frame(unique(data$SiteYear))
 colnames(site.years.obs) = "SiteYear"
    
-# Which are missing, and why?
+# Which site-years are missing, and why?
 missing.site.years <- anti_join(site.years.max, site.years.obs)
 
 # Deer Creek:2010 --> site established in 2011; this is a real NA
@@ -287,56 +287,58 @@ missing.site.years <- anti_join(site.years.max, site.years.obs)
 # Buck Meadows:2013 --> site inaccessible in 2013 due to fire; this is a real NA
 # Rock Creek:2012 --> 2013 data folder lost; this is a real NA 
 # Rock Creek:2013 --> 2013 data folder lost; this is a real NA 
-
-# Redwood Creek:2015
-
-# Sites visited but no plants --> manually set lambda=0
-# Hauser Creek:2012
-# Hauser Creek:2013
-# Hauser Creek:2014
-# Hauser Creek:2015
-# Kitchen Creek:2014
-# Kitchen Creek:2015
-# Whitewater Canyon:2015
-
+# Redwood Creek:2015 --> site inaccessible in 2016 due to fire; this is a real NA
+# Hauser Creek:2012 --> sites visited but no plants --> manually set lambda=0
 Hauser=filter(site.info, Site=="Hauser Creek" & Year==2011)
 Hauser$Year=2012 %>% factor()
 Hauser$SiteYear="Hauser Creek:2012" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) 
+# Hauser Creek:2013 --> sites visited but no plants --> manually set lambda=0
 Hauser$Year=2013 %>% factor()
 Hauser$SiteYear="Hauser Creek:2013" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) 
+# Hauser Creek:2014 --> sites visited but no plants --> manually set lambda=0
 Hauser$Year=2014 %>% factor()
 Hauser$SiteYear="Hauser Creek:2014" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) 
+# Hauser Creek:2015 --> sites visited but no plants --> manually set lambda=0
 Hauser$Year=2015 %>% factor()
 Hauser$SiteYear="Hauser Creek:2015" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
+# Kitchen Creek:2014 --> sites visited but no plants --> manually set lambda=0
 Kitchen=filter(site.info, Site=="Kitchen Creek" & Year==2013)
 Kitchen$Year=2014 %>% factor()
 Kitchen$SiteYear="Kitchen Creek:2014" %>% factor()
 Kitchen$lambda=0
 site.info=bind_rows(site.info, Kitchen) 
+# Kitchen Creek:2015 --> sites visited but no plants --> manually set lambda=0
 Kitchen$Year=2015 %>% factor()
 Kitchen$SiteYear="Kitchen Creek:2015" %>% factor()
 Kitchen$lambda=0
 site.info=bind_rows(site.info, Kitchen) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
+# Whitewater Canyon:2015 --> sites visited but no plants --> manually set lambda=0
 Whitewater=filter(site.info, Site=="Whitewater Canyon" & Year==2014)
 Whitewater$Year=2015 %>% factor()
 Whitewater$SiteYear="Whitewater Canyon:2015" %>% factor()
 Whitewater$lambda=0
 site.info=bind_rows(site.info, Whitewater) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
 
-# Which sites have lambda=NA, and why?
+# Which site-years have lambda=NA, and why?
 lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::select(SiteYear)
 
-# Coast Fork of Willamette:2012
-# Canton Creek:2011
-# West Fork Mojave River:2013
+# Coast Fork of Willamette:2012 -->  good data in 2012 and 2013 
+### TO DO: Figure out why this site is incalculable! It must be getting dropped when we cull params to complete cases, so perhaps missing model coefficients for some vital rates?
+
+# Canton Creek:2011 --> good data in 2011 and 2012
+### TO DO: Figure out why this site is incalculable! It must be getting dropped when we cull params to complete cases, so perhaps missing model coefficients for some vital rates?
+
+# West Fork Mojave River:2013 --> existing plots 1-5 all dead, so set lambda to 0. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013.
+site.info$lambda[site.info$SiteYear=="West Fork Mojave River:2013"] = 0
+### TO DO: decide if this is the right choice, because the entire site was not dead as at Hauser, Kitchen, Whitewater. 
 # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; keep as NA
 # Mill Creek:2014 --> site not visited in 2013, so this makes sense; keep as NA
 # Whitewater Canyon:2014 --> all plants died, so set lambda to 0
