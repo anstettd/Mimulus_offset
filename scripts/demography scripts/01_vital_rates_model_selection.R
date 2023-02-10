@@ -67,6 +67,7 @@ anova(s3, s4, s5, s6)
 model.sel(s3, s4, s5, s6) 
 
 # PREFERRED MODEL IS s3, despite singularity
+# TO DO ***High priority*** determine if it is ok to proceed with this as top model despite singularity. This is the case for all vital rate functions.
 r.squaredGLMM(s3) 
 
 # Save top survival model to .rda file
@@ -161,13 +162,11 @@ model.sel(fr1_glm, fr2_glm, fr3_glm, fr4_glm)
 	   
 # PREFERRED MODEL IS fr2 (negative binomial w/out 0-inflation)
 
-# fixed effects model w/ and w/out size
+# Fixed effects model w/ and w/out size
 fr5_glm <- glm.nb(Fec1 ~ 1, data=data, na.action=na.omit)
 model.sel(fr2_glm, fr5_glm) # model w/ size is preferred
 	  	
 ##6B. Model selection of random effects structure
-# NOTE: when I ran same models with glmmadmb() function and family="poisson" none of the models except for fr4 converged
-# NOTE: I also ran same models with glmer.nb; computationally faster but less widely used in literature
 
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (nested within Year)
