@@ -375,9 +375,15 @@ site.info <- site.info %>%
 
 all <- left_join(site.info, old.lambda)
 
-ggplot(data=all, aes(x=lambda, y=lambda.old)) +
-         geom_point()
+ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
+         geom_point() + geom_text()
 
-ggplot(data=all, aes(x=lambda)) +
-  geom_histogram(color="blue", alpha=0.5) +
-  geom_histogram(aes(x=lambda.old), color="orange", alpha=0.5)
+ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
+  geom_point() + geom_text() + geom_abline(x=y)
+
+ggplot(data=all, aes(x=lambda, y=lambda.old, label=Year)) +
+  geom_point() + geom_text() + xlim(0,5) + ylim(0,10) + geom_abline(x=y)
+# mostly close to 1:1 line, but some high lambdas are pretty divergent, even for early transitions where input data were not changed
+# why are they differing? are global models are sensitive to cleaning of 2014-15 and 2015-16 data? are fruit models in glmmTMB that different from glmmADMB?
+
+
