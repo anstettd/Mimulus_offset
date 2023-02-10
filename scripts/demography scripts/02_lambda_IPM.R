@@ -165,8 +165,8 @@ fruit=c()
     summarise(fruits.per.site = sum(Fec1))
   
   # Join recruit # and fruits per site into one frame
-  # Obtain total seed count per site (= # fruits per site * # seeds per fruit per site) at year = t
-  # Obtain establishment probability as # of new recruits at year = t+1/# of seeds at year = t
+  # Obtain total seed count per site (= # fruits per site at year t * # seeds per fruit per site)
+  # Obtain establishment probability (= # of new recruits at year t+1/total seed count per site at year t)
   establishment <- full_join(recruit.number, fruits.per.site) %>% full_join(seeds.per.site) %>% 
     replace_na(list(recruit.number=0, fruits.per.site=0)) %>% # assign 0s to sites with no recruitment or no fertility
     # NOTE: Amy added this in 2023. Ok?
