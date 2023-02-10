@@ -195,15 +195,15 @@ fruit=c()
   # Which site-years are missing parameter estimates?
   params.missing <- params[!complete.cases(params),]
   params.missing$SiteYear
-    # Coast Fork of Willamette:2012 --> no fruits in 2012 so fruit slopes & intercepts are inestimable 
-    # Canton Creek:2011 --> growth slopes, intercepts, and sd are inestimable
+  # Canton Creek:2011 --> growth slopes, intercepts, and sd are inestimable; lambda is NA
+  # Coast Fork of Willamette:2012 --> no fruits in 2012 so fruit slopes & intercepts are inestimable; lambda is NA
     # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013.
     ### TO DO: decide if this should be kept as NA, because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants die)
-    # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; keep as NA
-    # Mill Creek:2014 --> site not visited in 2013, so this makes sense; keep as NA
+    # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; lambda is NA
+    # Mill Creek:2014 --> site not visited in 2013, so this makes sense; lambda is NA
     # Whitewater Canyon:2014 --> all plants died, so set lambda to 0 down below
     # Kitchen Creek:2013 --> only remaining plant died, so set lambda to 0 down below
-    # Hauser Creek:2011 --> all plants dead on plots 1-2, many plants on plot 3 but individuals indistinguishable; keep as NA
+    # Hauser Creek:2011 --> all plants dead on plots 1-2, but many plants on plot 3 that were  indistinguishable from one another; lambda is NA
   
   # Remove rows of parameters with NA
   params <- params[complete.cases(params), ]
@@ -283,21 +283,38 @@ colnames(site.years.obs) = "SiteYear"
 # Which site-years are missing, and why?
 missing.site.years <- anti_join(site.years.max, site.years.obs)
 
+# Rock Creek:2012 --> 2013 data folder lost; this is a real NA 
+# Rock Creek:2013 --> 2013 data folder lost; this is a real NA 
 # Deer Creek:2010 --> site established in 2011; this is a real NA
+# Rainbow Pool:2012 --> site inaccessible in 2013 due to fire; this is a real NA
+# Rainbow Pool:2013 --> site inaccessible in 2013 due to fire; this is a real NA
+# Carlon:2012 --> site inaccessible in 2013 due to fire; this is a real NA
+# Carlon:2013 --> site inaccessible in 2013 due to fire; this is a real NA
+# Buck Meadows:2012 --> site inaccessible in 2013 due to fire; this is a real NA
+# Buck Meadows:2013 --> site inaccessible in 2013 due to fire; this is a real NA
+# Redwood Creek:2015 --> site inaccessible in 2016 due to fire; this is a real NA
+# South Fork Middle Fork Tule:2010 --> site inaccessible in 2011; this is a real NA
+# South Fork Middle Fork Tule:2011 --> site inaccessible in 2011; this is a real NA
 # Mill Creek:2013 --> site inaccessible in 2014 due to flood; this is a real NA
 ### TO DO: Figure out why Mill Creek:2014 doesn't show up on this scan for inestimable site-years
 # Note: Mill Creek:2014 has lambda=NA in site.info file
-# South Fork Middle Fork Tule:2010 --> site inaccessible in 2011; this is a real NA
-# South Fork Middle Fork Tule:2011 --> site inaccessible in 2011; this is a real NA
-# Carlon:2012 --> site inaccessible in 2013 due to fire; this is a real NA
-# Carlon:2013 --> site inaccessible in 2013 due to fire; this is a real NA
-# Rainbow Pool:2012 --> site inaccessible in 2013 due to fire; this is a real NA
-# Rainbow Pool:2013 --> site inaccessible in 2013 due to fire; this is a real NA
-# Buck Meadows:2012 --> site inaccessible in 2013 due to fire; this is a real NA
-# Buck Meadows:2013 --> site inaccessible in 2013 due to fire; this is a real NA
-# Rock Creek:2012 --> 2013 data folder lost; this is a real NA 
-# Rock Creek:2013 --> 2013 data folder lost; this is a real NA 
-# Redwood Creek:2015 --> site inaccessible in 2016 due to fire; this is a real NA
+# Whitewater Canyon:2015 --> sites visited but no plants --> manually set lambda=0
+Whitewater=filter(site.info, Site=="Whitewater Canyon" & Year==2014)
+Whitewater$Year=2015 %>% factor()
+Whitewater$SiteYear="Whitewater Canyon:2015" %>% factor()
+Whitewater$lambda=0
+site.info=bind_rows(site.info, Whitewater) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
+# Kitchen Creek:2014 --> sites visited but no plants --> manually set lambda=0
+Kitchen=filter(site.info, Site=="Kitchen Creek" & Year==2013)
+Kitchen$Year=2014 %>% factor()
+Kitchen$SiteYear="Kitchen Creek:2014" %>% factor()
+Kitchen$lambda=0
+site.info=bind_rows(site.info, Kitchen) 
+# Kitchen Creek:2015 --> sites visited but no plants --> manually set lambda=0
+Kitchen$Year=2015 %>% factor()
+Kitchen$SiteYear="Kitchen Creek:2015" %>% factor()
+Kitchen$lambda=0
+site.info=bind_rows(site.info, Kitchen) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
 # Hauser Creek:2012 --> sites visited but no plants --> manually set lambda=0
 Hauser=filter(site.info, Site=="Hauser Creek" & Year==2011)
 Hauser$Year=2012 %>% factor()
@@ -319,23 +336,6 @@ Hauser$Year=2015 %>% factor()
 Hauser$SiteYear="Hauser Creek:2015" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
-# Kitchen Creek:2014 --> sites visited but no plants --> manually set lambda=0
-Kitchen=filter(site.info, Site=="Kitchen Creek" & Year==2013)
-Kitchen$Year=2014 %>% factor()
-Kitchen$SiteYear="Kitchen Creek:2014" %>% factor()
-Kitchen$lambda=0
-site.info=bind_rows(site.info, Kitchen) 
-# Kitchen Creek:2015 --> sites visited but no plants --> manually set lambda=0
-Kitchen$Year=2015 %>% factor()
-Kitchen$SiteYear="Kitchen Creek:2015" %>% factor()
-Kitchen$lambda=0
-site.info=bind_rows(site.info, Kitchen) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
-# Whitewater Canyon:2015 --> sites visited but no plants --> manually set lambda=0
-Whitewater=filter(site.info, Site=="Whitewater Canyon" & Year==2014)
-Whitewater$Year=2015 %>% factor()
-Whitewater$SiteYear="Whitewater Canyon:2015" %>% factor()
-Whitewater$lambda=0
-site.info=bind_rows(site.info, Whitewater) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
 
 # Which site-years have lambda=NA, and why?
 lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::select(SiteYear)
