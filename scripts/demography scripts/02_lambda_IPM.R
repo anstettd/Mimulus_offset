@@ -45,9 +45,6 @@ site_fruit_count_data$SiteYear = factor(site_fruit_count_data$SiteYear)
 #### 1. Create global survival, growth and fecundity models using data from all sites ###
 #*******************************************************************************
 
-# Create a vector of unique Site x Year for subsetting; note this is sorted by decreasing latitude 
-#SiteYear <- unique(data$SiteYear)
-
 # Set up data frame of model parameters
 params=c()
 growth=c()
