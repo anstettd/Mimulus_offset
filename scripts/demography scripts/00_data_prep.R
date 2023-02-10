@@ -105,20 +105,18 @@ data_2014.2016 <- data_2014.2016 %>%
                            ifelse(str_detect(OtherNotesPY, "part of"), 1,       
                                 0))))))))))))))))) 
 # Note: this is lacking level 2 (=maybe), so is possibly more restrictive than 2010-14 filter
-# TO DO: Inspect resulting data frame to make sure this is working as expected
-# TO DO: repeat this automatic coding for 2010-2014 as a sensitivity analysis
+# TO DO: Repeat this automatic coding for 2010-2014 as a sensitivity analysis
 
 # Add 'NotARecruit' column
 data_2014.2016 <- data_2014.2016 %>% 
-  mutate(NotARecruit = ifelse(str_detect(OtherNotesCY, "old"), 2, 
+  mutate(NotARecruit = ifelse(!is.na(Size), NA, 
+                       ifelse(str_detect(OtherNotesCY, "old"), 2, 
                        ifelse(str_detect(OtherNotesCY, "Old"), 2,
                        ifelse(str_detect(OtherNotesCY, "missed"), 2,
                        ifelse(str_detect(OtherNotesCY, "14?"), 2, 
                        ifelse(str_detect(OtherNotesCY, "15?"), 2, 
-                       ifelse(!is.na(Size), NA, 
                        ifelse(NewPlot_CY==TRUE, 1, 0))))))))
-# TO DO: Consult other queries (e.g., skipped in, exclusion areas) to identify rows that should be coded as level 1
-# TO DO: Inspect resulting data frame to make sure this is working as expected
+# TO DO ***HIGH PRIORITY***: Consult other queries (e.g., skipped in, exclusion areas) to identify rows that should be coded as level 1
 # Note: this is lacking level 3 (=size range of other recruits), which is not reliable
 
 # Create columns of log-transformed sizes
