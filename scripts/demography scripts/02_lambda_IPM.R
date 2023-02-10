@@ -195,6 +195,19 @@ fruit=c()
   ### 2A. Subset data for site f
   #*******************************************************************************
   
+  # Which site-years are missing parameter estimates?
+  params.missing <- params[!complete.cases(params),]
+  params.missing$SiteYear
+    # Coast Fork of Willamette:2012 --> no fruits in 2012 so fruit slopes & intercepts are inestimable 
+    # Canton Creek:2011 --> growth slopes, intercepts, and sd are inestimable
+    # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013.
+    ### TO DO: decide if this should be kept as NA, because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants die)
+    # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; keep as NA
+    # Mill Creek:2014 --> site not visited in 2013, so this makes sense; keep as NA
+    # Whitewater Canyon:2014 --> all plants died, so set lambda to 0 down below
+    # Kitchen Creek:2013 --> only remaining plant died, so set lambda to 0 down below
+    # Hauser Creek:2011 --> all plants dead on plots 1-2, many plants on plot 3 but individuals indistinguishable; keep as NA
+  
   # Remove rows of parameters with NA
   params <- params[complete.cases(params), ]
   
@@ -329,24 +342,19 @@ site.info=bind_rows(site.info, Whitewater) %>% mutate(Year=factor(Year), SiteYea
 
 # Which site-years have lambda=NA, and why?
 lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::select(SiteYear)
+# Note: these are the same as the site-years identified as having incomplete cases above
 
-# Coast Fork of Willamette:2012 -->  good data in 2012 and 2013 
-### TO DO: Figure out why this site is incalculable! It must be getting dropped when we cull params to complete cases, so perhaps missing model coefficients for some vital rates?
-
-# Canton Creek:2011 --> good data in 2011 and 2012
-### TO DO: Figure out why this site is incalculable! It must be getting dropped when we cull params to complete cases, so perhaps missing model coefficients for some vital rates?
-
-# West Fork Mojave River:2013 --> existing plots 1-5 all dead, so set lambda to 0. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013.
-site.info$lambda[site.info$SiteYear=="West Fork Mojave River:2013"] = 0
-### TO DO: decide if this is the right choice, because the entire site was not dead as at Hauser, Kitchen, Whitewater. 
+# Coast Fork of Willamette:2012 --> no fruits in 2012 so fruit slopes & intercepts are inestimable 
+# Canton Creek:2011 --> growth slopes, intercepts, and sd are inestimable
+# West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013.
+### TO DO: decide if this should be kept as NA, because the entire site was not dead as at Hauser, Kitchen, Whitewater
 # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; keep as NA
 # Mill Creek:2014 --> site not visited in 2013, so this makes sense; keep as NA
-# Whitewater Canyon:2014 --> all plants died, so set lambda to 0
+# Whitewater Canyon:2014 --> all plants died, so set lambda to 0 
 site.info$lambda[site.info$SiteYear=="Whitewater Canyon:2014"] = 0
-# Kitchen Creek:2013 --> only remaining plant died, so set lambda to 0
+# Kitchen Creek:2013 --> only remaining plant died, so set lambda to 0 
 site.info$lambda[site.info$SiteYear=="Kitchen Creek:2013"] = 0
 # Hauser Creek:2011 --> all plants dead on plots 1-2, many plants on plot 3 but individuals indistinguishable; keep as NA
-
 
 # view final data frame
 str(site.info)
