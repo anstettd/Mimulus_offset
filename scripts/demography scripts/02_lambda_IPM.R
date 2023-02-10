@@ -373,14 +373,14 @@ site.info <- site.info %>%
 all <- left_join(site.info, old.lambda)
 
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
-         geom_point() + geom_text()
-
-ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + geom_abline(x=y)
+# TO DO ***High priority***: figure out why Buck Meadows:2015 and Mill Creek:2015 have such abnormally high lambdas in this newer estimate
+# Buck Meadows:2015 had only 2 fruits but >400 recruits, so establishment probably (which is a transition to which lambda is especially sensitive) was incredibly high. But, unclear why this would change in cleaned data, since even problematic large plants go into site fruit count denominator and cleaning should only reduce recruit # in the numerator
+# Mill Creek:2015 has second-highest establishment probability for reasons similar to Buck:2015. Again, unclear why this becomes so high after cleaning.
 
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=Year)) +
   geom_point() + geom_text() + xlim(0,5) + ylim(0,10) + geom_abline(x=y)
-# mostly close to 1:1 line, but some high lambdas are pretty divergent, even for early transitions where input data were not changed
-# why are they differing? are global models are sensitive to cleaning of 2014-15 and 2015-16 data? are fruit models in glmmTMB that different from glmmADMB?
+# mostly close to 1:1 line, but some higher lambdas are pretty divergent, even for early transitions where input data were not changed
+# TO DO ***High priority*** Figure out why are they differing. Are global models are sensitive to cleaning of 2014-15 and 2015-16 data? Are fruit models in glmmTMB that different from glmmADMB?
 
 
