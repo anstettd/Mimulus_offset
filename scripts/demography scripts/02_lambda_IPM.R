@@ -360,6 +360,6 @@ site.info$lambda[site.info$SiteYear=="Kitchen Creek:2013"] = 0
 str(site.info)
 
 # save to .csv file 
-write.csv(site.info,"R_output/siteYear.lambda_2010-2016.csv",row.names=FALSE)
+write.csv(site.info,"data/demography data/siteYear.lambda_2010-2016.csv",row.names=FALSE)
 
 
