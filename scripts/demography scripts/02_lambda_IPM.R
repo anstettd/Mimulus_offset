@@ -378,9 +378,16 @@ ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
 # Buck Meadows:2015 had only 2 fruits but >400 recruits, so establishment probably (which is a transition to which lambda is especially sensitive) was incredibly high. But, unclear why this would change in cleaned data, since even problematic large plants go into site fruit count denominator and cleaning should only reduce recruit # in the numerator
 # Mill Creek:2015 has second-highest establishment probability for reasons similar to Buck:2015. Again, unclear why this becomes so high after cleaning.
 
-ggplot(data=all, aes(x=lambda, y=lambda.old, label=Year)) +
+ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(0,5) + ylim(0,10) + geom_abline(x=y)
-# mostly close to 1:1 line, but some higher lambdas are pretty divergent, even for early transitions where input data were not changed
-# TO DO ***High priority*** Figure out why are they differing. Are global models are sensitive to cleaning of 2014-15 and 2015-16 data? Are fruit models in glmmTMB that different from glmmADMB?
+# Note: mostly close to 1:1 line, but some higher lambdas are pretty divergent, even for early transitions where input data were not changed
+# Note: lambdas from earlier years seem to have shrunk, while lambdas from later years seem to have increased relative to the older estimates. I expected that lambdas from earlier years should stay unchanged, while lambdas from later years should shrink with data cleaning to remove immortal non-individuals and large new plants that are not actually new recruits.
+# TO DO ***High priority*** Figure out what is causing these unexpected and sometimes large differences. Are global models are sensitive to cleaning of 2014-15 and 2015-16 data? Are fruit models in glmmTMB that different from glmmADMB?
+# Priorities for checking:
+# Deer Creek:2013
+# Coast Fork Willamette:2011
+# O'Neil Creek:2015
+# South Fork Tule:2015
+# West Fork Mojave:2015
 
 
