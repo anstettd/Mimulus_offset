@@ -356,10 +356,28 @@ site.info$lambda[site.info$SiteYear=="Whitewater Canyon:2014"] = 0
 site.info$lambda[site.info$SiteYear=="Kitchen Creek:2013"] = 0
 # Hauser Creek:2011 --> all plants dead on plots 1-2, many plants on plot 3 but individuals indistinguishable; keep as NA
 
-# view final data frame
+# View final data frame
 str(site.info)
 
-# save to .csv file 
+# Save to .csv file 
 write.csv(site.info,"data/demography data/siteYear.lambda_2010-2016.csv",row.names=FALSE)
 
+#*******************************************************************************
+### 4. Compare to preliminary estimates 
+#*******************************************************************************
+# 
+old.lambda <- read.csv("data/demography data/siteYear.lambda_2010-2016_old.csv") %>% 
+  dplyr::select(SiteYear, lambda.old=lambda)
+# Note: this file is copied in from demography_analyses repo
 
+site.info <- site.info %>% 
+  mutate(SiteYear = gsub(" ", "", SiteYear))
+
+all <- left_join(site.info, old.lambda)
+
+ggplot(data=all, aes(x=lambda, y=lambda.old)) +
+         geom_point()
+
+ggplot(data=all, aes(x=lambda)) +
+  geom_histogram(color="blue", alpha=0.5) +
+  geom_histogram(aes(x=lambda.old), color="orange", alpha=0.5)
