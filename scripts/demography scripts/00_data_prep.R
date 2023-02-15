@@ -1,10 +1,10 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Tidy raw demographic vital rate data in preparation for IPM analyses 
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230202
+#### DATE LAST MODIFIED: 20230215
 
 #*******************************************************************************
-#### 1. Clean worspace and load required packages
+#### 1. Clean workspace and load required packages
 #*******************************************************************************
 
 # Remove objects and clear workspace
@@ -194,10 +194,6 @@ data <- subset(data, !(!is.na(Class) & is.na(Surv)))
 
 # Make Fec1 numeric and round fruit # to nearest integer
 data$Fec1 <- round(as.numeric(data$Fec1, digits=0)) 
-
-# Remove data where fruit # has errors resulting from 0s in denominator
-data <- subset(data, Fec1 != "#Num!" | Fec1 != "#Div/0!" | is.na(Fec1)) 
-# TO DO: Remove? I think this is unnecessary because they are forced to NA by conversion to numeric.
 
 # Only include seed counts for plants that produced at least one fruit
 data$SeedCt[data$Fec1 < 1 | is.na(data$Fec1)]=NA

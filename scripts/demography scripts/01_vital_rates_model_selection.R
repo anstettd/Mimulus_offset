@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Perform model selection for each vital rate for subsequent use in IPMs
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230207
+#### DATE LAST MODIFIED: 20230215
 
 #*******************************************************************************
 #### 0. Clean workspace and load required packages
@@ -11,16 +11,14 @@
 rm(list = ls(all=TRUE))
 
 # Make vector of packages needed
-packages_needed <- c("lme4", "MuMIn", "MASS", "pscl", "tidyverse", "glmmTMB", "bbmle", "R2admb") #"glmmADMB"
-# NOTE: glmmADMB is not available for current version of R
-# NOTE: are all of these packages needed? pscl? bbmle?
+packages_needed <- c("lme4", "MuMIn", "MASS", "pscl", "tidyverse", "glmmTMB", "R2admb") 
 
 # Install packages needed (if not already installed)
 for (i in 1:length(packages_needed)){
   if(!(packages_needed[i] %in% installed.packages())){install.packages(packages_needed[i])}
 }
-# Note: might need to install from source:
-# install.packages("glmmADMB", repos=c("http://glmmadmb.r-forge.r-project.org/repos",getOption("repos")),type="source")
+
+# if there are errors related to glmmTMB, try: install.packages("glmmTMB", type="source")
 
 # Load packages needed
 for (i in 1:length(packages_needed)){
@@ -66,13 +64,11 @@ s6 <- glmer(Surv ~ logSize + (logSize|Year) + (1|Site), data=data, family=binomi
 anova(s3, s4, s5, s6)
 model.sel(s3, s4, s5, s6) 
 
-# PREFERRED MODEL IS s3, despite singularity
-# TO DO ***High priority*** determine if it is ok to proceed with this as top model despite singularity. This is the case for all vital rate functions.
-r.squaredGLMM(s3) 
+# PREFERRED MODEL IS s3, but due to singularity issues, we are going with the next best model, s4
+r.squaredGLMM(s4) 
 
 # Save top survival model to .rda file
-save(s3, file='data/demography data/surv.reg.rda')   
-
+save(s4, file='data/demography data/surv.reg.rda')   
 
 #*******************************************************************************
 #### 4. Growth ###
@@ -104,12 +100,11 @@ g6 <- lmer(logSizeNext ~ logSize + (logSize|Year) + (1|Site), data=data, control
 anova(g3, g4, g5, g6)
 model.sel(g3, g4, g5, g6)
 
-# PREFERRED MODEL IS g3, despite singularity
-r.squaredGLMM(g3) 
+# # PREFERRED MODEL IS g3, but due to singularity issues, we are going with the next best model, g4
+r.squaredGLMM(g4) 
 
 # Save top growth model to .rda file
-save(g3, file='data/demography data/growth.reg.rda')   
-
+save(g4, file='data/demography data/growth.reg.rda')   
 
 #*******************************************************************************
 #### 5. Flowering ###
@@ -141,12 +136,11 @@ fl6 <- glmer(Fec0 ~ logSize + (logSize|Year) + (1|Site), data=data, family=binom
 anova(fl3, fl4, fl5, fl6)
 model.sel(fl3, fl4, fl5, fl6) 
 
-# PREFERRED MODEL IS fl3, despite singularity
-r.squaredGLMM(fl3) 
+# # PREFERRED MODEL IS fl3, but due to singularity issues, we are going with the next best model, fl4
+r.squaredGLMM(fl4) 
 
 # Save top flowering model to .rda file
-save(fl3, file='data/demography data/flowering.reg.rda')   
-
+save(fl4, file='data/demography data/flowering.reg.rda')   
 
 #*******************************************************************************
 #### 6. Fruit number ###
@@ -189,8 +183,8 @@ fr6 <- glmmTMB(Fec1 ~ logSize + (logSize|Year) + (1|Site), data=data[!is.na(data
 anova(fr3, fr4, fr5, fr6)
 model.sel(fr3, fr4, fr5, fr6) 
 
-# PREFERRED MODEL IS fr3, despite singularity
+# PREFERRED MODEL IS fr3, but due to singularity issues, we are going with the next best model, fr4
+r.squaredGLMM(fr4)
 
 # Save top fruit # model to .rda file 
-save(fr3, file='data/demography data/fruit.reg.rda')   
-    
+save(fr4, file='data/demography data/fruit.reg.rda')   
