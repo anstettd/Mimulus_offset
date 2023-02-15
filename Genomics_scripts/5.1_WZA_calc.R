@@ -45,7 +45,7 @@ map_pop <- as.numeric(climate_wza[2,])
 cmd_pop <- as.numeric(climate_wza[3,])
 
 
-optima <- read.csv("/Users/daniel_anstett/Dropbox/AM_Workshop/WZA_vignette/environments.1_0.5_192.alleleFreqs.csv", header = F)
+#optima <- read.csv("/Users/daniel_anstett/Dropbox/AM_Workshop/WZA_vignette/environments.1_0.5_192.alleleFreqs.csv", header = F)
 
 #Import full snp table for baseline
 pop_order<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/baseline_filtered_variants.QUAL20_MQ40_AN80_MAF0.03_DP1SD.Baypass_table.pop_order", header=F, sep="\t")
@@ -64,7 +64,7 @@ colnames(all_data)[4] <- "win"
 
 #############################################################################################################
 #############################################################################################################
-#Tutorial
+#WZA data prep and exploration
 
 #Filter for minor allele frequency
 # Let's split the data so that we have an allele freq. dataframe and a dataframe with SNP info

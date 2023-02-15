@@ -87,8 +87,8 @@ WZA_sd_cmd <- sd(WZA_df_cmd$WZA)
 WZA_df_cmd$approx_p <- 2*pnorm(-abs(WZA_df_cmd$WZA), mean = WZA_mean_cmd, sd= WZA_sd_cmd) ## Calculate an approximate p-value based on the assumption of normality
 
 
-write_csv(WZA_df_mat, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_win_mat.csv")
-write_csv(WZA_df_map, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_win_map.csv")
-write_csv(WZA_df_cmd, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_win_cmd.csv")
+write_csv(WZA_df_mat, "Genomics_scripts/Data/WZA_win_mat.csv")
+write_csv(WZA_df_map, "Genomics_scripts/Data/WZA_win_map.csv")
+write_csv(WZA_df_cmd, "Genomics_scripts/Data/WZA_win_cmd.csv")
 
 
