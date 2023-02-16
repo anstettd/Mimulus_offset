@@ -56,7 +56,7 @@ chr1_graph_14 <-ggplot(chr_all, aes(x=Position, y=env)) +
         axis.title.x = element_text(color="black", size=14, vjust = 0.5, face="bold"),
         axis.title.y=element_blank())
 chr1_graph_14
-ggsave("Graphs_CI/chr_map_double_filter.pdf",width=8, height = 8, units = "in")
+ggsave("Graphs/chr_map.pdf",width=8, height = 8, units = "in")
 
 
 
