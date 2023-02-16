@@ -298,7 +298,7 @@ clim_distance_1215 <- sqrt((pred_past_env[,1]-pred_1215_env[,1])^2+(pred_past_en
 mask_offset_2012_dist[stk_2012.df.cell] <- clim_distance_1215
 plot(mask_offset_2012_dist)
 
-writeRaster(mask_offset_2012_dist,"Genomics_scripts/Data/clim_distance.tif", format="GTiff", overwrite=TRUE)
+#writeRaster(mask_offset_2012_dist,"Genomics_scripts/Data/clim_distance.tif", format="GTiff", overwrite=TRUE)
 
 
 

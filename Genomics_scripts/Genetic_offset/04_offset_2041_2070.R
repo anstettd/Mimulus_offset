@@ -113,10 +113,6 @@ rasterStack <- function(x,varList,rType='tif',vConvert=T){
   return(stk)
 }
 
-#Examples
-#varList <- c('mat','map','td','tmin_sp','ahm','tmax_wt')
-#wd <- 'G:/ClimateXX_out/BC2/BC800v600/Normal_1961_1990MSY'
-#stk <- rasterStack(wd,varList,rType='tif',vConvert=T);stk
 
 ############################################################################################################
 ############################################################################################################
@@ -145,8 +141,7 @@ pred<-colnames(env_site)
 
 ## Range wide polygon
 # Import M.cardinalis ensamble range extent as sf polygon
-#c_range <- st_read("SDM/Output/c_range_2.shp")
-c_range <- st_read("Shape/c_range50.shp") 
+c_range <- st_read("Genomics_scripts/Data/Shape/c_range50.shp") 
 c_range <- st_transform(c_range, crs = 4326) # reproject to WGS 1984 (EPSG 4326)
 
 
@@ -254,7 +249,9 @@ maxLevel <- log2(0.368*nrow(df_in_1)/2) #account for correlations, see ?gradient
 gf <- gradientForest(df_in_1,predictor.vars = pred, 
                      response.vars = resp,ntree = 500, 
                      maxLevel = maxLevel, trace=T, corr.threshold = 0.5)
+#Save PDF as 7 X 4
 plot(gf) #Importance Plot
+
 
 
 # Conpact version for larger datasets
@@ -307,123 +304,6 @@ writeRaster(mask_offset_85,"Genomics_scripts/Data/offset_8.5_peakbf2_grain.tif",
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-###################################################################################
-# Mapping spatial genetic variation --------------------------------------------
-
-
-# map continuous variation 
-BF20_RGBmap <- pcaToRaster(predBF20, rbs_4.5, stk.df.cell)
-plotRGB(BF20_RGBmap)
-writeRaster(BF20_RGBmap, "Offset_graphs/current_climate_BF20_map.tif", format="GTiff", overwrite=TRUE)
-
-# map continuous variation 
-BF20_RGBmap <- pcaToRaster(projBF20, stk_4.5.mask, stk_4.5.df.cell)
-plotRGB(BF20_RGBmap)
-writeRaster(BF20_RGBmap, "Offset_graphs/current_climate_BF20_map.tif", format="GTiff", overwrite=TRUE)
-
-
-
-
-################################################################################
-
-
-
-
-
-
-
-
-##################################################################################################################
-#Basic Plots
-
-most_important <- names(importance(gf))[1:9]
-
-##Split Density Plot
-#The second plot is the splits density plot (plot.type="S"), which shows binned 
-#split importance and location on each gradient (spikes), kernel density of splits 
-#(black lines), of observations(red lines) and of splits standardised by 
-#observations density (blue lines). Each distribution integrates to predictor 
-#importance. These show where important changes in the abundance of
-#multiple species are occurring along the gradient; they indicate a composition change rate
-plot(gf, plot.type = "S", imp.vars = most_important,leg.posn = "topright", cex.legend = 0.4, cex.axis = 0.6,
-     cex.lab = 0.7, line.ylab = 0.9, par.args = list(mgp = c(1.5, 0.5, 0), mar = c(3.1, 1.5, 0.1, 1)))
-
-##Cumulaive Plot
-#for each species shows cumulative importance distributions of splits improvement scaled by
-#R2 weighted importance, and standardised by density of observations. These show cumulative
-#change in abundance of individual species, where changes occur on the gradient, and the species
-#changing most on each gradient.
-plot(gf, plot.type = "C", imp.vars = most_important,show.overall = F, legend = T, leg.posn = "topleft",
-     leg.nspecies = 5, cex.lab = 0.7, cex.legend = 0.4,cex.axis = 0.6, line.ylab = 0.9, 
-     par.args = list(mgp = c(1.5, 0.5, 0), mar = c(2.5, 1, 0.1, 0.5), omi = c(0,0.3, 0, 0)))
-
-
-plot(gf, plot.type = "P", show.names = F, horizontal = F, cex.axis = 1, cex.labels = 0.7, line = 2.5)
-
-
-
-
-
-
-
-
-#MAT.clip <- raster("Donor_selection/data/clip/MAT.clip.grd")
-#MAP.clip <- raster("Donor_selection/data/clip/MAP.clip.grd")
-#PAS.clip <- raster("Donor_selection/data/clip/PAS.clip.grd")
-#EXT.clip <- raster("Donor_selection/data/clip/EXT.clip.grd")
-#CMD.clip <- raster("Donor_selection/data/clip/CMD.clip.grd")
-
-#Seasonal
-#PPT_sm.clip <- raster("Donor_selection/data/clip/PPT_sm.clip.grd")
-#PPT_wt.clip <- raster("Donor_selection/data/clip/PPT_wt.clip.grd")
-#Tave_sm.clip <- raster("Donor_selection/data/clip/Tave_sm.clip.grd")
-#Tave_wt.clip <- raster("Donor_selection/data/clip/Tave_wt.clip.grd")
-
-#Stack Raster
-#env_wna <- stack(list(MAT=MAT.clip,MAP=MAP.clip,CMD=CMD.clip))
-#env_wna <- as.data.frame(env_wna, xy=TRUE)
-
-#colnames(env_wna)[1]<-"X"
-#colnames(env_wna)[2]<-"Y"
-
-# The rasters are for all of North America and too large for storage in this repo
-# Trim them to study area and save only trimmed files in the repo
-# Define extent as 1 degree beyond lat-long extent of points
-
-
-
-
-
-
-
-clim <- read_csv("SDM/data_files/points_Normal_1961_1990MSY.csv")
-prj.laea <- "+proj=laea +lon_0=-100 +lat_0=45 +type=crs" ## set laea CRS
-ext <- extent(min(clim$Longitude)-1, max(clim$Longitude)+1, min(clim$Latitude)-1, max(clim$Latitude)+1)
-bbox = as(ext, "SpatialPolygons") #convert coordinates to a bounding box
-prj.wgs = "+proj=longlat + type=crs" #define unprojected coordinate system
-proj4string(bbox) <- CRS(prj.wgs) #set projection
-bbox.lcc = spTransform(bbox, CRS=CRS(prj.laea)) #re-project to match rasters
-
-
-
-#Now we're going to use the bbox info as the y argument to extract info from the raster
-#env_wna_df <-extract(stk, bbox.lcc,cellnumbers=T)
 
 
 
