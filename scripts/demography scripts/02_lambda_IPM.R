@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Create data frame of vital rate parameters and build integral projection models to obtain estimates of annual lambdas for each population
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230207
+#### DATE LAST MODIFIED: 20230215
 
 
 #*******************************************************************************
@@ -18,6 +18,8 @@ packages_needed <- c("lme4", "glmmTMB", "tidyverse")
 for (i in 1:length(packages_needed)){
   if(!(packages_needed[i] %in% installed.packages())){install.packages(packages_needed[i])}
 }
+
+# if there are errors related to glmmTMB, try: install.packages("glmmTMB", type="source")
 
 # Load packages needed
 for (i in 1:length(packages_needed)){
@@ -54,27 +56,27 @@ fruit=c()
   ### 1A. Survival ###
   #*******************************************************************************
 
-  # Read in top survival model output (Formula: Surv ~ logSize + (logSize | Year/Site))
+  # Read in top survival model output (Formula: Surv ~ logSize + (1| Year/Site))
   surv.reg <- load("data/demography data/surv.reg.rda")
 
   # Store model coefficients
-  params$SiteYear=rownames(coefficients(s3)$'Site:Year')
-  params$surv.int=coefficients(s3)$'Site:Year'[,1] 
-  params$surv.slope=coefficients(s3)$'Site:Year'[,2] 
+  params$SiteYear=rownames(coefficients(s4)$'Site:Year')
+  params$surv.int=coefficients(s4)$'Site:Year'[,1] 
+  params$surv.slope=coefficients(s4)$'Site:Year'[,2] 
 
   
   #*******************************************************************************
   ### 1B. Growth ###
   #*******************************************************************************
   
-  # Read in top growth model output (Formula: logSizeNext ~ logSize + (logSize|Year/Site))
+  # Read in top growth model output (Formula: logSizeNext ~ logSize + (1|Year/Site))
   growth.reg <- load("data/demography data/growth.reg.rda")
   
   # Store model coefficients
-  growth$SiteYear=rownames(coefficients(g3)$'Site:Year')
-  growth$growth.int=coefficients(g3)$'Site:Year'[,1] 
-  growth$growth.slope=coefficients(g3)$'Site:Year'[,2] 
-  growth$growth.sd=rep(sigma(g3), times=length(coefficients(g3)$'Site:Year'[,2])) 
+  growth$SiteYear=rownames(coefficients(g4)$'Site:Year')
+  growth$growth.int=coefficients(g4)$'Site:Year'[,1] 
+  growth$growth.slope=coefficients(g4)$'Site:Year'[,2] 
+  growth$growth.sd=rep(sigma(g4), times=length(coefficients(g4)$'Site:Year'[,2])) 
   # TO DO: Address Seema's comment about growth.sd: "WARNING! I'M UNCERTAIN THAT THIS IS BEST METHOD!"
   
   # make a data frame
@@ -84,24 +86,24 @@ fruit=c()
   ### 1C. Flowering ###
   #*******************************************************************************
   
-  # Read in top flowering model output (Formula: Fec0 ~ logSize + (logSize|Year/Site))
+  # Read in top flowering model output (Formula: Fec0 ~ logSize + (1|Year/Site))
   flowering.reg=load("data/demography data/flowering.reg.rda")
 
   # Store model coefficients
-  params$flowering.int=coefficients(fl3)$'Site:Year'[,1] 
-  params$flowering.slope=coefficients(fl3)$'Site:Year'[,2] 
+  params$flowering.int=coefficients(fl4)$'Site:Year'[,1] 
+  params$flowering.slope=coefficients(fl4)$'Site:Year'[,2] 
   
   #*******************************************************************************
   ### 1D. Fruit number (untransformed) using negative binomial regression ###
   #*******************************************************************************
   
-  # Read in top model output for fruit.reg (Formula: Fec1 ~ logSize + (logSize|Year/Site))   
+  # Read in top model output for fruit.reg (Formula: Fec1 ~ logSize + (1|Year/Site))   
   fruit.reg=load("data/demography data/fruit.reg.rda")
 
-  # Store model coefficients (fr3 from glmmTMB)
-  fruit$SiteYear=rownames(ranef(fr3)$cond$'Site:Year')
-  fruit$fruit.int=fixef(fr3)$cond[1]+ranef(fr3)$cond$'Site:Year'[,1] 
-  fruit$fruit.slope=fixef(fr3)$cond[2]+ranef(fr3)$cond$'Site:Year'[,2] 
+  # Store model coefficients (fr4 from glmmTMB)
+  fruit$SiteYear=rownames(ranef(fr4)$cond$'Site:Year')
+  fruit$fruit.int=fixef(fr4)$cond[1]+ranef(fr4)$cond$'Site:Year'[,1] 
+  fruit$fruit.slope=rep(fixef(fr4)$cond[2],times=length(rownames(ranef(fr4)$cond$'Site:Year'))) 
   
   # make data frame
   fruit=data.frame(fruit) 
@@ -172,7 +174,7 @@ fruit=c()
     # NOTE: Amy added this in 2023. Ok?
     mutate(total.seeds.per.site = fruits.per.site*seed.ct,
            establishment.prob = ifelse(recruit.number==0, 0, 
-                                  ifelse(recruit.number>0 & fruits.per.site==0, recruit.number/seed.ct,                                          recruit.number/total.seeds.per.site))) 
+                                  ifelse(recruit.number>0 & fruits.per.site==0, recruit.number/seed.ct,recruit.number/total.seeds.per.site))) 
     # TO DO: there are a handful of site-years where recruit.number>0 but fruits.per.site=0, resulting in Inf for establishment.prob. Since establishment is non-zero in these site-years, we need a reasonable number for fruits.per.site. Ideas: (a) replace fruits.per.site with mean across other years or (b) replace fruits.per.site with value of 1 because fecundity was very low that year? Currently using (b)
   
   # Join with params frame
@@ -298,39 +300,46 @@ missing.site.years <- anti_join(site.years.max, site.years.obs)
 # Mill Creek:2013 --> site inaccessible in 2014 due to flood; this is a real NA
 ### TO DO: Figure out why Mill Creek:2014 doesn't show up on this scan for inestimable site-years
 # Note: Mill Creek:2014 has lambda=NA in site.info file
+
 # Whitewater Canyon:2015 --> sites visited but no plants --> manually set lambda=0
 Whitewater=filter(site.info, Site=="Whitewater Canyon" & Year==2014)
 Whitewater$Year=2015 %>% factor()
 Whitewater$SiteYear="Whitewater Canyon:2015" %>% factor()
 Whitewater$lambda=0
 site.info=bind_rows(site.info, Whitewater) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
+
 # Kitchen Creek:2014 --> sites visited but no plants --> manually set lambda=0
 Kitchen=filter(site.info, Site=="Kitchen Creek" & Year==2013)
 Kitchen$Year=2014 %>% factor()
 Kitchen$SiteYear="Kitchen Creek:2014" %>% factor()
 Kitchen$lambda=0
 site.info=bind_rows(site.info, Kitchen) 
+
 # Kitchen Creek:2015 --> sites visited but no plants --> manually set lambda=0
 Kitchen$Year=2015 %>% factor()
 Kitchen$SiteYear="Kitchen Creek:2015" %>% factor()
 Kitchen$lambda=0
 site.info=bind_rows(site.info, Kitchen) %>% mutate(Year=factor(Year), SiteYear=factor(SiteYear))
+
 # Hauser Creek:2012 --> sites visited but no plants --> manually set lambda=0
 Hauser=filter(site.info, Site=="Hauser Creek" & Year==2011)
 Hauser$Year=2012 %>% factor()
 Hauser$SiteYear="Hauser Creek:2012" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) 
+
 # Hauser Creek:2013 --> sites visited but no plants --> manually set lambda=0
 Hauser$Year=2013 %>% factor()
 Hauser$SiteYear="Hauser Creek:2013" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) 
+
 # Hauser Creek:2014 --> sites visited but no plants --> manually set lambda=0
 Hauser$Year=2014 %>% factor()
 Hauser$SiteYear="Hauser Creek:2014" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) 
+
 # Hauser Creek:2015 --> sites visited but no plants --> manually set lambda=0
 Hauser$Year=2015 %>% factor()
 Hauser$SiteYear="Hauser Creek:2015" %>% factor()
@@ -339,6 +348,7 @@ site.info=bind_rows(site.info, Hauser) %>% mutate(Year=factor(Year), SiteYear=fa
 
 # Which site-years have lambda=NA, and why?
 lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::select(SiteYear)
+
 # Note: these are the same as the site-years identified as having incomplete cases above
 
 # Coast Fork of Willamette:2012 --> no fruits in 2012 so fruit slopes & intercepts are inestimable 
