@@ -138,9 +138,3 @@ writeRaster(cmd_4170_85, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_
 
 
 
-
-
-#Export tif file
-writeRaster(mat_2016, "C:/Users/anstett3/Documents/Genomics/Large_files/Year/mat.grd ",
-              format="raster", overwrite = T)
-
