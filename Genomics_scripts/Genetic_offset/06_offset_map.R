@@ -102,7 +102,7 @@ tmap_save(offset85, filename = "Graphs/offset85.pdf",width=4, height=7)
 ##############################################################################
 #2012 to 2015 offset
 off_pallet <- c("#2166AC","#67A9CF","#D1E5F0","#f7c1c8","#f21836","#A50F15")
-off_pallet1215 <- c("#D1E5F0","#D1E5F0","#f7c1c8","#f7c1c8","#f21836","#f21836","#A50F15")
+off_pallet1215 <- c("#67A9CF","#D1E5F0","#f7c1c8","#f21836","#A50F15")
 #off_pallet1215 <- c("#67A9CF","#67A9CF","#D1E5F0","#D1E5F0","#f7c1c8","#f7c1c8","#f21836")
 #Plot offset 
 tmap_mode("plot")
