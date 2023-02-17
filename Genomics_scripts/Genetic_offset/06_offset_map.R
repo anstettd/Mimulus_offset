@@ -71,7 +71,7 @@ offset45 <- tm_shape(mask_offset_45_grain, bbox=st_bbox(calo)) + #legal boundire
   tm_dots(size=0.5,shape=1,col="black",border.lwd = 2.5)+
   #  tm_shape(baseline_pop_sf)+
   #  tm_dots(size=0.1,shape=1)+
-  tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.`001)
+  tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 offset45
 tmap_save(offset45, filename = "Graphs/offset45.pdf",width=4, height=7)
 
@@ -119,7 +119,7 @@ offset_1215 <- tm_shape(mask_offset_1215, bbox=st_bbox(calo)) + #legal boundires
   #  tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 offset_1215
-#tmap_save(offset_1215, filename = "Graphs/offset1215.pdf",width=4, height=7)
+tmap_save(offset_1215, filename = "Graphs/offset1215.pdf",width=4, height=7)
 
 
 ##############################################################################
