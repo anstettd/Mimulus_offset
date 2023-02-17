@@ -12,7 +12,13 @@ library(sf)
 library(rgdal)
 
 #############################################################################################################
+
 #Import asc file
+
+mat_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Normal_1981_2010_800/mat.asc")
+map_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Normal_1981_2010_800/map.asc")
+cmd_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Normal_1981_2010_800/cmd.asc")
+
 mat_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2011/mat.asc")
 map_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2011/map.asc")
 cmd_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2011/cmd.asc")
@@ -36,10 +42,6 @@ cmd_2015 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_20
 mat_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2016/mat.asc")
 map_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2016/map.asc")
 cmd_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2016/cmd.asc")
-
-mat_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Normal_1981_2010_800/mat.asc")
-map_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Normal_1981_2010_800/map.asc")
-cmd_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Normal_1981_2010_800/cmd.asc")
 
 mat_4170_45 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/13GCMs_ensemble_ssp245_2041-2070Y/mat.asc")
 map_4170_45 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/13GCMs_ensemble_ssp245_2041-2070Y/map.asc")
