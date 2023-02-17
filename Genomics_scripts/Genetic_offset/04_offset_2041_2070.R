@@ -147,7 +147,7 @@ c_range <- st_transform(c_range, crs = 4326) # reproject to WGS 1984 (EPSG 4326)
 
 ## Raster import and manipulation
 #Import 1981-2010 raster data for West NA & and stack them
-wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Year_8110"
+wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_8110"
 vlist <- c("MAT","MAP","CMD")
 stk <- rasterStack(wd,vlist,rType='tif',vConvert=F)
 
@@ -176,7 +176,7 @@ stk.df.cell<-cellFromXY(stk.mask, cbind(stk.df$x, stk.df$y))
 ############################################################################################################
 ##Import future climate change rasters
 #Import 2041-2070 SSP245 (RCP4.5) raster data for West NA & and stack them
-wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Year_4170_45"
+wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_45"
 vlist <- c("MAT","MAP","CMD")
 stk_4.5 <- rasterStack(wd,vlist,rType='tif',vConvert=F)
 
@@ -202,7 +202,7 @@ stk_4.5.df.cell<-cellFromXY(stk_4.5.mask, cbind(stk_4.5.df$x, stk_4.5.df$y))
 
 #####################################
 #Import 2041-2070 SSP585 (RCP8.5) raster data for West NA & and stack them
-wd_8.5 <- "C:/Users/anstett3/Documents/Genomics/Large_files/Year_4170_85"
+wd_8.5 <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_85"
 vlist <- c("MAT","MAP","CMD")
 stk_8.5 <- rasterStack(wd_8.5,vlist,rType='tif',vConvert=F)
 
@@ -227,7 +227,7 @@ stk_8.5.df.cell<-cellFromXY(stk_8.5.mask, cbind(stk_8.5.df$x, stk_8.5.df$y))
 
 
 #Get mask for RGB
-MAT.clip <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/Year_2016/MAT.tif")
+MAT.clip <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_8110/MAT.tif")
 MAT.clip <- projectRaster(MAT.clip, crs=EPSG4326) #reproject to WGS 1984 (EPSG 4326)
 rbg_mask <- raster::crop(MAT.clip, extent(c_range))
 rbg_mask <- mask(rbg_mask, c_range)
