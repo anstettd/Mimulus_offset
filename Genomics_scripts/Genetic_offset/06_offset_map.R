@@ -26,18 +26,9 @@ library(RColorBrewer)
 
 #Timeseries offset raster
 mask_offset_1215 <- raster("Genomics_scripts/Data/offset_1215.tif") #pop data
-mask_offset_2011 <- raster("Genomics_scripts/Data/offset_2011.tif") #pop data
-mask_offset_2012 <- raster("Genomics_scripts/Data/offset_2012.tif") #pop data
-mask_offset_2013 <- raster("Genomics_scripts/Data/offset_2013.tif") #pop data
-mask_offset_2014 <- raster("Genomics_scripts/Data/offset_2014.tif") #pop data
-mask_offset_2015 <- raster("Genomics_scripts/Data/offset_2015.tif") #pop data
-mask_offset_2016 <- raster("Genomics_scripts/Data/offset_2016.tif") #pop data
-mask_offset_1215 <- raster("Genomics_scripts/Data/offset_2016.tif") #pop data
 clim_diff_1215 <- raster("Genomics_scripts/Data/clim_distance.tif") #pop data
 
 #Future cliamte change offset raster
-mask_offset_45 <- raster("Genomics_scripts/Data/offset_4.5_peakbf2.tif") #pop data 
-mask_offset_85 <- raster("Genomics_scripts/Data/offset_8.5_peakbf2.tif") #pop data
 mask_offset_45_grain <- raster("Genomics_scripts/Data/offset_4.5_peakbf2_grain.tif") #pop data 
 mask_offset_85_grain <- raster("Genomics_scripts/Data/offset_8.5_peakbf2_grain.tif") #pop data
 
