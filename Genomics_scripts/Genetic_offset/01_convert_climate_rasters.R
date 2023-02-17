@@ -15,10 +15,6 @@ library(rgdal)
 
 #Import asc file
 
-mat_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Normal_1981_2010_800/mat.asc")
-map_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Normal_1981_2010_800/map.asc")
-cmd_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Normal_1981_2010_800/cmd.asc")
-
 mat_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2011/mat.asc")
 map_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2011/map.asc")
 cmd_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2011/cmd.asc")
@@ -43,13 +39,17 @@ mat_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_20
 map_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2016/map.asc")
 cmd_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2016/cmd.asc")
 
-mat_4170_45 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/13GCMs_ensemble_ssp245_2041-2070Y/mat.asc")
-map_4170_45 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/13GCMs_ensemble_ssp245_2041-2070Y/map.asc")
-cmd_4170_45 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/13GCMs_ensemble_ssp245_2041-2070Y/cmd.asc")
+mat_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Normal_1981_2010Y/mat.asc")
+map_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Normal_1981_2010Y/map.asc")
+cmd_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Normal_1981_2010Y/cmd.asc")
 
-mat_4170_85 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/13GCMs_ensemble_ssp585_2041-2070Y/mat.asc")
-map_4170_85 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/13GCMs_ensemble_ssp585_2041-2070Y/map.asc")
-cmd_4170_85 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/13GCMs_ensemble_ssp585_2041-2070Y/cmd.asc")
+mat_4170_45 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/13GCMs_ensemble_ssp245_2041-2070Y/mat.asc")
+map_4170_45 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/13GCMs_ensemble_ssp245_2041-2070Y/map.asc")
+cmd_4170_45 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/13GCMs_ensemble_ssp245_2041-2070Y/cmd.asc")
+
+mat_4170_85 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/13GCMs_ensemble_ssp585_2041-2070Y/mat.asc")
+map_4170_85 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/13GCMs_ensemble_ssp585_2041-2070Y/map.asc")
+cmd_4170_85 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/13GCMs_ensemble_ssp585_2041-2070Y/cmd.asc")
 
 
 
@@ -102,41 +102,45 @@ cmd_1215 <- (cmd_2012 + cmd_2013 + cmd_2014 + cmd_2015)/4
 
 
 #Export tif file
-writeRaster(mat_1215, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_1215/MAT.tif",format="GTiff")
-writeRaster(map_1215, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_1215/MAP.tif",format="GTiff")
-writeRaster(cmd_1215, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_1215/CMD.tif",format="GTiff")
+#writeRaster(mat_2011, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2011/MAT.tif",format="GTiff")
+#writeRaster(map_2011, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2011/MAP.tif",format="GTiff")
+#writeRaster(cmd_2011, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2011/CMD.tif",format="GTiff")
 
-writeRaster(mat_2011, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2011/MAT.tif",format="GTiff")
-writeRaster(map_2011, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2011/MAP.tif",format="GTiff")
-writeRaster(cmd_2011, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2011/CMD.tif",format="GTiff")
+#writeRaster(mat_2012, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2012/MAT.tif",format="GTiff")
+#writeRaster(map_2012, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2012/MAP.tif",format="GTiff")
+#writeRaster(cmd_2012, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2012/CMD.tif",format="GTiff")
 
-writeRaster(mat_2012, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2012/MAT.tif",format="GTiff")
-writeRaster(map_2012, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2012/MAP.tif",format="GTiff")
-writeRaster(cmd_2012, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2012/CMD.tif",format="GTiff")
+#writeRaster(mat_2013, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2013/MAT.tif",format="GTiff")
+#writeRaster(map_2013, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2013/MAP.tif",format="GTiff")
+#writeRaster(cmd_2013, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2013/CMD.tif",format="GTiff")
 
-writeRaster(mat_2013, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2013/MAT.tif",format="GTiff")
-writeRaster(map_2013, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2013/MAP.tif",format="GTiff")
-writeRaster(cmd_2013, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2013/CMD.tif",format="GTiff")
+#writeRaster(mat_2014, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2014/MAT.tif",format="GTiff")
+#writeRaster(map_2014, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2014/MAP.tif",format="GTiff")
+#writeRaster(cmd_2014, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2014/CMD.tif",format="GTiff")
 
-writeRaster(mat_2014, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2014/MAT.tif",format="GTiff")
-writeRaster(map_2014, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2014/MAP.tif",format="GTiff")
-writeRaster(cmd_2014, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2014/CMD.tif",format="GTiff")
+#writeRaster(mat_2015, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2015/MAT.tif",format="GTiff")
+#writeRaster(map_2015, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2015/MAP.tif",format="GTiff")
+#writeRaster(cmd_2015, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2015/CMD.tif",format="GTiff")
 
-writeRaster(mat_2015, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2015/MAT.tif",format="GTiff")
-writeRaster(map_2015, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2015/MAP.tif",format="GTiff")
-writeRaster(cmd_2015, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2015/CMD.tif",format="GTiff")
+#writeRaster(mat_2016, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2016/MAT.tif",format="GTiff")
+#writeRaster(map_2016, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2016/MAP.tif",format="GTiff")
+#writeRaster(cmd_2016, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2016/CMD.tif",format="GTiff")
 
-writeRaster(mat_2016, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2016/MAT.tif",format="GTiff")
-writeRaster(map_2016, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2016/MAP.tif",format="GTiff")
-writeRaster(cmd_2016, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_2016/CMD.tif",format="GTiff")
+#writeRaster(mat_1215, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_1215/MAT.tif",format="GTiff")
+#writeRaster(map_1215, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_1215/MAP.tif",format="GTiff")
+#writeRaster(cmd_1215, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_1215/CMD.tif",format="GTiff")
 
-writeRaster(mat_4170_45, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_4170_45/MAT.tif",format="GTiff")
-writeRaster(map_4170_45, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_4170_45/MAP.tif",format="GTiff")
-writeRaster(cmd_4170_45, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_4170_45/CMD.tif",format="GTiff")
+writeRaster(mat_8110, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_8110/MAT.tif",format="GTiff")
+writeRaster(map_8110, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_8110/MAP.tif",format="GTiff")
+writeRaster(cmd_8110, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_8110/CMD.tif",format="GTiff")
 
-writeRaster(mat_4170_85, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_4170_85/MAT.tif",format="GTiff")
-writeRaster(map_4170_85, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_4170_85/MAP.tif",format="GTiff")
-writeRaster(cmd_4170_85, "C:/Users/anstett3/Documents/Genomics/Large_files/Year_4170_85/CMD.tif",format="GTiff")
+writeRaster(mat_4170_45, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_45/MAT.tif",format="GTiff")
+writeRaster(map_4170_45, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_45/MAP.tif",format="GTiff")
+writeRaster(cmd_4170_45, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_45/CMD.tif",format="GTiff")
+
+writeRaster(mat_4170_85, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_85/MAT.tif",format="GTiff")
+writeRaster(map_4170_85, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_85/MAP.tif",format="GTiff")
+writeRaster(cmd_4170_85, "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_85/CMD.tif",format="GTiff")
 
 
 

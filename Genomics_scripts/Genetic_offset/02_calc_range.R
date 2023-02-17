@@ -30,12 +30,10 @@ us_shp <- wrld_simpl[grepl(c("United States"), wrld_simpl$NAME), ]
 us_shp_aea <- spTransform(us_shp, CRS(aea_NA))
 
 # load species locality and make projection
-#spp_locality = readRDS(file.choose()) # locality data
-spp_locality <- read.csv("SDM/data_files/presences.csv")
+spp_locality <- read.csv("Genomics_scripts/Data/presences.csv")
 spp_locality <- spp_locality %>% mutate(sp_name="M_cardinalis")
 spp_locality_select <- spp_locality %>% dplyr::select(sp_name,Latitude,Longitude)
 spp_shp <- SpatialPoints(spp_locality[,c("Longitude","Latitude")])
-#spp_shp <- SpatialPoints(spp_locality[,c("Species","Longitude","Latitude")])
 spp_shp <- SpatialPointsDataFrame(spp_shp, 
                     data.frame(ID=1:nrow(spp_locality),Species=spp_locality$sp_name))
 proj4string(spp_shp) <- CRS(proj_xy)
@@ -60,7 +58,11 @@ plot(spp_pb_aea10k2)
 
 
 #Export 50 km buffer
-shapefile(x = spp_pb_aea10k2, file = "Shape/c_range50.shp",overwrite=TRUE)
+#shapefile(x = spp_pb_aea10k2, file = "Genomics_scripts/Data/Shape/c_range50.shp",overwrite=TRUE)
+
+
+
+
 #writeOGR(spp_pb_aea10k2, dsn = '.', layer = 'poly', driver = "ESRI Shapefile")
 
 
