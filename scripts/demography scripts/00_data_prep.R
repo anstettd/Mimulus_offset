@@ -188,9 +188,8 @@ data <- data[!(is.na(data$logSize) & is.na(data$logSizeNext)),]
 # Remove plants that were recorded as having a class at time t but have no size measurements in that year
 data <- subset(data, !(!is.na(Class) & is.na(logSize)))
 
-# Remove plants that were recorded as having a class at time t but have no survival recorded from t to t+1 (were either excluded at time t+1, recorded as "?" in Class field, or recorded as "NA" in Class field) 
+# Remove plants that were recorded as having a class at time t but have no survival recorded from t to t+1 (were either excluded at time t+1, recorded as "?" in ClassNext field, or recorded as "NA" in ClassNext field) 
 data <- subset(data, !(!is.na(Class) & is.na(Surv)))
-# TO DO: check annotation; should it say ?/NA in Class or ClassNext? We have already removed ? and E at time t (lines 159-160). 
 
 # Make Fec1 numeric and round fruit # to nearest integer
 data$Fec1 <- round(as.numeric(data$Fec1, digits=0)) 
