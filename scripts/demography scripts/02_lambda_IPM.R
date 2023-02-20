@@ -171,11 +171,11 @@ fruit=c()
   # Obtain establishment probability (= # of new recruits at year t+1/total seed count per site at year t)
   establishment <- full_join(recruit.number, fruits.per.site) %>% full_join(seeds.per.site) %>% 
     replace_na(list(recruit.number=0, fruits.per.site=0)) %>% # assign 0s to sites with no recruitment or no fertility
-    # NOTE: Amy added this in 2023. Ok?
+    # NOTE: Amy added this in 2023. 
     mutate(total.seeds.per.site = fruits.per.site*seed.ct,
            establishment.prob = ifelse(recruit.number==0, 0, 
                                   ifelse(recruit.number>0 & fruits.per.site==0, recruit.number/seed.ct,recruit.number/total.seeds.per.site))) 
-    # TO DO: there are a handful of site-years where recruit.number>0 but fruits.per.site=0, resulting in Inf for establishment.prob. Since establishment is non-zero in these site-years, we need a reasonable number for fruits.per.site. Ideas: (a) replace fruits.per.site with mean across other years or (b) replace fruits.per.site with value of 1 because fecundity was very low that year? Currently using (b)
+    # NOTE: there are a handful of site-years where recruit.number>0 but fruits.per.site=0, resulting in Inf for establishment.prob. Since establishment is non-zero in these site-years, we need a reasonable number for fruits.per.site. Solution used here is to replace fruits.per.site with value of 1 because fecundity was very low that year.
   
   # Join with params frame
     params <- left_join(params, establishment)
@@ -199,8 +199,7 @@ fruit=c()
   params.missing$SiteYear
   # Canton Creek:2011 --> growth slopes, intercepts, and sd are inestimable; lambda is NA
   # Coast Fork of Willamette:2012 --> no fruits in 2012 so fruit slopes & intercepts are inestimable; lambda is NA
-    # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013.
-    ### TO DO: decide if this should be kept as NA, because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants die)
+    # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013. Keep as NA because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants died).
     # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; lambda is NA
     # Mill Creek:2014 --> site not visited in 2013, so this makes sense; lambda is NA
     # Whitewater Canyon:2014 --> all plants died, so set lambda to 0 down below
@@ -392,7 +391,7 @@ ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(0,5) + ylim(0,10) + geom_abline(x=y)
 # Note: mostly close to 1:1 line, but some higher lambdas are pretty divergent, even for early transitions where input data were not changed
 # Note: lambdas from earlier years seem to have shrunk, while lambdas from later years seem to have increased relative to the older estimates. I expected that lambdas from earlier years should stay unchanged, while lambdas from later years should shrink with data cleaning to remove immortal non-individuals and large new plants that are not actually new recruits.
-# TO DO ***High priority*** Figure out what is causing these unexpected and sometimes large differences. Are global models are sensitive to cleaning of 2014-15 and 2015-16 data? Are fruit models in glmmTMB that different from glmmADMB?
+# TO DO ***High priority*** Figure out what is causing these unexpected and sometimes large differences. 
 # Priorities for checking:
 # Deer Creek:2013
 # Coast Fork Willamette:2011
