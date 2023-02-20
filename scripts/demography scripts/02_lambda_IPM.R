@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Create data frame of vital rate parameters and build integral projection models to obtain estimates of annual lambdas for each population
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230215
+#### DATE LAST MODIFIED: 20230220
 
 
 #*******************************************************************************
@@ -352,8 +352,7 @@ lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::sele
 
 # Coast Fork of Willamette:2012 --> no fruits in 2012 so fruit slopes & intercepts are inestimable 
 # Canton Creek:2011 --> growth slopes, intercepts, and sd are inestimable
-# West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013.
-### TO DO: decide if this should be kept as NA, because the entire site was not dead as at Hauser, Kitchen, Whitewater
+# West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013. Keep as NA because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants died).
 # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; keep as NA
 # Mill Creek:2014 --> site not visited in 2013, so this makes sense; keep as NA
 # Whitewater Canyon:2014 --> all plants died, so set lambda to 0 
@@ -379,24 +378,30 @@ old.lambda <- read.csv("data/demography data/siteYear.lambda_2010-2016_old.csv")
 site.info <- site.info %>% 
   mutate(SiteYear = gsub(" ", "", SiteYear))
 
-all <- left_join(site.info, old.lambda)
+all <- left_join(site.info, old.lambda) %>% 
+  mutate(lambda.diff = lambda - lambda.old,
+         check = ifelse(abs(lambda.diff)>1, "YES", "no"),
+         check.prop = ifelse(abs(lambda.diff/lambda)>0.50, "YES", "no"))
+
+summary(all$lambda.diff)
+table(all$check)
+table(all$check.prop)
+
+check.list = all$SiteYear[all$check=="YES"]
 
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + geom_abline(x=y)
-# TO DO ***High priority***: figure out why Buck Meadows:2015 and Mill Creek:2015 have such abnormally high lambdas in this newer estimate
-# Buck Meadows:2015 had only 2 fruits but >400 recruits, so establishment probably (which is a transition to which lambda is especially sensitive) was incredibly high. But, unclear why this would change in cleaned data, since even problematic large plants go into site fruit count denominator and cleaning should only reduce recruit # in the numerator
-# Mill Creek:2015 has second-highest establishment probability for reasons similar to Buck:2015. Again, unclear why this becomes so high after cleaning.
+# Note: Buck Meadows:2015 had only 2 fruits but >400 recruits, so establishment probably (a transition to which lambda is especially sensitive) was incredibly high. For unknown reasons, old estimates based on old input files had incorrect larger fruit numbers (perhaps due to a strings-as-factors issue in an older version of R). We have verified that the current numbers are correct by comparing to the raw queries from Access database.  
+# Note: Mill Creek:2015 has second-highest establishment probability for reasons similar to Buck:2015. The estimate has jumped up so dramatically for same reason as Buck:2015 (wrong fruit numbers in older input file).
+# Note: Deer Creek:2012 has come down from >30 to <20 after cleaning, but is still unreasonable.
 
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(0,5) + ylim(0,10) + geom_abline(x=y)
-# Note: mostly close to 1:1 line, but some higher lambdas are pretty divergent, even for early transitions where input data were not changed
-# Note: lambdas from earlier years seem to have shrunk, while lambdas from later years seem to have increased relative to the older estimates. I expected that lambdas from earlier years should stay unchanged, while lambdas from later years should shrink with data cleaning to remove immortal non-individuals and large new plants that are not actually new recruits.
-# TO DO ***High priority*** Figure out what is causing these unexpected and sometimes large differences. 
-# Priorities for checking:
-# Deer Creek:2013
-# Coast Fork Willamette:2011
-# O'Neil Creek:2015
-# South Fork Tule:2015
-# West Fork Mojave:2015
+# Note: mostly very close to 1:1 line, but some higher lambdas are somewhat divergent, even for early transitions where input data should not have changed (but see above about mistaken fruit numbers that have been corrected)
+# Coast Fork Willamette:2011 has come down from >5 to >3 after cleaning
+# O'Neil Creek:2015: mistaken fruit numbers in old input file
+# Deep Creek:2014: ?
+# South Fork Middle Fork Tule:2015: mistaken fruit numbers in old input file
+# West Fork Mojave:2015: mistaken fruit numbers in old input file
 
 
