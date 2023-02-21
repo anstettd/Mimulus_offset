@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Calculate slopes of lambda versus year as a metric of the rate of demographic decline during drought
 #### AUTHOR: Amy Angert
-#### DATE LAST MODIFIED: 20230210
+#### DATE LAST MODIFIED: 20230220
 
 
 #*******************************************************************************
@@ -76,6 +76,8 @@ ggplot(dat, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   theme_classic() +
   theme(strip.background = element_blank(), strip.text.x = element_blank(),
         legend.title = element_blank())
+  # Note: Buck Meadows and Mill Creek slopes getting pulled up by 2015, which had very high recruitment. Assuming this indicates early recovery, we should trim them out before calculating rate of decline as slope over time.
+  # Note: Deer Creek slope is getting pushed down by 2012, which had very high recruitment. This would not be drought recovery, so less clear whether it should be trimmed out or not. Still need to verify field notes to confirm that recruitment estimates are correct for this difficult site where plots wash out frequently.
 
 ggplot(dat.old, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   geom_point() +
@@ -93,6 +95,11 @@ ggplot(dat.old, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
 ### 3. Calculate slopes of lambda over time for each site
 #*******************************************************************************
 
+# remove 2015 estimates with indications of early recovery
+dat$lambda[dat$SiteYear=="Buck Meadows:2015"]=NA
+dat$lambda[dat$SiteYear=="Mill Creek:2015"]=NA
+# Note: this means that Mill Creek only has two annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013). So perhaps Mill Creek should be removed entirely if 2015 is trimmed out.
+
 # with cleaned lambdas
 site.vec <- unique(dat$Site)
 slopes.lam <- c()
@@ -106,7 +113,7 @@ for (i in 1:length(site.vec)) {
   }
 
 slopes.lambda <- bind_cols(site.lam, slopes.lam) %>% 
-  select(Site=...1, Lambda.Slope.New=...2) %>% 
+  dplyr::select(Site=...1, Lambda.Slope.New=...2) %>% 
   mutate(Site = gsub(" ", "", Site))
 
 # compare to preliminary older estimates
@@ -122,15 +129,13 @@ for (i in 1:length(site.vec.old)) {
   }
 
 slopes.lambda.old <- bind_cols(site.lam.old, slopes.lam.old) %>% 
-  select(Site=...1, Lambda.Slope.Old=...2) 
+  dplyr::select(Site=...1, Lambda.Slope.Old=...2) 
   
-
 slopes.all <- left_join(slopes.lambda, slopes.lambda.old)
 
 ggplot(data=slopes.all, aes(x=Lambda.Slope.New, y=Lambda.Slope.Old, label=Site)) +
   geom_point() + 
   geom_text() + 
-  geom_abline() +
-  ylim(-3, 3)
-  #xlim(-3, 3)
-# TO DO ***High Priority*** Figure out what is driving Buck Meadows and Mill Creek estimates to be so different after cleaning
+  geom_abline()
+
+  
