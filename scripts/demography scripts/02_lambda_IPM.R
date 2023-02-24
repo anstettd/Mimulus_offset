@@ -399,9 +399,10 @@ ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(0,5) + ylim(0,10) + geom_abline(x=y)
 # Note: mostly very close to 1:1 line, but some higher lambdas are somewhat divergent, even for early transitions where input data should not have changed (but see above about mistaken fruit numbers that have been corrected)
 # Coast Fork Willamette:2011 has come down from >5 to >3 after cleaning
-# O'Neil Creek:2015: mistaken fruit numbers in old input file
-# Deep Creek:2014: ?
-# South Fork Middle Fork Tule:2015: mistaken fruit numbers in old input file
-# West Fork Mojave:2015: mistaken fruit numbers in old input file
+# O'Neil Creek:2015: likely mistaken fruit numbers in old input file
+# Deep Creek:2014: ???
+### TO DO: identify why Deep Creek:2014 estimate has jumped
+# South Fork Middle Fork Tule:2015: likely mistaken fruit numbers in old input file
+# West Fork Mojave:2015: likely mistaken fruit numbers in old input file
 
 
