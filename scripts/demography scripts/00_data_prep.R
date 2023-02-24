@@ -36,7 +36,7 @@ seed.ct <- subset(seed.ct,select=c(site,newgrandmean))
 colnames(seed.ct) = c("Site","SeedCt")
 seed.ct$SeedCt = round(seed.ct$SeedCt,digits=0) # round seed count to nearest integer
 seed.ct$Site = factor(seed.ct$Site) # make site column a factor to streamline joining
-# TO DO: update with more recent years' collections
+# Note: could try to update with more recent years' collections if available
 
 # Read in vital rate data for 2010-11, 2011-12, 2012-13, 2013-14 transitions 
 # Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
