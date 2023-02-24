@@ -77,7 +77,7 @@ fruit=c()
   growth$growth.int=coefficients(g4)$'Site:Year'[,1] 
   growth$growth.slope=coefficients(g4)$'Site:Year'[,2] 
   growth$growth.sd=rep(sigma(g4), times=length(coefficients(g4)$'Site:Year'[,2])) 
-  # TO DO: Address Seema's comment about growth.sd: "WARNING! I'M UNCERTAIN THAT THIS IS BEST METHOD!"
+  # Note: script "dnorm.R" determines that we do not need to switch to the cdf estimation for the growth function
   
   # make a data frame
   growth=data.frame(growth)
