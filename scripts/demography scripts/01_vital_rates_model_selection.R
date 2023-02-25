@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Perform model selection for each vital rate for subsequent use in IPMs
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230215
+#### DATE LAST MODIFIED: 20230225
 
 #*******************************************************************************
 #### 0. Clean workspace and load required packages
@@ -30,7 +30,7 @@ for (i in 1:length(packages_needed)){
 #### 2. Read in vital rate data ###
 #*******************************************************************************
 
-data <- read.csv("data/demography data/Mcard_demog_data_2010-2016_cleanindivs.csv")
+data <- read.csv("data/demography data/Mcard_demog_data_2010-2015_cleanindivs.csv")
 data$Site = factor(data$Site)
 data$Year = factor(data$Year)
 
@@ -51,6 +51,7 @@ s3 <- glmer(Surv  ~logSize + (logSize|Year/Site), data=data, family=binomial, co
 # Random intercepts & constant slopes for Year
 # Random intercepts & constant slopes for Site (nested within Year)
 s4 <- glmer(Surv ~ logSize  +(1|Year/Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+# NOTE: this model has a singularity warning
 
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
@@ -64,11 +65,11 @@ s6 <- glmer(Surv ~ logSize + (logSize|Year) + (1|Site), data=data, family=binomi
 anova(s3, s4, s5, s6)
 model.sel(s3, s4, s5, s6) 
 
-# PREFERRED MODEL IS s3, but due to singularity issues, we are going with the next best model, s4
-r.squaredGLMM(s4) 
+# PREFERRED MODEL IS s3, but due to singularity issues, we are going with the next best model that doesn't have singularity issues, s5
+r.squaredGLMM(s5) 
 
 # Save top survival model to .rda file
-save(s4, file='data/demography data/surv.reg.rda')   
+save(s5, file='data/demography data/surv.reg.rda')   
 
 #*******************************************************************************
 #### 4. Growth ###
@@ -183,8 +184,8 @@ fr6 <- glmmTMB(Fec1 ~ logSize + (logSize|Year) + (1|Site), data=data[!is.na(data
 anova(fr3, fr4, fr5, fr6)
 model.sel(fr3, fr4, fr5, fr6) 
 
-# PREFERRED MODEL IS fr3, but due to singularity issues, we are going with the next best model, fr4
-r.squaredGLMM(fr4)
+# PREFERRED MODEL IS fr3, but due to singularity issues, we are going with the next best model, fr5
+r.squaredGLMM(fr5)
 
 # Save top fruit # model to .rda file 
-save(fr4, file='data/demography data/fruit.reg.rda')   
+save(fr5, file='data/demography data/fruit.reg.rda')   
