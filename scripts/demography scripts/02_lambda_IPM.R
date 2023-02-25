@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Create data frame of vital rate parameters and build integral projection models to obtain estimates of annual lambdas for each population
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230220
+#### DATE LAST MODIFIED: 20230225
 
 
 #*******************************************************************************
@@ -31,13 +31,13 @@ for (i in 1:length(packages_needed)){
 #### 2. Read in vital rate data frames ###
 #*******************************************************************************
 
-data <- read.csv("data/demography data/Mcard_demog_data_2010-2016_cleanindivs.csv")
+data <- read.csv("data/demography data/Mcard_demog_data_2010-2015_cleanindivs.csv")
 data$Site = factor(data$Site)
 data$Year = factor(data$Year)
 data$Year = factor(data$Year)
 data$SiteYear = factor(data$SiteYear)
 
-site_fruit_count_data <- read.csv("data/demography data/Mcard_demog_data_2010-2016_seedinput.csv")
+site_fruit_count_data <- read.csv("data/demography data/Mcard_demog_data_2010-2015_seedinput.csv")
 site_fruit_count_data$Site = factor(site_fruit_count_data$Site)
 site_fruit_count_data$Year = factor(site_fruit_count_data$Year)
 site_fruit_count_data$Year = factor(site_fruit_count_data$Year)
@@ -56,13 +56,14 @@ fruit=c()
   ### 1A. Survival ###
   #*******************************************************************************
 
-  # Read in top survival model output (Formula: Surv ~ logSize + (1| Year/Site))
+  # Read in top survival model output (Formula: Surv ~ logSize + (1|Year) + (1|Site))
   surv.reg <- load("data/demography data/surv.reg.rda")
 
-  # Store model coefficients
-  params$SiteYear=rownames(coefficients(s4)$'Site:Year')
-  params$surv.int=coefficients(s4)$'Site:Year'[,1] 
-  params$surv.slope=coefficients(s4)$'Site:Year'[,2] 
+    ##### TO DO HIGH PRIORITY: THIS WAS BROKEN BY SWITCHING TO s5####
+    # Store model coefficients
+  params$SiteYear=rownames(coefficients(s5)$'Site:Year')
+  params$surv.int=coefficients(s5)$'Site:Year'[,1] 
+  params$surv.slope=coefficients(s5)$'Site:Year'[,2] 
 
   
   #*******************************************************************************
@@ -96,14 +97,14 @@ fruit=c()
   #*******************************************************************************
   ### 1D. Fruit number (untransformed) using negative binomial regression ###
   #*******************************************************************************
-  
-  # Read in top model output for fruit.reg (Formula: Fec1 ~ logSize + (1|Year/Site))   
+  ##### THIS WAS BROKEN BY SWITCHING TO fr5####
+  # Read in top model output for fruit.reg (Formula: Fec1 ~ logSize + (1|Year) + (1|Site))   
   fruit.reg=load("data/demography data/fruit.reg.rda")
 
-  # Store model coefficients (fr4 from glmmTMB)
-  fruit$SiteYear=rownames(ranef(fr4)$cond$'Site:Year')
-  fruit$fruit.int=fixef(fr4)$cond[1]+ranef(fr4)$cond$'Site:Year'[,1] 
-  fruit$fruit.slope=rep(fixef(fr4)$cond[2],times=length(rownames(ranef(fr4)$cond$'Site:Year'))) 
+  # Store model coefficients (fr5 from glmmTMB)
+  fruit$SiteYear=rownames(ranef(fr5)$cond$'Site:Year')
+  fruit$fruit.int=fixef(fr5)$cond[1]+ranef(fr5)$cond$'Site:Year'[,1] 
+  fruit$fruit.slope=rep(fixef(fr5)$cond[2],times=length(rownames(ranef(fr5)$cond$'Site:Year'))) 
   
   # make data frame
   fruit=data.frame(fruit) 
