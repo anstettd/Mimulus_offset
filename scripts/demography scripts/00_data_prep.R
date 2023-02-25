@@ -68,25 +68,8 @@ data_2014.2015=read.csv("data/demography data/SS_Horizontal_2015_Notes.csv") %>%
 # Note: this file was queried from the database on 2023-02-01
 # We will tidy it below based on the decision rules as above for 2010-14 data, but scripted here instead of done manually in excel. 
 
-# Read in vital rate data for 2015-16 transition
-# Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
-data_2015.2016 = read.csv("data/demography data/SS_Horizontal_2016_Notes.csv") %>% 
-  rename(Site = SiteID, #rename to match 2010-2014 data
-         Class = Class_PY,
-         ClassNext = Class_CY,
-         Fec1 = TotFr_PY,
-         Size = TotStLn_PY,
-         SizeNext = TotStLn_CY,
-         Surv = SurvPYCY) %>% 
-  mutate(Year = 2015) #add year at time t (=2015) column)
-# Note: this file was queried from the database on 2023-02-01
-# We script the creation of NotARecruit and NotAnIndividual columns below (instead of  manually in excel)
-
-# Combine 2014-16 data into one data frame 
-data_2014.2016 = rbind(data_2014.2015,data_2015.2016)
-
 # Add 'NotAnIndividual' column
-data_2014.2016 <- data_2014.2016 %>% 
+data_2014.2015 <- data_2014.2015 %>% 
   mutate(NotAnIndividual = ifelse(str_detect(OtherNotesCY, "lump"), 1, 
                            ifelse(str_detect(OtherNotesCY, "Lump"), 1,
                            ifelse(str_detect(OtherNotesCY, "split"), 1,
@@ -108,7 +91,7 @@ data_2014.2016 <- data_2014.2016 %>%
 # TO DO: Repeat this automatic coding for 2010-2014 as a sensitivity analysis
 
 # Add 'NotARecruit' column
-data_2014.2016 <- data_2014.2016 %>% 
+data_2014.2015 <- data_2014.2015 %>% 
   mutate(NotARecruit = ifelse(!is.na(Size), NA, 
                        ifelse(str_detect(OtherNotesCY, "old"), 2, 
                        ifelse(str_detect(OtherNotesCY, "Old"), 2,
@@ -120,29 +103,29 @@ data_2014.2016 <- data_2014.2016 %>%
 # Note: this is lacking level 3 (=size range of other recruits), which is not reliable
 
 # Create columns of log-transformed sizes
-data_2014.2016$logSize = log(data_2014.2016$Size)
-data_2014.2016$logSizeNext = log(data_2014.2016$SizeNext)
+data_2014.2015$logSize = log(data_2014.2015$Size)
+data_2014.2015$logSizeNext = log(data_2014.2015$SizeNext)
 
 # Add a column ranking regions from south to north
-data_2014.2016$RegionRank[data_2014.2016$Region=="S1"]=1
-data_2014.2016$RegionRank[data_2014.2016$Region=="S2"]=2
-data_2014.2016$RegionRank[data_2014.2016$Region=="C1"]=3
-data_2014.2016$RegionRank[data_2014.2016$Region=="C2"]=4
-data_2014.2016$RegionRank[data_2014.2016$Region=="C3"]=5
-data_2014.2016$RegionRank[data_2014.2016$Region=="N1"]=6
-data_2014.2016$RegionRank[data_2014.2016$Region=="N2"]=7
+data_2014.2015$RegionRank[data_2014.2015$Region=="S1"]=1
+data_2014.2015$RegionRank[data_2014.2015$Region=="S2"]=2
+data_2014.2015$RegionRank[data_2014.2015$Region=="C1"]=3
+data_2014.2015$RegionRank[data_2014.2015$Region=="C2"]=4
+data_2014.2015$RegionRank[data_2014.2015$Region=="C3"]=5
+data_2014.2015$RegionRank[data_2014.2015$Region=="N1"]=6
+data_2014.2015$RegionRank[data_2014.2015$Region=="N2"]=7
 
 # Create column for probability of flowering
-data_2014.2016$Fec0 = (ifelse(data_2014.2016$Class=="A", 1, 
-                              ifelse(data_2014.2016$Class=="J",0 , NA))) 
+data_2014.2015$Fec0 = (ifelse(data_2014.2015$Class=="A", 1, 
+                              ifelse(data_2014.2015$Class=="J",0 , NA))) 
 
 # Merge transition data with seed count data
-data_2014.2016 <- merge(data_2014.2016,seed.ct,by="Site",all.x=TRUE,all.y=FALSE)
+data_2014.2015 <- merge(data_2014.2015,seed.ct,by="Site",all.x=TRUE,all.y=FALSE)
 
-data_2014.2016 <- data_2014.2016 %>% select(colnames(data_2010.2014))
+data_2014.2015 <- data_2014.2015 %>% select(colnames(data_2010.2014))
 
 # Combine all years
-data <- rbind(data_2010.2014, data_2014.2016)
+data <- rbind(data_2010.2014, data_2014.2015)
 
 # Make site x year variable
 data$SiteYear = paste(data$Site, data$Year, sep=":") %>% factor()
@@ -246,8 +229,8 @@ tail(data.indivs)
 data.indivs=data.indivs[order(-data.indivs$Latitude,data.indivs$Year),]
 
 # write to .csv
-write.csv(data.indivs,"data/demography data/Mcard_demog_data_2010-2016_cleanindivs.csv",row.names=FALSE)
-write.csv(site_fruit_count_data,"data/demography data/Mcard_demog_data_2010-2016_seedinput.csv",row.names=FALSE)
+write.csv(data.indivs,"data/demography data/Mcard_demog_data_2010-2015_cleanindivs.csv",row.names=FALSE)
+write.csv(site_fruit_count_data,"data/demography data/Mcard_demog_data_2010-2015_seedinput.csv",row.names=FALSE)
 
 
 #*******************************************************************************
