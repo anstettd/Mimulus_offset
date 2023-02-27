@@ -155,7 +155,7 @@ c_range <- st_transform(c_range, crs = 4326) # reproject to WGS 1984 (EPSG 4326)
 
 ## Raster import and manipulation
 #Import 1981-2010 raster data for West NA & and stack them
-wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Year_8110"
+wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_8110"
 vlist <- c("MAT","MAP","CMD")
 stk <- rasterStack(wd,vlist,rType='tif',vConvert=F)
 
@@ -184,8 +184,8 @@ stk.df.cell<-cellFromXY(stk.mask, cbind(stk.df$x, stk.df$y))
 ##Import 2012-2015 raster average
 
 #######################
-#Import 2012 raster data for West NA & and stack them
-wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Year_1215"
+#Import 2012-2015 raster data for West NA & and stack them
+wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_1215"
 vlist <- c("MAT","MAP","CMD")
 stk_2012 <- rasterStack(wd,vlist,rType='tif',vConvert=F)
 
@@ -212,7 +212,7 @@ stk_2012.df.cell<-cellFromXY(stk_2012.mask, cbind(stk_2012.df$x, stk_2012.df$y))
 
 
 #Get mask for RGB
-MAT.clip <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/Year_2016/MAT.tif")
+MAT.clip <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_8110/MAT.tif")
 MAT.clip <- projectRaster(MAT.clip, crs=EPSG4326) #reproject to WGS 1984 (EPSG 4326)
 rbg_mask <- raster::crop(MAT.clip, extent(c_range))
 rbg_mask <- mask(rbg_mask, c_range)

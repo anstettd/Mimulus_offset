@@ -15,29 +15,30 @@ library(rgdal)
 
 #Import asc file
 
-mat_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2011/mat.asc")
-map_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2011/map.asc")
-cmd_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2011/cmd.asc")
+#2011
+mat_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2011/mat.asc")
+map_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2011/map.asc")
+cmd_2011 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2011/cmd.asc")
 
-mat_2012 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2012/mat.asc")
-map_2012 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2012/map.asc")
-cmd_2012 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2012/cmd.asc")
+mat_2012 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2012/mat.asc")
+map_2012 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2012/map.asc")
+cmd_2012 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2012/cmd.asc")
 
-mat_2013 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2013/mat.asc")
-map_2013 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2013/map.asc")
-cmd_2013 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2013/cmd.asc")
+mat_2013 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2013/mat.asc")
+map_2013 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2013/map.asc")
+cmd_2013 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2013/cmd.asc")
 
-mat_2014 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2014/mat.asc")
-map_2014 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2014/map.asc")
-cmd_2014 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2014/cmd.asc")
+mat_2014 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2014/mat.asc")
+map_2014 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2014/map.asc")
+cmd_2014 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2014/cmd.asc")
 
-mat_2015 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2015/mat.asc")
-map_2015 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2015/map.asc")
-cmd_2015 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2015/cmd.asc")
+mat_2015 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2015/mat.asc")
+map_2015 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2015/map.asc")
+cmd_2015 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2015/cmd.asc")
 
-mat_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2016/mat.asc")
-map_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2016/map.asc")
-cmd_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc/Year_2016/cmd.asc")
+mat_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2016/mat.asc")
+map_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2016/map.asc")
+cmd_2016 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Year_2016/cmd.asc")
 
 mat_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Normal_1981_2010Y/mat.asc")
 map_8110 <- raster("C:/Users/anstett3/Documents/Genomics/Large_files/asc_updated/Normal_1981_2010Y/map.asc")
