@@ -25,12 +25,12 @@ library(RColorBrewer)
 ## INPUTS
 
 #Timeseries offset raster
-mask_offset_1215 <- raster("Genomics_scripts/Data/offset_1215.tif") #pop data
-clim_diff_1215 <- raster("Genomics_scripts/Data/clim_distance.tif") #pop data
+mask_offset_1215 <- raster("data/genomic_data/offset_1215.tif") #pop data
+clim_diff_1215 <- raster("data/genomic_data/clim_distance.tif") #pop data
 
 #Future cliamte change offset raster
-mask_offset_45_grain <- raster("Genomics_scripts/Data/offset_4.5_peakbf2_grain.tif") #pop data 
-mask_offset_85_grain <- raster("Genomics_scripts/Data/offset_8.5_peakbf2_grain.tif") #pop data
+mask_offset_45_grain <- raster("data/genomic_data/offset_4.5_peakbf2_grain.tif") #pop data 
+mask_offset_85_grain <- raster("data/genomic_data/offset_8.5_peakbf2_grain.tif") #pop data
 
 #Labled as bf2, but is actually bf5
 
@@ -43,7 +43,7 @@ calo <- states %>%
   filter(name_en=="Oregon" | name_en=="California" | name_en=="Nevada")
 
 #Baseline & Timeseries
-baseline_pop <- read_csv("Genomics_scripts/Data/paper_ID_site_select.csv")
+baseline_pop <- read_csv("data/genomic_data/paper_ID_site_select.csv")
 timeseries_pop <- baseline_pop %>% filter(Paper_ID<13) %>% dplyr::select(Long,Lat)
 timeseries_pop_sf <- st_as_sf(timeseries_pop,coords=c("Long","Lat"), crs=EPSG4326)
 baseline_pop <- baseline_pop  %>% dplyr::select(Long,Lat)

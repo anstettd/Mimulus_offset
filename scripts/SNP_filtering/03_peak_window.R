@@ -17,9 +17,9 @@ snps_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_
 snps_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_map.csv")
 snps_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_cmd.csv")
 
-wza_win_mat <- read_csv("Genomics_scripts/Data/WZA_win_mat.csv")
-wza_win_map <- read_csv("Genomics_scripts/Data/WZA_win_map.csv")
-wza_win_cmd <- read_csv("Genomics_scripts/Data/WZA_win_cmd.csv")
+wza_win_mat <- read_csv("data/genomic_data/WZA_win_mat.csv")
+wza_win_map <- read_csv("data/genomic_data/WZA_win_map.csv")
+wza_win_cmd <- read_csv("data/genomic_data/WZA_win_cmd.csv")
 
 #Filter by Bonferonnii correction alpha critical = 1.29423e-06, aka 5.887988 sigma
 mat_bon <- wza_win_mat %>% filter(approx_p<1.29423e-06)
@@ -127,14 +127,14 @@ ggplotly(wza_empri_mat)
 
 
 #Export peak snps
-write_csv(snps_mat_peak,"Genomics_scripts/Data/snps_peak_mat.csv")
-write_csv(snps_map_peak,"Genomics_scripts/Data/snps_peak_map.csv")
-write_csv(snps_cmd_peak,"Genomics_scripts/Data/snps_peak_cmd.csv")
+write_csv(snps_mat_peak,"data/genomic_data/snps_peak_mat.csv")
+write_csv(snps_map_peak,"data/genomic_data/snps_peak_map.csv")
+write_csv(snps_cmd_peak,"data/genomic_data/snps_peak_cmd.csv")
 
 #Export peak windows
-write_csv(mat_bon_peak,"Genomics_scripts/Data/peak_window_mat.csv")
-write_csv(map_bon_peak,"Genomics_scripts/Data/peak_window_map.csv")
-write_csv(cmd_bon_peak,"Genomics_scripts/Data/peak_window_cmd.csv")
+write_csv(mat_bon_peak,"data/genomic_data/peak_window_mat.csv")
+write_csv(map_bon_peak,"data/genomic_data/peak_window_map.csv")
+write_csv(cmd_bon_peak,"data/genomic_data/peak_window_cmd.csv")
 
 
 

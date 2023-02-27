@@ -13,7 +13,7 @@ library(tidyverse)
 library(qqman)
 
 #Import chromosome size
-chr_size <- read_csv("Genomics_scripts/Data/chr_size.csv")
+chr_size <- read_csv("data/genomic_data/chr_size.csv")
 chr_size[,3] <- cumsum(chr_size$size) #get cumulative chromosome position
 colnames(chr_size)[3] <- "poz"
 

@@ -121,11 +121,11 @@ rasterStack <- function(x,varList,rType='tif',vConvert=T){
 
 ## Import SNP data and arrange for gradient forest
 #Import SNP Data & and reformat
-snp_clim_bf20NA <- read_csv("Genomics_scripts/Data/snp_clim_peakbf5_noNA.csv") #pop data
+snp_clim_bf20NA <- read_csv("data/genomic_data/snp_clim_peakbf5_noNA.csv") #pop data
 test_snp <- snp_clim_bf20NA %>% dplyr::select(-Site_Name, -Paper_ID, -Latitude, -Longitude, -Elevation, -MAT, -MAP, -CMD,
                                        -PAS, -EXT, -Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm)
-#snp_clim_ful <- read_csv("Genomics_scripts/Data/snp_clim_full.csv") # full data
-#snp_clim_bf20 <- read_csv("Genomics_scripts/Data/snp_clim_peakbf5_NA.csv") #pop data, NA's included
+#snp_clim_ful <- read_csv("data/genomic_data/snp_clim_full.csv") # full data
+#snp_clim_bf20 <- read_csv("data/genomic_data/snp_clim_peakbf5_NA.csv") #pop data, NA's included
 #test_snp <- snp_clim_bf20 %>% dplyr::select(-Site_Name, -Paper_ID, -Latitude, -Longitude, -Elevation, -MAT, -MAP, -CMD,
 #-PAS, -EXT, -Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm)
 
@@ -149,7 +149,7 @@ pred<-colnames(env_site)
 ## Range wide polygon
 # Import M.cardinalis ensamble range extent as sf polygon
 #c_range <- st_read("SDM/Output/c_range_2.shp")
-c_range <- st_read("Genomics_scripts/Data/Shape/c_range50.shp") 
+c_range <- st_read("data/genomic_data/Shape/c_range50.shp") 
 c_range <- st_transform(c_range, crs = 4326) # reproject to WGS 1984 (EPSG 4326)
 
 
@@ -274,7 +274,7 @@ offset_BF20_2012 <- sqrt((projBF20_2012[,1]-predBF20[,1])^2+(projBF20_2012[,2]-p
 mask_offset_2012[stk_2012.df.cell] <- offset_BF20_2012
 plot(mask_offset_2012)
 
-writeRaster(mask_offset_2012,"Genomics_scripts/Data/offset_1215.tif", format="GTiff", overwrite=TRUE)
+writeRaster(mask_offset_2012,"data/genomic_data/offset_1215.tif", format="GTiff", overwrite=TRUE)
 
 
 #Get Climate Distance
@@ -298,7 +298,7 @@ clim_distance_1215 <- sqrt((pred_past_env[,1]-pred_1215_env[,1])^2+(pred_past_en
 mask_offset_2012_dist[stk_2012.df.cell] <- clim_distance_1215
 plot(mask_offset_2012_dist)
 
-writeRaster(mask_offset_2012_dist,"Genomics_scripts/Data/clim_distance.tif", format="GTiff", overwrite=TRUE)
+writeRaster(mask_offset_2012_dist,"data/genomic_data/clim_distance.tif", format="GTiff", overwrite=TRUE)
 
 
 

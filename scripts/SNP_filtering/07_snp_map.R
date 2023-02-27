@@ -17,9 +17,9 @@
 library(tidyverse)
 
 #Import BF>20 SNP data
-snp1_filter <- read_csv("Genomics_scripts/Data/win_bf_mat30_5.csv")
-snp2_filter <- read_csv("Genomics_scripts/Data/win_bf_map30_5.csv")
-snp5_filter <- read_csv("Genomics_scripts/Data/win_bf_cmd30_5.csv")
+snp1_filter <- read_csv("data/genomic_data/win_bf_mat30_5.csv")
+snp2_filter <- read_csv("data/genomic_data/win_bf_map30_5.csv")
+snp5_filter <- read_csv("data/genomic_data/win_bf_cmd30_5.csv")
 
 #Add env variable identifier 
 chr_obs_mat <- snp1_filter %>% select(chr_snp) %>% separate(chr_snp,c("CE","chr","Position")) %>% select(-CE)

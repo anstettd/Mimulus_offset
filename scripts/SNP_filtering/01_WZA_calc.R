@@ -36,7 +36,7 @@ library(tidyverse)
 library(Kendall)
 
 #Import Climate Data
-climate <- read_csv("Genomics_scripts/Data/env_baseline.csv",col_names=FALSE)
+climate <- read_csv("data/genomic_data/env_baseline.csv",col_names=FALSE)
 climate2 <- filter(climate[1:2,])
 climate5 <- filter(climate[5,])
 climate_wza <- rbind(climate2,climate5)

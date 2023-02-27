@@ -14,9 +14,9 @@ loci_win <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/loci
 loci_win <- loci_win %>% unite(col="chr_snp", c("chr","snp"), sep="_")
 
 #Import files
-snps_peak_mat <- read_csv("Genomics_scripts/Data/snps_peak_mat.csv")
-snps_peak_map <- read_csv("Genomics_scripts/Data/snps_peak_map.csv")
-snps_peak_cmd <- read_csv("Genomics_scripts/Data/snps_peak_cmd.csv")
+snps_peak_mat <- read_csv("data/genomic_data/snps_peak_mat.csv")
+snps_peak_map <- read_csv("data/genomic_data/snps_peak_map.csv")
+snps_peak_cmd <- read_csv("data/genomic_data/snps_peak_cmd.csv")
 
 #Import snp env associations (Baseline)
 env1 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_1_trim.tsv",header=F, sep=" ")
@@ -66,8 +66,8 @@ colnames(snp_map_peakbf30_win)[5] <- "win"
 colnames(snp_cmd_peakbf30_win)[5] <- "win"
 
 
-write_csv(snp_mat_peakbf30_win,"Genomics_scripts/Data/win_bf_mat30_5.csv")
-write_csv(snp_map_peakbf30_win,"Genomics_scripts/Data/win_bf_map30_5.csv")
-write_csv(snp_cmd_peakbf30_win,"Genomics_scripts/Data/win_bf_cmd30_5.csv")
+write_csv(snp_mat_peakbf30_win,"data/genomic_data/win_bf_mat30_5.csv")
+write_csv(snp_map_peakbf30_win,"data/genomic_data/win_bf_map30_5.csv")
+write_csv(snp_cmd_peakbf30_win,"data/genomic_data/win_bf_cmd30_5.csv")
 
 

@@ -119,7 +119,7 @@ rasterStack <- function(x,varList,rType='tif',vConvert=T){
 
 ## Import SNP data and arrange for gradient forest
 #Import SNP Data & and reformat
-snp_clim_bf20NA <- read_csv("Genomics_scripts/Data/snp_clim_peakbf5_noNA.csv") #pop data
+snp_clim_bf20NA <- read_csv("data/genomic_data/snp_clim_peakbf5_noNA.csv") #pop data
 test_snp <- snp_clim_bf20NA %>% dplyr::select(-Site_Name, -Paper_ID, -Latitude, -Longitude, -Elevation, -MAT, -MAP, -CMD,
                                               -PAS, -EXT, -Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm)
 
@@ -141,7 +141,7 @@ pred<-colnames(env_site)
 
 ## Range wide polygon
 # Import M.cardinalis ensamble range extent as sf polygon
-c_range <- st_read("Genomics_scripts/Data/Shape/c_range50.shp") 
+c_range <- st_read("data/genomic_data/Shape/c_range50.shp") 
 c_range <- st_transform(c_range, crs = 4326) # reproject to WGS 1984 (EPSG 4326)
 
 
@@ -299,8 +299,8 @@ mask_offset_85[stk_8.5.df.cell] <- offset_BF20_8.5
 plot(mask_offset_45)
 plot(mask_offset_85)
 
-writeRaster(mask_offset_45,"Genomics_scripts/Data/offset_4.5_peakbf2_grain.tif", format="GTiff", overwrite=TRUE)
-writeRaster(mask_offset_85,"Genomics_scripts/Data/offset_8.5_peakbf2_grain.tif", format="GTiff", overwrite=TRUE)
+writeRaster(mask_offset_45,"data/genomic_data/offset_4.5_peakbf2_grain.tif", format="GTiff", overwrite=TRUE)
+writeRaster(mask_offset_85,"data/genomic_data/offset_8.5_peakbf2_grain.tif", format="GTiff", overwrite=TRUE)
 
 
 

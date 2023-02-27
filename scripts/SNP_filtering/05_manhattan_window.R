@@ -13,9 +13,9 @@ library(Kendall)
 
 #Import files
 
-wza_win_mat <- read_csv("Genomics_scripts/Data/WZA_win_mat.csv")
-wza_win_map <- read_csv("Genomics_scripts/Data/WZA_win_map.csv")
-wza_win_cmd <- read_csv("Genomics_scripts/Data/WZA_win_cmd.csv")
+wza_win_mat <- read_csv("data/genomic_data/WZA_win_mat.csv")
+wza_win_map <- read_csv("data/genomic_data/WZA_win_map.csv")
+wza_win_cmd <- read_csv("data/genomic_data/WZA_win_cmd.csv")
 
 
 ###########################################################################################################
