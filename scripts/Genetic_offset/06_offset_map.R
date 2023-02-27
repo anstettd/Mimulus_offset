@@ -119,7 +119,7 @@ offset_1215 <- tm_shape(mask_offset_1215, bbox=st_bbox(calo)) + #legal boundires
   #  tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 offset_1215
-#tmap_save(offset_1215, filename = "Graphs/offset1215.pdf",width=4, height=7)
+tmap_save(offset_1215, filename = "Graphs/offset1215.pdf",width=4, height=7)
 
 
 ##############################################################################
@@ -143,7 +143,7 @@ env_1215 <- tm_shape(clim_diff_1215, bbox=st_bbox(calo)) + #legal boundires
   #  tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 env_1215
-#tmap_save(env_1215, filename = "Graphs/clim_diff_1215.pdf",width=4, height=7)
+tmap_save(env_1215, filename = "Graphs/clim_diff_1215.pdf",width=4, height=7)
 
 
 
