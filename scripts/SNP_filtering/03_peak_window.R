@@ -13,29 +13,18 @@ library(Kendall)
 library(plotly)
 
 #Import files
-snps_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/mat_WZA.csv")
-snps_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/map_WZA.csv")
-snps_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/cmd_WZA.csv")
-
-
-
-
-
-
-
-
-
-
-
-
 wza_win_mat <- read_csv("data/genomic_data/WZA_win_mat.csv")
 wza_win_map <- read_csv("data/genomic_data/WZA_win_map.csv")
 wza_win_cmd <- read_csv("data/genomic_data/WZA_win_cmd.csv")
 
+#snps_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/mat_WZA.csv")
+#snps_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/map_WZA.csv")
+#snps_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/cmd_WZA.csv")
+
 #Filter by Bonferonnii correction alpha critical = 1.29423e-06, aka 5.887988 sigma
-mat_bon <- wza_win_mat %>% filter(approx_p<1.29423e-06)
-map_bon <- wza_win_map %>% filter(approx_p<1.29423e-06)
-cmd_bon <- wza_win_cmd %>% filter(approx_p<1.29423e-06)
+mat_bon <- wza_win_mat %>% filter(Z_pVal<1.29423e-06)
+map_bon <- wza_win_map %>% filter(Z_pVal<1.29423e-06)
+cmd_bon <- wza_win_cmd %>% filter(Z_pVal<1.29423e-06)
 
 #Get peak windows only
 #Filter out windows that are not peak windows
@@ -59,7 +48,7 @@ snps_cmd_peak <- snps_cmd_peak %>% unite(chr_snp,"chr","snp",sep="_")
 #View empirical p-value plots using plotly
 
 #CMD
-wza_empri_cmd <- ggplot(data = wza_win_cmd, aes( x = pos/1e6, y = -log10(approx_p)))+
+wza_empri_cmd <- ggplot(data = wza_win_cmd, aes( x = pos/1e6, y = -log10(Z_pVal)))+
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
   geom_line()+
   scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,20))+

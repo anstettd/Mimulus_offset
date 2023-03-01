@@ -34,24 +34,38 @@ cd /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filterin
 
 #Implement WZA for MAT, MAP, CMD associated SNPs
 
-python3 general_WZA_script.py --correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_mat_input.csv \
+python3 /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering/general_WZA_script.py \
+--correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_mat_input.csv \
                               --summary_stat empirical_p \
                               --window win \
                               --MAF q_bar \
                               --output /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/mat_WZA.csv \
                               --sep ","
-                              
-python3 general_WZA_script.py --correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_map_input.csv \
+                              --large_i_small_p TRUE
+                                                            
+python3 /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering/general_WZA_script.py 
+--correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_map_input.csv \
                               --summary_stat empirical_p \
                               --window win \
                               --MAF q_bar \
                               --output /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/map_WZA.csv \
                               --sep ","
                               
-python3 general_WZA_script.py --correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_cmd_input.csv \
+python3 /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering/general_WZA_script.py 
+--correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_cmd_input.csv \
                               --summary_stat empirical_p \
                               --window win \
                               --MAF q_bar \
                               --output /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/cmd_WZA.csv \
                               --sep ","
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
                               
