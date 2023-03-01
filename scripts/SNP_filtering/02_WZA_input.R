@@ -37,24 +37,9 @@ WZA_df_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/ma
 WZA_df_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/cmd_WZA.csv")
 
 ###########################################################################################################
-#Calc empirical p-value based on WZA scores
-
-#MAT
-WZA_mean_mat <- mean(WZA_df_mat$Z_pVal,na.rm = T) ## Calculate the mean and sd of the WZA distribution
-WZA_sd_mat <- sd(WZA_df_mat$Z_pVal,na.rm = T)
-WZA_df_mat$approx_p <- 2*pnorm(-abs(WZA_df_mat$Z_pVal), mean = WZA_mean_mat, sd= WZA_sd_mat) ## Calculate an approximate p-value based on the assumption of normality
+#Re-name windows
 names(WZA_df_mat)[names(WZA_df_mat) == 'gene'] <- 'win'
-
-#MAP
-WZA_mean_map <- mean(WZA_df_map$Z_pVal,na.rm = T) ## Calculate the mean and sd of the WZA distribution
-WZA_sd_map <- sd(WZA_df_map$Z_pVal,na.rm = T)
-WZA_df_map$approx_p <- 2*pnorm(-abs(WZA_df_map$Z_pVal), mean = WZA_mean_map, sd= WZA_sd_map) ## Calculate an approximate p-value based on the assumption of normality
 names(WZA_df_map)[names(WZA_df_map) == 'gene'] <- 'win'
-
-#CMD
-WZA_mean_cmd <- mean(WZA_df_cmd$Z_pVal,na.rm = T) ## Calculate the mean and sd of the WZA distribution
-WZA_sd_cmd <- sd(WZA_df_cmd$Z_pVal,na.rm = T)
-WZA_df_cmd$approx_p <- 2*pnorm(-abs(WZA_df_cmd$Z_pVal), mean = WZA_mean_cmd, sd= WZA_sd_cmd) ## Calculate an approximate p-value based on the assumption of normality
 names(WZA_df_cmd)[names(WZA_df_cmd) == 'gene'] <- 'win'
 
 #Make DF that has chr ID for each window
