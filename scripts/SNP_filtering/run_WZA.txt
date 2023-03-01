@@ -1,0 +1,57 @@
+#############################################################################################################
+## #Calc WZA for windows
+## #Author Daniel Anstett
+## 
+## 
+## #Modified from Tom Booker WZA Vignette
+## #Last Modified March 1, 2023
+#############################################################################################################
+
+#Install miniconda
+#Make virtual environment in miniconda
+conda create -n wza_env
+
+#Activate conda env
+conda activate wza_env
+
+#Install packages:
+
+#pandas
+conda install pandas
+#scipy
+conda install scipy
+#numpy
+conda install numpy
+
+##############################################################################################
+
+
+#Navigate to directory
+cd /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering
+
+#Implement in virtual environment with the following packages loaded:
+
+
+#Implement WZA for MAT, MAP, CMD associated SNPs
+
+python3 general_WZA_script.py --correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/data/genomic_data/WZA_mat_input.csv \
+                              --summary_stat empirical_p \
+                              --window win \
+                              --MAF q_bar \
+                              --output mat_WZA.csv \
+                              --sep ","
+                              
+python3 general_WZA_script.py --correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/data/genomic_data/WZA_map_input.csv \
+                              --summary_stat empirical_p \
+                              --window win \
+                              --MAF q_bar \
+                              --output map_WZA.csv \
+                              --sep ","
+                              
+python3 general_WZA_script.py --/Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/data/genomic_data/correlations WZA_cmd_input.csv \
+                              --summary_stat empirical_p \
+                              --window win \
+                              --MAF q_bar \
+                              --output cmd_WZA.csv \
+                              --sep ","
+                              
