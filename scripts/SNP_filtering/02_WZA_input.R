@@ -1,5 +1,6 @@
 #############################################################################################################
 ## Calc WZA for windows
+## Get empirical p-value
 ## Author Daniel Anstett
 ## 
 ## 
@@ -13,107 +14,51 @@ library(tidyverse)
 
 #Import files
 
-snps_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_mat.csv")
-snps_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_map.csv")
-snps_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_cmd.csv")
+#snps_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_mat.csv")
+#snps_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_map.csv")
+#snps_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_cmd.csv")
 
 ###########################################################################################################
 
 #Filter needed variables for WZA
-snps_mat_input <- snps_mat %>% select(empirical_p,win,q_bar)
-snps_map_input <- snps_map %>% select(empirical_p,win,q_bar)
-snps_cmd_input <- snps_cmd %>% select(empirical_p,win,q_bar)
+#snps_mat_input <- snps_mat %>% select(empirical_p,win,q_bar)
+#snps_map_input <- snps_map %>% select(empirical_p,win,q_bar)
+#snps_cmd_input <- snps_cmd %>% select(empirical_p,win,q_bar)
 
 #Too large to store on github. Store locally
-write_csv(snps_mat_input, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_mat_input.csv")
-write_csv(snps_map_input, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_map_input.csv")     
-write_csv(snps_cmd_input, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_cmd_input.csv")   
+#write_csv(snps_mat_input, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_mat_input.csv")
+#write_csv(snps_map_input, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_map_input.csv")     
+#write_csv(snps_cmd_input, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_cmd_input.csv")   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-###########################################################################################################
-#Calc WZA
-
-
-# Now convert the empirical p-values to z scores
-snps_mat$z_score <- qnorm(snps_mat$empirical_p, lower.tail = F)
-snps_map$z_score <- qnorm(snps_map$empirical_p, lower.tail = F)
-snps_cmd$z_score <- qnorm(snps_cmd$empirical_p, lower.tail = F)
-
-
-# Calculate p_bar*q_bar
-snps_mat$pbar_qbar <- snps_mat$p_bar*snps_mat$q_bar
-snps_map$pbar_qbar <- snps_map$p_bar*snps_mat$q_bar
-snps_cmd$pbar_qbar <- snps_cmd$p_bar*snps_mat$q_bar
-
-
-# Calculate the WZA for each window
-#MAT
-WZA_numerator_mat <- tapply(snps_mat$z_score*snps_mat$pbar_qbar, snps_mat$win, sum)
-WZA_denominator_mat <- sqrt( tapply((snps_mat$pbar_qbar*snps_mat$pbar_qbar), snps_mat$win, sum) )
-WZA_mat <- WZA_numerator_mat/WZA_denominator_mat
-pos_mat <- tapply(snps_mat$snp_c, snps_mat$win, mean)
-win_mat <- snps_mat %>% distinct(chr, win) #Get window and chromosome info into WZA data frame
-WZA_df_mat_df <- data.frame(WZA = WZA_mat, pos = pos_mat)
-WZA_df_mat <- cbind(win_mat,WZA_df_mat_df)
-
-#MAP
-WZA_numerator_map <- tapply(snps_map$z_score*snps_map$pbar_qbar, snps_map$win, sum)
-WZA_denominator_map <- sqrt( tapply((snps_map$pbar_qbar*snps_map$pbar_qbar), snps_map$win, sum) )
-WZA_map <- WZA_numerator_map/WZA_denominator_map
-pos_map <- tapply(snps_map$snp_c, snps_map$win, mean)
-win_map <- snps_map %>% distinct(chr, win) #Get window and chromosome info into WZA data frame
-WZA_df_map_df <- data.frame(WZA = WZA_map, pos = pos_map)
-WZA_df_map <- cbind(win_map,WZA_df_map_df)
-
-#CMD
-WZA_numerator_cmd <- tapply(snps_cmd$z_score*snps_cmd$pbar_qbar, snps_cmd$win, sum)
-WZA_denominator_cmd <- sqrt( tapply((snps_cmd$pbar_qbar*snps_cmd$pbar_qbar), snps_cmd$win, sum) )
-WZA_cmd <- WZA_numerator_cmd/WZA_denominator_cmd
-pos_cmd <- tapply(snps_cmd$snp_c, snps_cmd$win, mean)
-win_cmd <- snps_cmd %>% distinct(chr, win) #Get window and chromosome info into WZA data frame
-WZA_df_cmd_df <- data.frame(WZA = WZA_cmd, pos = pos_cmd)
-WZA_df_cmd <- cbind(win_cmd,WZA_df_cmd_df)
+#Run python script run_WZA.txt
+#Import WZA scores
+WZA_df_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/mat_WZA.csv")
+WZA_df_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/map_WZA.csv")
+WZA_df_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/cmd_WZA.csv")
 
 ###########################################################################################################
 #Calc empirical p-value based on WZA scores
 
 #MAT
-WZA_mean_mat <- mean(WZA_df_mat$WZA) ## Calculate the mean and sd of the WZA distribution
-WZA_sd_mat <- sd(WZA_df_mat$WZA)
-WZA_df_mat$approx_p <- 2*pnorm(-abs(WZA_df_mat$WZA), mean = WZA_mean_mat, sd= WZA_sd_mat) ## Calculate an approximate p-value based on the assumption of normality
+WZA_mean_mat <- mean(WZA_df_mat$Z_pVal,na.rm = T) ## Calculate the mean and sd of the WZA distribution
+WZA_sd_mat <- sd(WZA_df_mat$Z_pVal,na.rm = T)
+WZA_df_mat$approx_p <- 2*pnorm(-abs(WZA_df_mat$Z_pVal), mean = WZA_mean_mat, sd= WZA_sd_mat) ## Calculate an approximate p-value based on the assumption of normality
 
 #MAP
-WZA_mean_map <- mean(WZA_df_map$WZA) ## Calculate the mean and sd of the WZA distribution
-WZA_sd_map <- sd(WZA_df_map$WZA)
-WZA_df_map$approx_p <- 2*pnorm(-abs(WZA_df_map$WZA), mean = WZA_mean_map, sd= WZA_sd_map) ## Calculate an approximate p-value based on the assumption of normality
+WZA_mean_map <- mean(WZA_df_map$Z_pVal,na.rm = T) ## Calculate the mean and sd of the WZA distribution
+WZA_sd_map <- sd(WZA_df_map$Z_pVal,na.rm = T)
+WZA_df_map$approx_p <- 2*pnorm(-abs(WZA_df_map$Z_pVal), mean = WZA_mean_map, sd= WZA_sd_map) ## Calculate an approximate p-value based on the assumption of normality
 
 #CMD
-WZA_mean_cmd <- mean(WZA_df_cmd$WZA) ## Calculate the mean and sd of the WZA distribution
-WZA_sd_cmd <- sd(WZA_df_cmd$WZA)
-WZA_df_cmd$approx_p <- 2*pnorm(-abs(WZA_df_cmd$WZA), mean = WZA_mean_cmd, sd= WZA_sd_cmd) ## Calculate an approximate p-value based on the assumption of normality
-
+WZA_mean_cmd <- mean(WZA_df_cmd$Z_pVal,na.rm = T) ## Calculate the mean and sd of the WZA distribution
+WZA_sd_cmd <- sd(WZA_df_cmd$Z_pVal,na.rm = T)
+WZA_df_cmd$approx_p <- 2*pnorm(-abs(WZA_df_cmd$Z_pVal), mean = WZA_mean_cmd, sd= WZA_sd_cmd) ## Calculate an approximate p-value based on the assumption of normality
 
 write_csv(WZA_df_mat, "data/genomic_data/WZA_win_mat.csv")
 write_csv(WZA_df_map, "data/genomic_data/WZA_win_map.csv")
 write_csv(WZA_df_cmd, "data/genomic_data/WZA_win_cmd.csv")
+
+
+
 
 

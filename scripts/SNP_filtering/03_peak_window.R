@@ -13,9 +13,20 @@ library(Kendall)
 library(plotly)
 
 #Import files
-snps_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_mat.csv")
-snps_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_map.csv")
-snps_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_cmd.csv")
+snps_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/mat_WZA.csv")
+snps_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/map_WZA.csv")
+snps_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/cmd_WZA.csv")
+
+
+
+
+
+
+
+
+
+
+
 
 wza_win_mat <- read_csv("data/genomic_data/WZA_win_mat.csv")
 wza_win_map <- read_csv("data/genomic_data/WZA_win_map.csv")
