@@ -22,16 +22,15 @@ snps_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_
 snps_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_cmd_bf.csv")
 
 #Filter by Bonferonnii correction alpha critical = 1.29423e-06, aka 5.887988 sigma
-mat_bon <- wza_win_mat %>% filter(Z_pVal<1.29423e-06)
-map_bon <- wza_win_map %>% filter(Z_pVal<1.29423e-06)
-cmd_bon <- wza_win_cmd %>% filter(Z_pVal<1.29423e-06)
+mat_bon <- wza_win_mat %>% filter(Z_pVal<1.294264e-06)
+map_bon <- wza_win_map %>% filter(Z_pVal<1.294264e-06)
+cmd_bon <- wza_win_cmd %>% filter(Z_pVal<1.294264e-06)
 
 #Get peak windows only
 #Filter out windows that are not peak windows
-mat_bon_peak <- mat_bon %>% filter(!win %in% c(9934,9937,9939,3340)) # 11 windows
-map_bon_peak <- map_bon # 2 windows
-#%>% filter(!win %in% c())
-cmd_bon_peak <- cmd_bon #9 windows
+mat_bon_peak <- mat_bon %>% filter(!win %in% c(6458,6459)) # 19 windows
+map_bon_peak <- map_bon %>% filter(!win %in% c(3881,3882)) # 14 windows
+cmd_bon_peak <- cmd_bon # 12 windows
 #%>% filter(!win %in% c())
 
 #Filter SNPs for peak
@@ -80,7 +79,7 @@ wza_empri_map <- ggplot(data = wza_win_map, aes( x = pos/1e6, y = -log10(Z_pVal)
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
   geom_line()+
   scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,20))+
-  scale_x_continuous("Position (Mbp)",limits=c(0,410))+ #MODIFY RANGE HERE TO VIEW DATA UP CLOSE
+  scale_x_continuous("Position (Mbp)",limits=c(353,354))+ #MODIFY RANGE HERE TO VIEW DATA UP CLOSE
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_map)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "deepskyblue"), 22 )) +
   theme_classic()+
@@ -106,7 +105,7 @@ wza_empri_mat <- ggplot(data = wza_win_mat, aes( x = pos/1e6, y = -log10(Z_pVal)
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
   geom_line()+
   scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,20))+
-  scale_x_continuous("Position (Mbp)",limits=c(341,342))+ #MODIFY RANGE HERE TO VIEW DATA UP CLOSE
+  scale_x_continuous("Position (Mbp)",limits=c(64.5,64.7))+ #MODIFY RANGE HERE TO VIEW DATA UP CLOSE
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_mat)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "darkgoldenrod"), 22 )) +
   theme_classic()+
@@ -129,14 +128,14 @@ ggplotly(wza_empri_mat)
 
 
 #Export peak snps
-write_csv(snps_mat_peak,"data/genomic_data/snps_peak_mat.csv")
-write_csv(snps_map_peak,"data/genomic_data/snps_peak_map.csv")
-write_csv(snps_cmd_peak,"data/genomic_data/snps_peak_cmd.csv")
+write_csv(snps_mat_peak,"data/genomic_data/snps_peak_mat_bf.csv")
+write_csv(snps_map_peak,"data/genomic_data/snps_peak_map_bf.csv")
+write_csv(snps_cmd_peak,"data/genomic_data/snps_peak_cmd_bf.csv")
 
 #Export peak windows
-write_csv(mat_bon_peak,"data/genomic_data/peak_window_mat.csv")
-write_csv(map_bon_peak,"data/genomic_data/peak_window_map.csv")
-write_csv(cmd_bon_peak,"data/genomic_data/peak_window_cmd.csv")
+write_csv(mat_bon_peak,"data/genomic_data/peak_window_mat_bf.csv")
+write_csv(map_bon_peak,"data/genomic_data/peak_window_map_bf.csv")
+write_csv(cmd_bon_peak,"data/genomic_data/peak_window_cmd_bf.csv")
 
 
 
