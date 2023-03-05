@@ -36,13 +36,13 @@ library(tidyverse)
 library(Kendall)
 
 #Import Climate Data
-climate <- read_csv("data/genomic_data/env_baseline.csv",col_names=FALSE)
-climate2 <- filter(climate[1:2,])
-climate5 <- filter(climate[5,])
-climate_wza <- rbind(climate2,climate5)
-mat_pop <- as.numeric(climate_wza[1,])
-map_pop <- as.numeric(climate_wza[2,])
-cmd_pop <- as.numeric(climate_wza[3,])
+#climate <- read_csv("data/genomic_data/env_baseline.csv",col_names=FALSE)
+#climate2 <- filter(climate[1:2,])
+#climate5 <- filter(climate[5,])
+#climate_wza <- rbind(climate2,climate5)
+#mat_pop <- as.numeric(climate_wza[1,])
+#map_pop <- as.numeric(climate_wza[2,])
+#cmd_pop <- as.numeric(climate_wza[3,])
 
 
 #optima <- read.csv("/Users/daniel_anstett/Dropbox/AM_Workshop/WZA_vignette/environments.1_0.5_192.alleleFreqs.csv", header = F)
@@ -64,22 +64,7 @@ colnames(all_data)[4] <- "win"
 
 #############################################################################################################
 #############################################################################################################
-#WZA data prep and exploration
-
-#Filter for minor allele frequency
-# Let's split the data so that we have an allele freq. dataframe and a dataframe with SNP info
-snps_all <- all_data[,1:5]
-
-# let's take a look at the data, there should be SNPs in gene0 on chromosome 1 
-str(snps_all)
-
-# extract frequency data for each SNP
-freqs_all <- all_data[,5:dim(all_data)[2]] # There are 40 demes in the dataset, so columns 4 to 43 represent all the demes
-
-# take a look at the freuqency for the first SNP
-as.numeric(freqs_all[1,])
-
-# As you can see, most SNPs are at a low minor allele frequency - we remove the low frequency ones before applying the WZA.
+#WZA data prep
 
 # The first thing we'll do is calculate the average allele frequency across populations for each SNP and add it to the SNP info dataframe
 #Calc row means
@@ -89,66 +74,33 @@ all_data$q_bar <- 1 - all_data$p_bar
 # take the minimum to get the MAF
 all_data$MAF <- pmin(all_data$p_bar, all_data$q_bar)
 
-# now we'll apply the MAF filter to the data
-#separate
-snps <- snps_all[all_data$MAF >= 0.05, ]
-freqs <- freqs_all[all_data$MAF >= 0.05, ]
-
 #together
-all_data_filter <- all_data %>% filter(MAF>=0.05)
+#all_data_filter <- all_data %>% filter(MAF>=0.05)
+
 
 #############################################################################################################
-#Calc WZA
 
-#Make a little wrapper function for cor.test to return the summary stat and the p-value as a vector
-cor_test_wrapper <- function(p_vec, env_vector){
-  correlation_result <- cor.test(p_vec, env_vector, method = "kendall", exact = F)
-  return(c(correlation_result$estimate,
-           correlation_result$p.val))
-}
+#Import BayPass Results
+env1 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_1_trim.tsv",header=F, sep=" ")
+env2 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_2_trim.tsv",header=F, sep=" ")
+env5 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_5_trim.tsv",header=F, sep=" ")
 
-## Use the apply function to use the wrapper function on each line of the DF - this step takes a while...
-cor_results_1 <- apply(as.matrix(freqs[,-1]),
-                      1,
-                      function(x) cor_test_wrapper(x, mat_pop))
-cor_results_2 <- apply(as.matrix(freqs[,-1]),
-                       1,
-                       function(x) cor_test_wrapper(x, map_pop))
-cor_results_3 <- apply(as.matrix(freqs[,-1]),
-                       1,
-                       function(x) cor_test_wrapper(x, cmd_pop))
+#Name Columns
+colnames(env1) <- c("Chromosome","SNP","Env","BF")
+colnames(env2) <- c("Chromosome","SNP","Env","BF")
+colnames(env5) <- c("Chromosome","SNP","Env","BF")
 
-# transpose the result and store as a dataframe
-cor_results_1_t <- as.data.frame(t(cor_results_1))
-cor_results_2_t <- as.data.frame(t(cor_results_2))
-cor_results_3_t <- as.data.frame(t(cor_results_3))
+env1_united <- env1 %>% unite(chr_snp,"Chromosome","SNP",sep="_")
+env2_united <- env2 %>% unite(chr_snp,"Chromosome","SNP",sep="_")
+env5_united <- env5 %>% unite(chr_snp,"Chromosome","SNP",sep="_")
 
-# give the column informative names
-names(cor_results_1_t) <- c("Kendall", "p_val")
-names(cor_results_2_t) <- c("Kendall", "p_val")
-names(cor_results_3_t) <- c("Kendall", "p_val")
-
-# combine the result with the SNP table
-snps_mat <- cbind(snps , all_data_filter[61:63] , cor_results_1_t)
-snps_map <- cbind(snps , all_data_filter[61:63] , cor_results_2_t)
-snps_cmd <- cbind(snps , all_data_filter[61:63] , cor_results_3_t)
-
-snps_mat <- snps_mat %>% na.omit(snps_mat)
-snps_map <- snps_map %>% na.omit(snps_map)
-snps_cmd <- snps_cmd %>% na.omit(snps_cmd)
-
-min(snps_mat$p_val)
-min(snps_map$p_val)
-min(snps_cmd$p_val)
-
-# Make empirical p-value
-snps_mat$empirical_p <- rank(snps_mat$p_val)/length(snps_mat$p_val)
-snps_map$empirical_p <- rank(snps_map$p_val)/length(snps_map$p_val)
-snps_cmd$empirical_p <- rank(snps_cmd$p_val)/length(snps_cmd$p_val)
+snps_mat_bf <- left_join(all_data,env1_united, chr_snp=chr_snp)
+snps_map_bf <- left_join(all_data,env2_united, chr_snp=chr_snp)
+snps_cmd_bf <- left_join(all_data,env5_united, chr_snp=chr_snp)
 
 #Too large to store on github. Store locally
-#write_csv(snps_mat, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_mat.csv")
-#write_csv(snps_map, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_map.csv")     
-#write_csv(snps_cmd, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_cmd.csv")     
+write_csv(snps_mat_bf, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_mat_bf.csv")
+write_csv(snps_map_bf, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_map_bf.csv")     
+write_csv(snps_cmd_bf, "/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_cmd_bf.csv")     
 
 

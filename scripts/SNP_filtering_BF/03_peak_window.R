@@ -13,13 +13,13 @@ library(Kendall)
 library(plotly)
 
 #Import files
-wza_win_mat <- read_csv("data/genomic_data/WZA_win_mat.csv")
-wza_win_map <- read_csv("data/genomic_data/WZA_win_map.csv")
-wza_win_cmd <- read_csv("data/genomic_data/WZA_win_cmd.csv")
+wza_win_mat <- read_csv("data/genomic_data/WZA_win_mat_bf.csv")
+wza_win_map <- read_csv("data/genomic_data/WZA_win_map_bf.csv")
+wza_win_cmd <- read_csv("data/genomic_data/WZA_win_cmd_bf.csv")
 
-snps_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_mat.csv")
-snps_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_map.csv")
-snps_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_cmd.csv")
+snps_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_mat_bf.csv")
+snps_map <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_map_bf.csv")
+snps_cmd <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_cmd_bf.csv")
 
 #Filter by Bonferonnii correction alpha critical = 1.29423e-06, aka 5.887988 sigma
 mat_bon <- wza_win_mat %>% filter(Z_pVal<1.29423e-06)

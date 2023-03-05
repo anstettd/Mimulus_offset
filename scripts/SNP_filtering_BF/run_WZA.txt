@@ -25,39 +25,37 @@ conda install numpy
 
 ##############################################################################################
 
-
-#Navigate to directory
-cd /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering
-
 #Implement in virtual environment with the following packages loaded:
-
+conda activate wza_env
 
 #Implement WZA for MAT, MAP, CMD associated SNPs
 
-python3 /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering/general_WZA_script.py \
---correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_mat_input.csv \
-                              --summary_stat empirical_p \
+python3 /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering_BF/general_WZA_script.py \
+--correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_mat_input_bf.csv \
+                              --summary_stat BF \
                               --window win \
                               --MAF q_bar \
-                              --output /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/mat_WZA.csv \
-                              --sep ","
-                              --large_i_small_p TRUE
+                              --output /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/mat_WZA_bf.csv \
+                              --sep "," \
+                              --large_i_small_p
                                                             
-python3 /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering/general_WZA_script.py 
---correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_map_input.csv \
-                              --summary_stat empirical_p \
+python3 /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering_BF/general_WZA_script.py \
+--correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_map_input_bf.csv \
+                              --summary_stat BF \
                               --window win \
                               --MAF q_bar \
-                              --output /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/map_WZA.csv \
-                              --sep ","
+                              --output /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/map_WZA_bf.csv \
+                              --sep "," \
+                              --large_i_small_p
                               
-python3 /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering/general_WZA_script.py 
---correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_cmd_input.csv \
-                              --summary_stat empirical_p \
+python3 /Users/daniel_anstett/Dropbox/AM_Workshop/Mimulus_offset/scripts/SNP_filtering_BF/general_WZA_script.py \
+--correlations /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_cmd_input_bf.csv \
+                              --summary_stat BF \
                               --window win \
                               --MAF q_bar \
-                              --output /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/cmd_WZA.csv \
-                              --sep ","
+                              --output /Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/cmd_WZA_bf.csv \
+                              --sep "," \
+                              --large_i_small_p
                               
                               
                               
