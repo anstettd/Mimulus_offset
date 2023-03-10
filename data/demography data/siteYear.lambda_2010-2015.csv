@@ -1,0 +1,94 @@
+"Site","Year","SiteYear","Latitude","Longitude","Elevation","Region","RegionRank","lambda"
+"Coast Fork of Williamette","2010","Coast Fork of Williamette:2010",43.6517,-123.088,254,"N2",7,0.704838023057562
+"Coast Fork of Williamette","2011","Coast Fork of Williamette:2011",43.6517,-123.088,254,"N2",7,5.06994293266666
+"Coast Fork of Williamette","2012","Coast Fork of Williamette:2012",43.6517,-123.088,254,"N2",7,7.30478338168086
+"Coast Fork of Williamette","2013","Coast Fork of Williamette:2013",43.6517,-123.088,254,"N2",7,0.905240938734989
+"Coast Fork of Williamette","2014","Coast Fork of Williamette:2014",43.6517,-123.088,254,"N2",7,0.918084638944983
+"Canton Creek","2010","Canton Creek:2010",43.4137,-122.7804,503,"N2",7,1.71569724085686
+"Canton Creek","2011","Canton Creek:2011",43.4137,-122.7804,503,"N2",7,NA
+"Canton Creek","2012","Canton Creek:2012",43.4137,-122.7804,503,"N2",7,2.25686100200398
+"Canton Creek","2013","Canton Creek:2013",43.4137,-122.7804,503,"N2",7,0.798730759248737
+"Canton Creek","2014","Canton Creek:2014",43.4137,-122.7804,503,"N2",7,0.541025769452903
+"Rock Creek","2010","Rock Creek:2010",43.37876,-122.9521,295,"N2",7,0.222357111403477
+"Rock Creek","2011","Rock Creek:2011",43.37876,-122.9521,295,"N2",7,0.624678917897242
+"Rock Creek","2014","Rock Creek:2014",43.37876,-122.9521,295,"N2",7,0.161448476053129
+"Deer Creek","2011","Deer Creek:2011",42.27525,-123.64,387,"N1",6,0.355098936460414
+"Deer Creek","2012","Deer Creek:2012",42.27525,-123.64,387,"N1",6,46.0751565304524
+"Deer Creek","2013","Deer Creek:2013",42.27525,-123.64,387,"N1",6,1.60655779984683
+"Deer Creek","2014","Deer Creek:2014",42.27525,-123.64,387,"N1",6,0.172518230752105
+"O'Neil Creek","2010","O'Neil Creek:2010",41.80979,-123.1189,487,"N1",6,0.883466206124559
+"O'Neil Creek","2011","O'Neil Creek:2011",41.80979,-123.1189,487,"N1",6,0.898150608615891
+"O'Neil Creek","2012","O'Neil Creek:2012",41.80979,-123.1189,487,"N1",6,0.40791631844529
+"O'Neil Creek","2013","O'Neil Creek:2013",41.80979,-123.1189,487,"N1",6,2.23960986918949
+"O'Neil Creek","2014","O'Neil Creek:2014",41.80979,-123.1189,487,"N1",6,1.2269449053585
+"Deep Creek","2010","Deep Creek:2010",41.66546,-123.1134,694,"N1",6,1.09476442482157
+"Deep Creek","2011","Deep Creek:2011",41.66546,-123.1134,694,"N1",6,1.52490942875616
+"Deep Creek","2012","Deep Creek:2012",41.66546,-123.1134,694,"N1",6,0.910902017997514
+"Deep Creek","2013","Deep Creek:2013",41.66546,-123.1134,694,"N1",6,0.860416703985022
+"Deep Creek","2014","Deep Creek:2014",41.66546,-123.1134,694,"N1",6,1.75291426135531
+"Little Jameson Creek","2010","Little Jameson Creek:2010",39.74298,-120.704,1592,"C3",5,0.964924223586707
+"Little Jameson Creek","2011","Little Jameson Creek:2011",39.74298,-120.704,1592,"C3",5,0.89690209916643
+"Little Jameson Creek","2012","Little Jameson Creek:2012",39.74298,-120.704,1592,"C3",5,0.902899658106528
+"Little Jameson Creek","2013","Little Jameson Creek:2013",39.74298,-120.704,1592,"C3",5,0.938112010572643
+"Little Jameson Creek","2014","Little Jameson Creek:2014",39.74298,-120.704,1592,"C3",5,0.917023925504166
+"Oregon Creek","2010","Oregon Creek:2010",39.39704,-121.082,448,"C3",5,1.31787516546615
+"Oregon Creek","2011","Oregon Creek:2011",39.39704,-121.082,448,"C3",5,0.937051020036855
+"Oregon Creek","2012","Oregon Creek:2012",39.39704,-121.082,448,"C3",5,1.27950312167538
+"Oregon Creek","2013","Oregon Creek:2013",39.39704,-121.082,448,"C3",5,1.05599344933838
+"Oregon Creek","2014","Oregon Creek:2014",39.39704,-121.082,448,"C3",5,0.825834010118867
+"Rainbow Pool","2010","Rainbow Pool:2010",37.81878,-120.0073,833,"C2",4,1.29313174458878
+"Rainbow Pool","2011","Rainbow Pool:2011",37.81878,-120.0073,833,"C2",4,0.69807731867774
+"Rainbow Pool","2014","Rainbow Pool:2014",37.81878,-120.0073,833,"C2",4,0.682184511062428
+"Carlon","2010","Carlon:2010",37.81006,-119.8568,1320,"C2",4,0.758227449502744
+"Carlon","2011","Carlon:2011",37.81006,-119.8568,1320,"C2",4,0.325654681151511
+"Carlon","2014","Carlon:2014",37.81006,-119.8568,1320,"C2",4,0.843929260427796
+"Buck Meadows","2010","Buck Meadows:2010",37.77722,-120.0633,830,"C2",4,0.971145683248437
+"Buck Meadows","2011","Buck Meadows:2011",37.77722,-120.0633,830,"C2",4,0.954806427960852
+"Buck Meadows","2014","Buck Meadows:2014",37.77722,-120.0633,830,"C2",4,0.62022658394762
+"Wawona","2010","Wawona:2010",37.53822,-119.6514,1208,"C2",4,0.764982758182882
+"Wawona","2011","Wawona:2011",37.53822,-119.6514,1208,"C2",4,0.759211217253829
+"Wawona","2012","Wawona:2012",37.53822,-119.6514,1208,"C2",4,1.07387076310091
+"Wawona","2013","Wawona:2013",37.53822,-119.6514,1208,"C2",4,0.874561761766976
+"Wawona","2014","Wawona:2014",37.53822,-119.6514,1208,"C2",4,1.04792557117073
+"Redwood Creek","2010","Redwood Creek:2010",36.68952,-118.9096,1677,"C1",3,0.616371977256435
+"Redwood Creek","2011","Redwood Creek:2011",36.68952,-118.9096,1677,"C1",3,1.16283061335915
+"Redwood Creek","2012","Redwood Creek:2012",36.68952,-118.9096,1677,"C1",3,0.805630317721118
+"Redwood Creek","2013","Redwood Creek:2013",36.68952,-118.9096,1677,"C1",3,0.697524450133354
+"Redwood Creek","2014","Redwood Creek:2014",36.68952,-118.9096,1677,"C1",3,0.449092707229081
+"North Fork Middle Fork Tule","2010","North Fork Middle Fork Tule:2010",36.20081,-118.6509,1284,"C1",3,1.00718326762781
+"North Fork Middle Fork Tule","2011","North Fork Middle Fork Tule:2011",36.20081,-118.6509,1284,"C1",3,0.76599313588552
+"North Fork Middle Fork Tule","2012","North Fork Middle Fork Tule:2012",36.20081,-118.6509,1284,"C1",3,1.01263716132887
+"North Fork Middle Fork Tule","2013","North Fork Middle Fork Tule:2013",36.20081,-118.6509,1284,"C1",3,0.783457314309072
+"North Fork Middle Fork Tule","2014","North Fork Middle Fork Tule:2014",36.20081,-118.6509,1284,"C1",3,0.8810689071152
+"South Fork Middle Fork Tule","2012","South Fork Middle Fork Tule:2012",36.13756,-118.5741,1664,"C1",3,1.40480855825905
+"South Fork Middle Fork Tule","2013","South Fork Middle Fork Tule:2013",36.13756,-118.5741,1664,"C1",3,1.22531684458184
+"South Fork Middle Fork Tule","2014","South Fork Middle Fork Tule:2014",36.13756,-118.5741,1664,"C1",3,0.823216947550434
+"West Fork Mojave River","2010","West Fork Mojave River:2010",34.28425,-117.3754,1087,"S2",2,0.35946826266224
+"West Fork Mojave River","2011","West Fork Mojave River:2011",34.28425,-117.3754,1087,"S2",2,0.89673331785649
+"West Fork Mojave River","2012","West Fork Mojave River:2012",34.28425,-117.3754,1087,"S2",2,0.74061556959829
+"West Fork Mojave River","2013","West Fork Mojave River:2013",34.28425,-117.3754,1087,"S2",2,NA
+"West Fork Mojave River","2014","West Fork Mojave River:2014",34.28425,-117.3754,1087,"S2",2,0.589333648615814
+"Mill Creek","2010","Mill Creek:2010",34.07808,-116.8756,1992,"S2",2,NA
+"Mill Creek","2011","Mill Creek:2011",34.07808,-116.8756,1992,"S2",2,0.0440368124577958
+"Mill Creek","2012","Mill Creek:2012",34.07808,-116.8756,1992,"S2",2,0.630613290441633
+"Mill Creek","2014","Mill Creek:2014",34.07808,-116.8756,1992,"S2",2,NA
+"Whitewater Canyon","2010","Whitewater Canyon:2010",33.99329,-116.6627,696,"S2",2,0.325169146349958
+"Whitewater Canyon","2011","Whitewater Canyon:2011",33.99329,-116.6627,696,"S2",2,0.37336324277123
+"Whitewater Canyon","2012","Whitewater Canyon:2012",33.99329,-116.6627,696,"S2",2,0.475162261034837
+"Whitewater Canyon","2013","Whitewater Canyon:2013",33.99329,-116.6627,696,"S2",2,0.40254632406714
+"Whitewater Canyon","2014","Whitewater Canyon:2014",33.99329,-116.6627,696,"S2",2,0
+"Sweetwater River","2010","Sweetwater River:2010",32.89913,-116.5865,1386,"S1",1,0.72189143776031
+"Sweetwater River","2011","Sweetwater River:2011",32.89913,-116.5865,1386,"S1",1,0.490831117081894
+"Sweetwater River","2012","Sweetwater River:2012",32.89913,-116.5865,1386,"S1",1,0.478086059302408
+"Sweetwater River","2013","Sweetwater River:2013",32.89913,-116.5865,1386,"S1",1,0.639915903659335
+"Sweetwater River","2014","Sweetwater River:2014",32.89913,-116.5865,1386,"S1",1,0.447549214580717
+"Kitchen Creek","2010","Kitchen Creek:2010",32.75206,-116.4522,1173,"S1",1,0.459678778988065
+"Kitchen Creek","2011","Kitchen Creek:2011",32.75206,-116.4522,1173,"S1",1,0.526567197768425
+"Kitchen Creek","2012","Kitchen Creek:2012",32.75206,-116.4522,1173,"S1",1,0.536959017632502
+"Kitchen Creek","2013","Kitchen Creek:2013",32.75206,-116.4522,1173,"S1",1,0
+"Hauser Creek","2010","Hauser Creek:2010",32.65822,-116.5323,788,"S1",1,0.0896356673409667
+"Hauser Creek","2011","Hauser Creek:2011",32.65822,-116.5323,788,"S1",1,NA
+"Kitchen Creek","2014","Kitchen Creek:2014",32.75206,-116.4522,1173,"S1",1,0
+"Hauser Creek","2012","Hauser Creek:2012",32.65822,-116.5323,788,"S1",1,0
+"Hauser Creek","2013","Hauser Creek:2013",32.65822,-116.5323,788,"S1",1,0
+"Hauser Creek","2014","Hauser Creek:2014",32.65822,-116.5323,788,"S1",1,0
