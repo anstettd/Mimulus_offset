@@ -40,7 +40,8 @@ seed.ct$Site = factor(seed.ct$Site) # make site column a factor to streamline jo
 
 # Read in vital rate data for 2010-11, 2011-12, 2012-13, 2013-14 transitions 
 # Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
-data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv") %>% dplyr::select(-Reasoning, -Reasoning.1) #remove unwanted columns
+data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv") %>% dplyr::select(-Reasoning, -Reasoning.1) %>% 
+  mutate(PlotID=NA) #remove unwanted columns and add plot column for merging
 # Note: this file was created for the analyses published in Sheth and Angert 2018 PNAS 
 # It results from Amy Angert's work in July 2016 (original file: "Mcard_demog_data_2010-2013_ALA.xlsx") to scan datasheet notes to identify individuals to exclude, based on these columns:
 # Column 'NotAnIndividual': 
@@ -173,7 +174,10 @@ data <- data %>% filter(Site %in% focal.sites) %>% droplevels()
 data <- subset(data, Class!="D" | is.na(Class))
 
 # Remove plants with Class=? or Class=excluded
-data <- subset(data, Class != "E" & Class != "?" | is.na(Class))
+data <- subset(data, Class!="E" & Class!="?" | is.na(Class))
+
+# Double check that Deer Creek 2013 Plot 4 Line 1, where existing plants were all marked D in 2014 but should have been marked E, are not in the data frame
+deer2013P04 <- subset(data, Site=="Deer Creek" & Year==2013 & PlotID==238) #no rows
 
 # Remove rows for which size at time t AND size at t+1 is NA
 data <- data[!(is.na(data$logSize) & is.na(data$logSizeNext)),]
