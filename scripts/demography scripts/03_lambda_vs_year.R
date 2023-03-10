@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Calculate slopes of lambda versus year as a metric of the rate of demographic decline during drought
 #### AUTHOR: Amy Angert
-#### DATE LAST MODIFIED: 20230220
+#### DATE LAST MODIFIED: 20230310
 
 
 #*******************************************************************************
@@ -97,7 +97,7 @@ ggplot(dat.old, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
 
 # Note: Mill Creek only has two annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed entirely from downstream analyses.
 
-# Note: should Deer Creek be re-estimated after dropping its 2012 value, or shoudl we exclude Deer Creek from downstream analyses altogether because the plot markers are so unstable that a disproportionate amount of the data are of dubious quality?
+# Note: should Deer Creek be re-estimated after dropping its 2012 value, or should we exclude Deer Creek from downstream analyses altogether because the plot markers are so unstable that a disproportionate amount of the data are of dubious quality?
 
 # with cleaned lambdas
 site.vec <- unique(dat$Site)
