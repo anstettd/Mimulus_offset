@@ -88,7 +88,7 @@ ggplot(env1_united, aes(x=BP, y=BF)) +
   # Show all points
   geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.5) +
   scale_color_manual(values = rep(c("black", "darkgoldenrod"), 22 )) +
-  geom_hline(yintercept=20, linetype="dashed",color = "red", size=2) +
+  geom_hline(yintercept=10, linetype="dashed",color = "red", size=2) +
   # custom X axis:
   scale_x_continuous(expand = c(0, 0), label = axisdf_1$CHR, breaks= axisdf_1$center) +
   scale_y_continuous(breaks = c(-20,-10,0,10,20,30,40)) +
@@ -123,7 +123,7 @@ ggplot(env2_united, aes(x=BP, y=BF)) +
   # Show all points
   geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.5) +
   scale_color_manual(values = rep(c("black", "deepskyblue"), 22 )) +
-  geom_hline(yintercept=20, linetype="dashed",color = "red", size=2) +
+  geom_hline(yintercept=10, linetype="dashed",color = "red", size=2) +
   # custom X axis:
   scale_x_continuous(expand = c(0, 0), label = axisdf_2$CHR, breaks= axisdf_2$center) +
   scale_y_continuous(breaks = c(-20,-10,0,10,20,30,40)) +
@@ -160,7 +160,7 @@ ggplot(env5_united, aes(x=BP, y=BF)) +
   # Show all points
   geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.5) +
   scale_color_manual(values = rep(c("black", "magenta3"), 22 )) +
-  geom_hline(yintercept=20, linetype="dashed",color = "blue", size=2) +
+  geom_hline(yintercept=10, linetype="dashed",color = "blue", size=2) +
   # custom X axis:
   scale_x_continuous(expand = c(0, 0), label = axisdf_5$CHR, breaks= axisdf_5$center) +
   scale_y_continuous(breaks = c(-20,-10,0,10,20,30,40)) +
