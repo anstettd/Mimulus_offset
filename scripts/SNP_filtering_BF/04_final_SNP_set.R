@@ -142,65 +142,25 @@ colnames(windows_in) <- c("log10BF","MAT Windows","MAP Windows","CMD Windows")
   
 windows_in
 
-write_csv(snps_in_win,"data/genomic_data/snps_in_win_bf.csv")
-write_csv(windows_in,"data/genomic_data/windows_in_bf.csv")
-
-
-
-
-dim(env1_united_bf30)[1]
-
+#write_csv(snps_in_win,"data/genomic_data/snps_in_win_bf.csv")
+#write_csv(windows_in,"data/genomic_data/windows_in_bf.csv")
 
 
 #############################################################################################################
 
-
-
-
-
-
-
-
-
-
+#Setup bf10 snps for merger
+bf10_mat <- snp_mat_peakbf10_win %>% select(chr_snp,Env,BF)
+bf10_map <- snp_map_peakbf10_win %>% select(chr_snp,Env,BF)
+bf10_cmd <- snp_cmd_peakbf10_win %>% select(chr_snp,Env,BF)
 
 #Filter baseline by BF=>30
-
-##Filter Bayes factor by peak windows
-env1_united_bf30 <- env1_united %>% filter(BF>30)
-env2_united_bf30 <- env2_united %>% filter(BF>30)
-env5_united_bf30 <- env5_united %>% filter(BF>30)
-
-#Filter Bayes factor by peak windows
-snp_mat_peakbf <- env1_united %>% #filter(BF<=30) %>% 
-  filter(chr_snp %in% as.character(snps_peak_mat$chr_snp))
-snp_map_peakbf <- env2_united %>% #filter(BF<=30) %>% 
-  filter(chr_snp %in% as.character(snps_peak_map$chr_snp))
-snp_cmd_peakbf <- env5_united %>% #filter(BF<=30) %>% 
-  filter(chr_snp %in% as.character(snps_peak_cmd$chr_snp))
-
-#Filter peak windows by BF >10
-snp_mat_peakbf10 <- snp_mat_peakbf %>% filter(BF>5)
-snp_map_peakbf10 <- snp_map_peakbf %>% filter(BF>5)
-snp_cmd_peakbf10 <- snp_cmd_peakbf %>% filter(BF>5)
-
-#Merge peakbf10 with bf30
-snp_mat_peakbf30 <- rbind(snp_mat_peakbf10,env1_united_bf30)
-snp_map_peakbf30 <- rbind(snp_map_peakbf10,env2_united_bf30)
-snp_cmd_peakbf30 <- rbind(snp_cmd_peakbf10,env5_united_bf30)
-
-#Get window IDs for all selected SNPs
-snp_mat_peakbf30_win <- left_join(snp_mat_peakbf30,loci_win, by="chr_snp")
-snp_map_peakbf30_win <- left_join(snp_map_peakbf30,loci_win, by="chr_snp")
-snp_cmd_peakbf30_win <- left_join(snp_cmd_peakbf30,loci_win, by="chr_snp")
-
-colnames(snp_mat_peakbf30_win)[5] <- "win"
-colnames(snp_map_peakbf30_win)[5] <- "win"
-colnames(snp_cmd_peakbf30_win)[5] <- "win"
+snp_set_mat <- rbind(env1_united_bf30,bf10_mat)
+snp_set_map <- rbind(env2_united_bf30,bf10_map)
+snp_set_cmd <- rbind(env5_united_bf30,bf10_cmd)
 
 
-#write_csv(snp_mat_peakbf30_win,"data/genomic_data/win_bf_mat30_5.csv")
-#write_csv(snp_map_peakbf30_win,"data/genomic_data/win_bf_map30_5.csv")
-#write_csv(snp_cmd_peakbf30_win,"data/genomic_data/win_bf_cmd30_5.csv")
+write_csv(snp_set_mat,"data/genomic_data/snp_set_mat.csv")
+write_csv(snp_set_map,"data/genomic_data/snp_set_map.csv")
+write_csv(snp_set_cmd,"data/genomic_data/snp_set_cmd.csv")
 
 

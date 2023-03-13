@@ -23,6 +23,26 @@ env_merge <- rbind(env1_peak,env2_peak,env5_peak) #248 snps across all env
 env_all <- env_merge[,1]
 env_snp <- unique(env_all) #202 unique SNPs
 
+#Import Beagle imputed SNPs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #Import full snp table for baseline
 pop_order<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/baseline_filtered_variants.QUAL20_MQ40_AN80_MAF0.03_DP1SD.Baypass_table.pop_order", header=F, sep="\t")
 snp<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/baseline_filtered_variants.QUAL20_MQ40_AN80_MAF0.03_DP1SD.Baypass_table", header=F, sep=" ")
