@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Tidy raw demographic vital rate data in preparation for IPM analyses 
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230215
+#### DATE LAST MODIFIED: 20230310
 
 #*******************************************************************************
 #### 1. Clean workspace and load required packages
@@ -40,7 +40,8 @@ seed.ct$Site = factor(seed.ct$Site) # make site column a factor to streamline jo
 
 # Read in vital rate data for 2010-11, 2011-12, 2012-13, 2013-14 transitions 
 # Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
-data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv") %>% dplyr::select(-Reasoning, -Reasoning.1) #remove unwanted columns
+data_2010.2014=read.csv("data/demography data/Mcard_demog_data_2010-2014.csv") %>% dplyr::select(-Reasoning, -Reasoning.1) %>% 
+  mutate(PlotID=NA) #remove unwanted columns and add plot column for merging
 # Note: this file was created for the analyses published in Sheth and Angert 2018 PNAS 
 # It results from Amy Angert's work in July 2016 (original file: "Mcard_demog_data_2010-2013_ALA.xlsx") to scan datasheet notes to identify individuals to exclude, based on these columns:
 # Column 'NotAnIndividual': 
@@ -90,6 +91,15 @@ data_2014.2015 <- data_2014.2015 %>%
 # Note: this is lacking level 2 (=maybe), so is possibly more restrictive than 2010-14 filter
 # TO DO: Repeat this automatic coding for 2010-2014 as a sensitivity analysis
 
+# Read in list of skipped plots and sites in certain years. These cannot be used for recruitment the following year, because these plots are missing from the seed input denominator at time t, and at time t+1 we cannot distinguish 1-yr-old and 2-yr-old plants cannot be distinguished
+skipped <- read.csv("data/demography data/SkippedPlots.csv") %>% 
+  separate(Squawk, sep=" ", c("Status", NA, "Year")) 
+skipped$Year = as.numeric(skipped$Year)
+
+data_2014.2015 <- left_join(data_2014.2015, skipped, by=c("Site"="Site","PlotID"="PlotID","Year"="Year")) 
+# Note: This file results from the "Skipped In" query, to which Amy added several plots after consulting field notes for 2014-2016
+# For example, Deer Creek plot 4 line 1 was totally reset in 2015. 2014 plants were recorded as dead, but some of them could have survived and not been mapped onto new coordinate system. It looks as if this site had 100% mortality and high recruitment of large individuals, but in reality there are survivors that could not be identified and translated from old to new coordinate system. Exclude entire line for 2014-15 transitions and 2015 recruitment.
+
 # Add 'NotARecruit' column
 data_2014.2015 <- data_2014.2015 %>% 
   mutate(NotARecruit = ifelse(!is.na(Size), NA, 
@@ -98,9 +108,10 @@ data_2014.2015 <- data_2014.2015 %>%
                        ifelse(str_detect(OtherNotesCY, "missed"), 2,
                        ifelse(str_detect(OtherNotesCY, "14?"), 2, 
                        ifelse(str_detect(OtherNotesCY, "15?"), 2, 
-                       ifelse(NewPlot_CY==TRUE, 1, 0))))))))
-# TO DO ***HIGH PRIORITY***: Consult other queries (e.g., skipped in, exclusion areas) to identify rows that should be coded as level 1
+                       ifelse(NewPlot_CY==TRUE, 1,
+                       ifelse(Status=="Skipped", 1, 0)))))))))
 # Note: this is lacking level 3 (=size range of other recruits), which is not reliable
+
 
 # Create columns of log-transformed sizes
 data_2014.2015$logSize = log(data_2014.2015$Size)
@@ -163,7 +174,10 @@ data <- data %>% filter(Site %in% focal.sites) %>% droplevels()
 data <- subset(data, Class!="D" | is.na(Class))
 
 # Remove plants with Class=? or Class=excluded
-data <- subset(data, Class != "E" & Class != "?" | is.na(Class))
+data <- subset(data, Class!="E" & Class!="?" | is.na(Class))
+
+# Double check that Deer Creek 2013 Plot 4 Line 1, where existing plants were all marked D in 2014 but should have been marked E, are not in the data frame
+deer2013P04 <- subset(data, Site=="Deer Creek" & Year==2013 & PlotID==238) #no rows
 
 # Remove rows for which size at time t AND size at t+1 is NA
 data <- data[!(is.na(data$logSize) & is.na(data$logSizeNext)),]

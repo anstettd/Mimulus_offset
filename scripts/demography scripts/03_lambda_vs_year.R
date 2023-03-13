@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Calculate slopes of lambda versus year as a metric of the rate of demographic decline during drought
 #### AUTHOR: Amy Angert
-#### DATE LAST MODIFIED: 20230220
+#### DATE LAST MODIFIED: 20230310
 
 
 #*******************************************************************************
@@ -28,7 +28,7 @@ for (i in 1:length(packages_needed)){
 #*******************************************************************************
 ### 1. Read in lambda estimates for each site and year
 #*******************************************************************************
-dat <- read.csv("data/demography data/siteYear.lambda_2010-2016.csv")
+dat <- read.csv("data/demography data/siteYear.lambda_2010-2015.csv")
 
 focal.sites <- c("CoastForkofWilliamette",
                  "CantonCreek",
@@ -76,8 +76,8 @@ ggplot(dat, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   theme_classic() +
   theme(strip.background = element_blank(), strip.text.x = element_blank(),
         legend.title = element_blank())
-  # Note: Buck Meadows and Mill Creek slopes getting pulled up by 2015, which had very high recruitment. Assuming this indicates early recovery, we should trim them out before calculating rate of decline as slope over time.
-  # Note: Deer Creek slope is getting pushed down by 2012, which had very high recruitment. This would not be drought recovery, so less clear whether it should be trimmed out or not. Still need to verify field notes to confirm that recruitment estimates are correct for this difficult site where plots wash out frequently.
+  # Note: Buck Meadows and Mill Creek slopes were getting pulled up by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
+  # Note: Deer Creek slope is getting pushed down by 2012, which had very high recruitment. Have verified that recruitment estimates are as correct as can be for this difficult site where plots wash out frequently. This would not be drought recovery, so less clear whether this year's estimate should be trimmed out or not. 
 
 ggplot(dat.old, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   geom_point() +
@@ -95,10 +95,9 @@ ggplot(dat.old, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
 ### 3. Calculate slopes of lambda over time for each site
 #*******************************************************************************
 
-# remove 2015 estimates with indications of early recovery
-dat$lambda[dat$SiteYear=="Buck Meadows:2015"]=NA
-dat$lambda[dat$SiteYear=="Mill Creek:2015"]=NA
-# Note: this means that Mill Creek only has two annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013). So perhaps Mill Creek should be removed entirely if 2015 is trimmed out.
+# Note: Mill Creek only has two annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed entirely from downstream analyses.
+
+# Note: should Deer Creek be re-estimated after dropping its 2012 value, or should we exclude Deer Creek from downstream analyses altogether because the plot markers are so unstable that a disproportionate amount of the data are of dubious quality?
 
 # with cleaned lambdas
 site.vec <- unique(dat$Site)
@@ -136,6 +135,27 @@ slopes.all <- left_join(slopes.lambda, slopes.lambda.old)
 ggplot(data=slopes.all, aes(x=Lambda.Slope.New, y=Lambda.Slope.Old, label=Site)) +
   geom_point() + 
   geom_text() + 
-  geom_abline()
+  geom_abline() 
+
+
+# Note: Re-estimate Deer Creek after dropping its 2012 value
+dat <- dat %>% filter(SiteYear!="Deer Creek:2012")
+
+site.vec <- unique(dat$Site)
+slopes.lam <- c()
+site.lam <- c()
+
+for (i in 1:length(site.vec)) {
+  dat.site <- dat %>% filter(Site==site.vec[i])
+  mod <- lm(lambda ~ Year, dat.site)
+  slopes.lam[i] <- coefficients(mod)[2]
+  site.lam[i] <- site.vec[i]
+}
+
+slopes.lambda <- bind_cols(site.lam, slopes.lam) %>% 
+  dplyr::select(Site=...1, Lambda.Slope.New=...2) %>% 
+  mutate(Site = gsub(" ", "", Site))
 
   
+# Save to .csv file 
+write.csv(slopes.lambda,"data/demography data/siteYear.lambda_slopes_2010-2015.csv",row.names=FALSE)
