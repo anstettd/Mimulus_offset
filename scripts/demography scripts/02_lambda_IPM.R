@@ -58,7 +58,7 @@ fruit=c()
   ### 1A. Survival ###
   #*******************************************************************************
 
-  # Read in top survival model output (Formula: Surv ~ logSize + (1|Year) + (1|Site))
+  # Read in top survival model output (Formula: Surv ~ logSize + (logSize|Year) + (logSize|Site))
   surv.reg <- load("data/demography data/surv.reg.rda")
 
   # Store model coefficients for each Site:Year
@@ -113,11 +113,6 @@ fruit=c()
   # Read in top model output for fruit.reg (Formula: Fec1 ~ logSize + (1|Year) + (1|Site))   
   fruit.reg=load("data/demography data/fruit.reg.rda")
 
-  # Store model coefficients (fr5 from glmmTMB)
-  fruit$SiteYear=rownames(ranef(fr5)$cond$'Site:Year')
-  fruit$fruit.int=fixef(fr5)$cond[1]+ranef(fr5)$cond$'Site:Year'[,1] 
-  fruit$fruit.slope=rep(fixef(fr5)$cond[2],times=length(rownames(ranef(fr5)$cond$'Site:Year'))) 
-  
   # Store model coefficients for each Site:Year
   Site=rownames(ranef(fr5)$cond$'Site')
   Year=rownames(ranef(fr5)$cond$'Year')
@@ -209,8 +204,6 @@ fruit=c()
   # Add separate columns for year and site
   params <- params %>% separate(SiteYear, c("Site","Year"), ":", remove=FALSE)
   
-  # Store parameters in .csv file for later use
-  write.csv(params,"data/demography data/vital_rate_coefficients.csv", row.names=FALSE)
   
 #*******************************************************************************
 ### 2. Create site-specific IPMs parameterized by site-specific parameters derived from global vital rates models 
@@ -225,16 +218,19 @@ fruit=c()
   params.missing$SiteYear
   # Buck Meadows:2012 --> site inaccessible in 2013 due to fire; lambda is NA
   # Buck Meadows:2013 --> site inaccessible in 2013 due to fire; lambda is NA
-  # Canton Creek:2011 --> growth slopes, intercepts, and sd are inestimable; lambda is NA
-  # Carlon:2012 --> site inaccessible in 2013 due to fire; lambda is NA
+  # Canton Creek:2011 --> growth slopes, intercepts, and sd are inestimable because of sparse data, but site was visited and censused and all other parameters are estimable; use mean across other years at this site for this year's growth parameters
+params$growth.int[params$SiteYear=="Canton Creek:2011"] = mean(params$growth.int[params$Site=="Canton Creek" & params$Year!=2011])
+params$growth.slope[params$SiteYear=="Canton Creek:2011"] = mean(params$growth.slope[params$Site=="Canton Creek" & params$Year!=2011])
+params$growth.sd[params$SiteYear=="Canton Creek:2011"] = mean(params$growth.sd[params$Site=="Canton Creek" & params$Year!=2011])
+# Carlon:2012 --> site inaccessible in 2013 due to fire; lambda is NA
   # Carlon:2013 --> site inaccessible in 2013 due to fire; lambda is NA
   # Deer Creek:2010 --> site established in 2011; lambda is NA
   # Hauser Creek: 2011 --> all plants dead on plots 1-2, but many plants on plot 3 that were  indistinguishable from one another; lambda is NA
-  # Hauser Creek: 2012 --> sites visited but no plants --> manually set lambda to 0 below
-  # Hauser Creek: 2013 --> sites visited but no plants --> manually set lambda to 0 below
-  # Hauser Creek: 2014 --> sites visited but no plants --> manually set lambda to 0 below
-  # Kitchen Creek: 2013 --> only remaining plant died, so set lambda to 0 below
-  # Kitchen Creek: 2014 --> sites visited but no plants --> manually set lambda to 0 below
+  # Hauser Creek: 2012 --> sites visited but no plants; manually set lambda to 0 below
+  # Hauser Creek: 2013 --> sites visited but no plants; manually set lambda to 0 below
+  # Hauser Creek: 2014 --> sites visited but no plants; manually set lambda to 0 below
+  # Kitchen Creek: 2013 --> only remaining plant died; manually set lambda to 0 below
+  # Kitchen Creek: 2014 --> sites visited but no plants; manually set lambda to 0 below
   # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; lambda is NA
   # Mill Creek:2013 --> site inaccessible in 2013 due to flood; lambda is NA
   # Mill Creek:2014 --> site inaccessible in 2013 due to flood; lambda is NA
@@ -245,10 +241,13 @@ fruit=c()
   # South Fork Middle Fork Tule:2010 --> site inaccessible in 2011; lambda is NA
   # South Fork Middle Fork Tule:2011 --> site inaccessible in 2011; lambda is NA
   # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013. Keep as NA because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants died).
-    # Whitewater Canyon:2014 --> all plants died, so set manually lambda to 0 below
+    # Whitewater Canyon:2014 --> all plants died; manually lambda to 0 below
 
   
-  # Remove rows of parameters with NA
+# Store parameters in .csv file for later use
+write.csv(params,"data/demography data/vital_rate_coefficients.csv", row.names=FALSE)
+
+# Remove rows of parameters with NA
   params <- params[complete.cases(params), ]
   
   
@@ -339,27 +338,27 @@ missing.site.years <- anti_join(site.years.max, site.years.obs)
 # Mill Creek:2013 --> site inaccessible in 2014 due to flood; this is a real NA
 # Note: unclear why Mill Creek:2014 doesn't show up on this scan for inestimable site-years, but it does have lambda=NA in site.info file
 
-# Kitchen Creek:2014 --> sites visited but no plants --> manually set lambda=0
+# Kitchen Creek:2014 --> site visited but no plants so manually set lambda=0
 Kitchen=filter(site.info, Site=="Kitchen Creek" & Year==2013)
 Kitchen$Year=2014 %>% factor()
 Kitchen$SiteYear="Kitchen Creek:2014" %>% factor()
 Kitchen$lambda=0
 site.info=bind_rows(site.info, Kitchen) 
 
-# Hauser Creek:2012 --> sites visited but no plants --> manually set lambda=0
+# Hauser Creek:2012 --> site visited but no plants so manually set lambda=0
 Hauser=filter(site.info, Site=="Hauser Creek" & Year==2011)
 Hauser$Year=2012 %>% factor()
 Hauser$SiteYear="Hauser Creek:2012" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) 
 
-# Hauser Creek:2013 --> sites visited but no plants --> manually set lambda=0
+# Hauser Creek:2013 --> site visited but no plants so manually set lambda=0
 Hauser$Year=2013 %>% factor()
 Hauser$SiteYear="Hauser Creek:2013" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) 
 
-# Hauser Creek:2014 --> sites visited but no plants --> manually set lambda=0
+# Hauser Creek:2014 --> site visited but no plants so manually set lambda=0
 Hauser$Year=2014 %>% factor()
 Hauser$SiteYear="Hauser Creek:2014" %>% factor()
 Hauser$lambda=0
@@ -369,7 +368,6 @@ site.info=bind_rows(site.info, Hauser)
 # Which site-years have lambda=NA, and why?
 lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::select(SiteYear)
 
-# Canton Creek:2011 --> growth slopes, intercepts, and sd are inestimable
 # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013. Keep as NA because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants died).
 # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; keep as NA
 # Mill Creek:2014 --> site not visited in 2013, so this makes sense; keep as NA
@@ -419,7 +417,7 @@ ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
 # Note: symmetrical around 1:1 
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(1,2) + ylim(1,2) + geom_abline(x=y)
-# Note: mostly close to 1:1 line, but Deep Creek:2014 has come up a lot due to exclusion of plot 4 where all plants were erroneously coded as D instead of E
+# Note: many more above 1:1 line than below. Deep Creek:2014 has come up a lot due to exclusion of plot 4 where all plants were erroneously coded as D instead of E
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(2,3) + ylim(2,3) + geom_abline(x=y)
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
