@@ -30,16 +30,16 @@ snps_env9 <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA
 ###########################################################################################################
 
 #Filter needed variables for WZA
-snps_env1_input <- snps_env1 %>% select(BF,win,MAF)
-snps_env2_input <- snps_env2 %>% select(BF,win,MAF)
-snps_env3_input <- snps_env3 %>% select(BF,win,MAF)
-snps_env4_input <- snps_env4 %>% select(BF,win,MAF)
-snps_env5_input <- snps_env5 %>% select(BF,win,MAF)
+#snps_env1_input <- snps_env1 %>% select(BF,win,MAF)
+#snps_env2_input <- snps_env2 %>% select(BF,win,MAF)
+#snps_env3_input <- snps_env3 %>% select(BF,win,MAF)
+#snps_env4_input <- snps_env4 %>% select(BF,win,MAF)
+#snps_env5_input <- snps_env5 %>% select(BF,win,MAF)
 
-snps_env6_input <- snps_env6 %>% select(BF,win,MAF)
-snps_env7_input <- snps_env7 %>% select(BF,win,MAF)
-snps_env8_input <- snps_env8 %>% select(BF,win,MAF)
-snps_env9_input <- snps_env9 %>% select(BF,win,MAF)
+#snps_env6_input <- snps_env6 %>% select(BF,win,MAF)
+#snps_env7_input <- snps_env7 %>% select(BF,win,MAF)
+#snps_env8_input <- snps_env8 %>% select(BF,win,MAF)
+#snps_env9_input <- snps_env9 %>% select(BF,win,MAF)
 
 
 #Too large to store on github. Store locally
@@ -81,11 +81,11 @@ names(WZA_df_env8)[names(WZA_df_env8) == 'gene'] <- 'win'
 names(WZA_df_env9)[names(WZA_df_env9) == 'gene'] <- 'win'
 
 #Make DF that has chr ID for each window
-chr_env1 <- snps_mat %>% select(chr,win) %>% distinct()
-chr_env2 <- snps_map %>% select(chr,win) %>% distinct()
+chr_env1 <- snps_env1 %>% select(chr,win) %>% distinct()
+chr_env2 <- snps_env2 %>% select(chr,win) %>% distinct()
 chr_env3 <- snps_env3 %>% select(chr,win) %>% distinct()
 chr_env4 <- snps_env4 %>% select(chr,win) %>% distinct()
-chr_env5 <- snps_cmd %>% select(chr,win) %>% distinct()
+chr_env5 <- snps_env5 %>% select(chr,win) %>% distinct()
 
 chr_env6 <- snps_env6 %>% select(chr,win) %>% distinct()
 chr_env7 <- snps_env7 %>% select(chr,win) %>% distinct()
