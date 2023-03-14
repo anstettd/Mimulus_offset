@@ -61,9 +61,13 @@ s5 <- glmer(Surv ~ logSize + (logSize|Year) + (logSize|Site), data=data, family=
 # Random intercepts & constant slopes for Site (not nested within Year)
 s6 <- glmer(Surv ~ logSize + (logSize|Year) + (1|Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
 
+# Random intercepts & constant slopes for Year
+# Random intercepts & random slopes for Site (not nested within Year)
+s7 <- glmer(Surv ~ logSize + (1|Year) + (logSize|Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+
 # Compare models
-anova(s3, s4, s5, s6)
-model.sel(s3, s4, s5, s6) 
+anova(s3, s4, s5, s6, s7)
+model.sel(s3, s4, s5, s6, s7) 
 
 # PREFERRED MODEL IS s3, but due to singularity issues, we are going with the next best model that doesn't have singularity issues, s5
 r.squaredGLMM(s5) 
@@ -97,9 +101,13 @@ g5 <- lmer(logSizeNext ~ logSize + (logSize|Year) + (logSize|Site), data=data, c
 # Random intercepts & constant slopes for Site (not nested within Year)
 g6 <- lmer(logSizeNext ~ logSize + (logSize|Year) + (1|Site), data=data, control=lmerControl(optimizer = "bobyqa")) 
 
+# Random intercepts & constant slopes for Year
+# Random intercepts & random slopes for Site (not nested within Year)
+g7 <- lmer(logSizeNext ~ logSize + (1|Year) + (logSize|Site), data=data, control=lmerControl(optimizer = "bobyqa")) 
+
 # Compare models
-anova(g3, g4, g5, g6)
-model.sel(g3, g4, g5, g6)
+anova(g3, g4, g5, g6, g7)
+model.sel(g3, g4, g5, g6, g7)
 
 # # PREFERRED MODEL IS g3, but due to singularity issues, we are going with the next best model, g4
 r.squaredGLMM(g4) 
@@ -133,9 +141,13 @@ fl5 <- glmer(Fec0 ~ logSize + (logSize|Year) + (logSize|Site), data=data, family
 # Random intercepts & constant slopes for Site (not nested within Year)
 fl6 <- glmer(Fec0 ~ logSize + (logSize|Year) + (1|Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
 
+# Random intercepts & constant slopes for Year
+# Random intercepts & random slopes for Site (not nested within Year)
+fl7 <- glmer(Fec0 ~ logSize + (1|Year) + (logSize|Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+
 # Compare models
-anova(fl3, fl4, fl5, fl6)
-model.sel(fl3, fl4, fl5, fl6) 
+anova(fl3, fl4, fl5, fl6, fl7)
+model.sel(fl3, fl4, fl5, fl6, fl7) 
 
 # # PREFERRED MODEL IS fl3, but due to singularity issues, we are going with the next best model, fl4
 r.squaredGLMM(fl4) 
@@ -180,9 +192,13 @@ fr5 <- glmmTMB(Fec1 ~ logSize + (logSize|Year) + (logSize|Site), data=data[!is.n
 # Random intercepts & constant slopes for Site (not nested within Year)
 fr6 <- glmmTMB(Fec1 ~ logSize + (logSize|Year) + (1|Site), data=data[!is.na(data$Fec1),], family=nbinom1()) 
 
+# Random intercepts & constant slopes for Year
+# Random intercepts & random slopes for Site (not nested within Year)
+fr7 <- glmmTMB(Fec1 ~ logSize + (1|Year) + (logSize|Site), data=data[!is.na(data$Fec1),], family=nbinom1) 
+
 # Compare models
-anova(fr3, fr4, fr5, fr6)
-model.sel(fr3, fr4, fr5, fr6) 
+anova(fr3, fr4, fr5, fr6, fr7)
+model.sel(fr3, fr4, fr5, fr6, fr7) 
 
 # PREFERRED MODEL IS fr3, but due to singularity issues, we are going with the next best model, fr5
 r.squaredGLMM(fr5)
