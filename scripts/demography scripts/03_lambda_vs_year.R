@@ -156,6 +156,8 @@ slopes.lambda <- bind_cols(site.lam, slopes.lam) %>%
   dplyr::select(Site=...1, Lambda.Slope.New=...2) %>% 
   mutate(Site = gsub(" ", "", Site))
 
-  
+# Remove Mill Creek and Deer Creek (see lines 98-100)
+slopes.lambda <- slopes.lambda %>% filter(Site!="DeerCreek" & Site!="MillCreek")
+
 # Save to .csv file 
 write.csv(slopes.lambda,"data/demography data/siteYear.lambda_slopes_2010-2015.csv",row.names=FALSE)
