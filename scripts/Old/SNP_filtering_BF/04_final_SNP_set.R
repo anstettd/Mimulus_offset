@@ -1,7 +1,7 @@
 #############################################################################################################
 ## Generate Final SNP Set
 ## BF > 30
-## Peak Boferroni window, BF >5
+## Peak Boferroni window, BF >10
 ## 
 ## 
 ## Last Modified Sept 28, 2022

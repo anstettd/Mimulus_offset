@@ -15,8 +15,6 @@ library(plotly)
 #Import files
 
 #Windows
-#wza_win_mat <- read_csv("data/genomic_data/WZA_win_mat_bf.csv")
-
 wza_win_env1 <- read_csv("data/genomic_data/WZA_win_env1_bf.csv")
 wza_win_env2 <- read_csv("data/genomic_data/WZA_win_env2_bf.csv")
 wza_win_env3 <- read_csv("data/genomic_data/WZA_win_env3_bf.csv")
@@ -29,8 +27,6 @@ wza_win_env8 <- read_csv("data/genomic_data/WZA_win_env8_bf.csv")
 wza_win_env9 <- read_csv("data/genomic_data/WZA_win_env9_bf.csv")
 
 #SNPs
-#snps_mat <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_mat_bf.csv")
-
 snps_env1 <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_env1_bf.csv")
 snps_env2 <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_env2_bf.csv")
 snps_env3 <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/WZA_snps_env3_bf.csv")
@@ -61,8 +57,6 @@ env9_bon <- wza_win_env9 %>% filter(Z_pVal<1.294264e-06) #19 windows
 #Get peak windows only
 #Filter out windows that are not peak windows
 #Keep two adjoining windows if they are less than 0.3 log P-value units away from each other.
-#mat_bon_peak <- mat_bon %>% filter(!win %in% c(6458,6459)) # 19 windows
-
 env1_bon_peak <- env1_bon %>% filter(!win %in% c(6458,6459)) #19 windows
 env2_bon_peak <- env2_bon %>% filter(!win %in% c(3881,3882)) #14 windows
 env3_bon_peak <- env3_bon %>% filter(!win %in% c(10527,30337)) #30 windows
