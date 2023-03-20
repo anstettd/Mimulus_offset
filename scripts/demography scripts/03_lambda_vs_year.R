@@ -77,7 +77,7 @@ ggplot(dat, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   theme(strip.background = element_blank(), strip.text.x = element_blank(),
         legend.title = element_blank())
   # Note: Buck Meadows and Mill Creek slopes were getting pulled up by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
-  # Note: Deer Creek slope is getting pushed down by 2012, which had very high recruitment. Have verified that recruitment estimates are as correct as can be for this difficult site where plots wash out frequently. This would not be drought recovery, so less clear whether this year's estimate should be trimmed out or not. 
+  # Note: Deer Creek slope is getting pushed down by 2012, which had very high recruitment. Have verified that recruitment estimates are as correct as can be for this difficult site where plots wash out frequently. This would not be drought recovery, so less clear whether this year's estimate should be trimmed out or not. This site is perennially tricky and unreliable, so suggest excluding site altogether.
 
 ggplot(dat.old, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   geom_point() +
@@ -156,6 +156,8 @@ slopes.lambda <- bind_cols(site.lam, slopes.lam) %>%
   dplyr::select(Site=...1, Lambda.Slope.New=...2) %>% 
   mutate(Site = gsub(" ", "", Site))
 
-  
+# Remove Mill Creek and Deer Creek (see lines 98-100)
+slopes.lambda <- slopes.lambda %>% filter(Site!="DeerCreek" & Site!="MillCreek")
+
 # Save to .csv file 
 write.csv(slopes.lambda,"data/demography data/siteYear.lambda_slopes_2010-2015.csv",row.names=FALSE)
