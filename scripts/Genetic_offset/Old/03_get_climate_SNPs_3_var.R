@@ -13,29 +13,15 @@ library(tidyverse)
 ##Import Data
 climate <- read_csv("data/genomic_data/climate_pop.csv")
 
-#Import all unique SNPs
-env_snp <- read_csv("data/genomic_data/snp_set_env.csv")
+#Import peak SNP data for each environmental variable
+env1_peak <- read_csv("data/genomic_data/snp_set_mat.csv")
+env2_peak <- read_csv("data/genomic_data/snp_set_map.csv")
+env5_peak <- read_csv("data/genomic_data/snp_set_cmd.csv")
 
-#Import Beagle imputed SNPs
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#Merge into 1 dataframe that includes every unique allele
+env_merge <- rbind(env1_peak,env2_peak,env5_peak) #248 snps across all env
+env_all <- env_merge[,1]
+env_snp <- unique(env_all) #202 unique SNPs
 
 #Import full snp table for baseline
 pop_order<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/baseline_filtered_variants.QUAL20_MQ40_AN80_MAF0.03_DP1SD.Baypass_table.pop_order", header=F, sep="\t")

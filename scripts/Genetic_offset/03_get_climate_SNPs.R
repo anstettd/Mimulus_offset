@@ -5,7 +5,7 @@
 ## Also merge data from 3 climate SNPs into one table
 ## Generate snpA table for both Bay and full data sets and merge with climate data
 ## 
-## Last Modified September 19, 2022
+## Last Modified March 20, 2022
 ###################################################################################
 ##Libraries
 library(tidyverse)
@@ -13,15 +13,8 @@ library(tidyverse)
 ##Import Data
 climate <- read_csv("data/genomic_data/climate_pop.csv")
 
-#Import peak SNP data for each environmental variable
-env1_peak <- read_csv("data/genomic_data/snp_set_mat.csv")
-env2_peak <- read_csv("data/genomic_data/snp_set_map.csv")
-env5_peak <- read_csv("data/genomic_data/snp_set_cmd.csv")
-
-#Merge into 1 dataframe that includes every unique allele
-env_merge <- rbind(env1_peak,env2_peak,env5_peak) #248 snps across all env
-env_all <- env_merge[,1]
-env_snp <- unique(env_all) #202 unique SNPs
+#Import all unique SNPs
+env_snp <- read_csv("data/genomic_data/snp_set_env.csv")
 
 #Import full snp table for baseline
 pop_order<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/baseline_filtered_variants.QUAL20_MQ40_AN80_MAF0.03_DP1SD.Baypass_table.pop_order", header=F, sep="\t")
@@ -79,13 +72,19 @@ dim(snp_clim_bayless_noNA)[2]-14
 
 #Tally NAs in each row
 row_nas <- apply(snp_clim_bayNA[,15:dim(snp_clim_bayNA)[2]], 1, function(row) sum(is.na(row)))
-row_nas <- row_nas[order(-row_nas)]
+row_nas <- as.data.frame(row_nas[order(-row_nas)])
 print(row_nas)
 
 # tally NAs for each column
 col_nas <- apply(snp_clim_bayNA[,15:dim(snp_clim_bayNA)[2]], 2, function(col) sum(is.na(col)))
-col_nas <- col_nas[order(-col_nas)]
+col_nas <- as.data.frame(col_nas[order(-col_nas)])
 print(col_nas)
+
+
+# Histogram plotting not working
+ggplot(data=row_nas$x)+
+geom_histogram() 
+
 
 # create histogram of number of NAs per row
 ggplot(data.frame(nas = row_nas), aes(x = nas)) + 
