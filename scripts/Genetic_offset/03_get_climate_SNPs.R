@@ -45,7 +45,27 @@ snp_clim_bayNA <- cbind(climate,snp_bay_T)
 ##############################################################################################
 #Remove NA's from all 55 populations
 snp_clim_bay_noNA <- snp_clim_bayNA %>% select_if(~ !any(is.na(.)))
-#write_csv(snp_clim_bay_noNA, "data/genomic_data/snp_clim_peakbf5_noNA.csv")
+write_csv(snp_clim_bay_noNA, "data/genomic_data/snp_clim_peakbf10_noNA.csv")
+
+#Number of SNPs total
+(dim(snp_clim_bayNA)[2]-14)
+
+#Number of SNPs lost due to having NA's
+(dim(snp_clim_bayNA)[2]-14) - (dim(snp_clim_bay_noNA)[2]-14)
+
+#Number of SNPs left over 
+614-224
+
+
+##############################################################################################
+
+
+
+
+
+
+
+
 
 294-(dim(snp_clim_bayNA %>% select_if(~ !any(is.na(.))))[2]-14) #number of SNPs lost
 
