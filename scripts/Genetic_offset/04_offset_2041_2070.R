@@ -119,12 +119,12 @@ rasterStack <- function(x,varList,rType='tif',vConvert=T){
 
 ## Import SNP data and arrange for gradient forest
 #Import SNP Data & and reformat
-snp_clim_bf20NA <- read_csv("data/genomic_data/snp_clim_peakbf5_noNA.csv") #pop data
+snp_clim_bf20NA <- read_csv("data/genomic_data/snp_clim_peakbf10_noNA.csv") #pop data
 test_snp <- snp_clim_bf20NA %>% dplyr::select(-Site_Name, -Paper_ID, -Latitude, -Longitude, -Elevation, -MAT, -MAP, -CMD,
                                               -PAS, -EXT, -Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm)
 
 ## Generate specific dataframes for GF model
-env_site <- snp_clim_bf20NA %>% dplyr::select(MAT,MAP,CMD)
+env_site <- snp_clim_bf20NA %>% dplyr::select(MAT,MAP,PAS,EXT,CMD,Tave_wt,Tave_sm,PPT_wt,PPT_sm)
 
 
 #Convert to data frame
@@ -148,7 +148,7 @@ c_range <- st_transform(c_range, crs = 4326) # reproject to WGS 1984 (EPSG 4326)
 ## Raster import and manipulation
 #Import 1981-2010 raster data for West NA & and stack them
 wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_8110"
-vlist <- c("MAT","MAP","CMD")
+vlist <- c("MAT","MAP","PAS","EXT","CMD","Tave_wt","Tave_sm","PPT_wt","PPT_sm")
 stk <- rasterStack(wd,vlist,rType='tif',vConvert=F)
 
 #Reproject to WGS 1984 (EPSG4326)
@@ -177,7 +177,7 @@ stk.df.cell<-cellFromXY(stk.mask, cbind(stk.df$x, stk.df$y))
 ##Import future climate change rasters
 #Import 2041-2070 SSP245 (RCP4.5) raster data for West NA & and stack them
 wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_45"
-vlist <- c("MAT","MAP","CMD")
+vlist <- c("MAT","MAP","PAS","EXT","CMD","Tave_wt","Tave_sm","PPT_wt","PPT_sm")
 stk_4.5 <- rasterStack(wd,vlist,rType='tif',vConvert=F)
 
 #Reproject to WGS 1984 (EPSG4326)
@@ -193,7 +193,14 @@ stk_4.5.df <- data.frame(rasterToPoints(stk_4.5.mask))
 stk_4.5.df <- na.omit(stk_4.5.df)
 colnames(stk_4.5.df)[3]<-"MAT"
 colnames(stk_4.5.df)[4]<-"MAP"
-colnames(stk_4.5.df)[5]<-"CMD"
+colnames(stk_4.5.df)[5]<-"PAS"
+colnames(stk_4.5.df)[6]<-"EXT"
+colnames(stk_4.5.df)[7]<-"CMD"
+colnames(stk_4.5.df)[8]<-"Tave_wt"
+colnames(stk_4.5.df)[9]<-"Tave_sm"
+colnames(stk_4.5.df)[10]<-"PPT_wt"
+colnames(stk_4.5.df)[11]<-"PPT_sm"
+
 
 #Convert xy coordinates into cell ID
 stk_4.5.df.cell<-cellFromXY(stk_4.5.mask, cbind(stk_4.5.df$x, stk_4.5.df$y))
@@ -203,7 +210,7 @@ stk_4.5.df.cell<-cellFromXY(stk_4.5.mask, cbind(stk_4.5.df$x, stk_4.5.df$y))
 #####################################
 #Import 2041-2070 SSP585 (RCP8.5) raster data for West NA & and stack them
 wd_8.5 <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_85"
-vlist <- c("MAT","MAP","CMD")
+vlist <- c("MAT","MAP","PAS","EXT","CMD","Tave_wt","Tave_sm","PPT_wt","PPT_sm")
 stk_8.5 <- rasterStack(wd_8.5,vlist,rType='tif',vConvert=F)
 
 #Reproject to WGS 1984 (EPSG4326)
@@ -217,9 +224,15 @@ stk_8.5.mask <- mask(stk_8.5.mask, c_range)
 #Extract point from raster stack
 stk_8.5.df <- data.frame(rasterToPoints(stk_8.5.mask))
 stk_8.5.df <- na.omit(stk_8.5.df)
-colnames(stk_8.5.df)[3]<-"MAT"
-colnames(stk_8.5.df)[4]<-"MAP"
-colnames(stk_8.5.df)[5]<-"CMD"
+colnames(stk_4.5.df)[3]<-"MAT"
+colnames(stk_4.5.df)[4]<-"MAP"
+colnames(stk_4.5.df)[5]<-"PAS"
+colnames(stk_4.5.df)[6]<-"EXT"
+colnames(stk_4.5.df)[7]<-"CMD"
+colnames(stk_4.5.df)[8]<-"Tave_wt"
+colnames(stk_4.5.df)[9]<-"Tave_sm"
+colnames(stk_4.5.df)[10]<-"PPT_wt"
+colnames(stk_4.5.df)[11]<-"PPT_sm"
 
 #Convert xy coordinates into cell ID
 stk_8.5.df.cell<-cellFromXY(stk_8.5.mask, cbind(stk_8.5.df$x, stk_8.5.df$y))
@@ -284,11 +297,26 @@ projBF20_8.5 <- predict(gf, stk_8.5.df[,-1:-2])
 
 
 # calculate euclidean distance between current and future genetic spaces  
-offset_BF20_4.5 <- sqrt((projBF20_4.5[,1]-predBF20[,1])^2+(projBF20_4.5[,2]-predBF20[,2])^2
-                        +(projBF20_4.5[,3]-predBF20[,3])^2)
+offset_BF20_4.5 <- sqrt((projBF20_4.5[,1]-predBF20[,1])^2
+                         +(projBF20_4.5[,2]-predBF20[,2])^2
+                         +(projBF20_4.5[,3]-predBF20[,3])^2
+                         +(projBF20_4.5[,4]-predBF20[,4])^2
+                         +(projBF20_4.5[,5]-predBF20[,5])^2
+                         +(projBF20_4.5[,6]-predBF20[,6])^2
+                         +(projBF20_4.5[,7]-predBF20[,7])^2
+                         +(projBF20_4.5[,8]-predBF20[,8])^2
+                         +(projBF20_4.5[,9]-predBF20[,9])^2)
 
-offset_BF20_8.5 <- sqrt((projBF20_8.5[,1]-predBF20[,1])^2+(projBF20_8.5[,2]-predBF20[,2])^2
-                        +(projBF20_8.5[,3]-predBF20[,3])^2)
+offset_BF20_8.5 <- sqrt((projBF20_8.5[,1]-predBF20[,1])^2
+                        +(projBF20_8.5[,2]-predBF20[,2])^2
+                        +(projBF20_8.5[,3]-predBF20[,3])^2
+                        +(projBF20_8.5[,4]-predBF20[,4])^2
+                        +(projBF20_8.5[,5]-predBF20[,5])^2
+                        +(projBF20_8.5[,6]-predBF20[,6])^2
+                        +(projBF20_8.5[,7]-predBF20[,7])^2
+                        +(projBF20_8.5[,8]-predBF20[,8])^2
+                        +(projBF20_8.5[,9]-predBF20[,9])^2)
+
 
 # assign values to raster - can be tricky if current/future climate
 # rasters are not identical in terms of # cells, extent, etc.
