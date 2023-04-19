@@ -43,11 +43,17 @@ calo <- states %>%
   filter(name_en=="Oregon" | name_en=="California" | name_en=="Nevada")
 
 #Baseline & Timeseries
-baseline_pop <- read_csv("data/genomic_data/paper_ID_site_select.csv")
-timeseries_pop <- baseline_pop %>% filter(Paper_ID<13) %>% dplyr::select(Long,Lat)
-timeseries_pop_sf <- st_as_sf(timeseries_pop,coords=c("Long","Lat"), crs=EPSG4326)
-baseline_pop <- baseline_pop  %>% dplyr::select(Long,Lat)
-baseline_pop_sf <- st_as_sf(baseline_pop,coords=c("Long","Lat"), crs=EPSG4326)
+#baseline_pop <- read_csv("data/genomic_data/paper_ID_site_select.csv")
+#timeseries_pop <- baseline_pop %>% filter(Paper_ID<13) %>% dplyr::select(Long,Lat)
+#timeseries_pop_sf <- st_as_sf(timeseries_pop,coords=c("Long","Lat"), crs=EPSG4326)
+#baseline_pop <- baseline_pop  %>% dplyr::select(Long,Lat)
+#baseline_pop_sf <- st_as_sf(baseline_pop,coords=c("Long","Lat"), crs=EPSG4326)
+
+#Demography Pop
+demography_pop <- read_csv("data/genomic_data/offset_pop_9var.csv")
+demography_pop <- demography_pop  %>% dplyr::select(Long,Lat)
+demography_pop_sf <- st_as_sf(demography_pop,coords=c("Long","Lat"), crs=EPSG4326)
+
 
 ##############################################################################
 
@@ -68,7 +74,7 @@ offset45 <- tm_shape(mask_offset_45_grain, bbox=st_bbox(calo)) + #legal boundire
   #  tm_raster(palette = "Reds")+
   tm_shape(calo)+
   tm_borders()+
-  tm_shape(timeseries_pop_sf)+
+  tm_shape(demography_pop_sf)+
   tm_dots(size=0.5,shape=1,col="black",border.lwd = 2.5)+
   #  tm_shape(baseline_pop_sf)+
   #  tm_dots(size=0.1,shape=1)+
@@ -92,7 +98,7 @@ offset85 <- tm_shape(mask_offset_85_grain, bbox=st_bbox(calo)) + #legal boundire
   tm_raster(palette = off_pallet85)+
   tm_shape(calo)+
   tm_borders()+
-  tm_shape(timeseries_pop_sf)+
+  tm_shape(demography_pop_sf)+
   tm_dots(size=0.5,shape=1,col="black",border.lwd = 2.5)+
   #  tm_shape(baseline_pop_sf)+
   #  tm_dots(size=0.1,shape=1)+
@@ -116,7 +122,7 @@ offset_1215 <- tm_shape(mask_offset_1215, bbox=st_bbox(calo)) + #legal boundires
   #  tm_raster(palette = "Reds")+
   tm_shape(calo)+
   tm_borders()+
-  tm_shape(timeseries_pop_sf)+
+  tm_shape(demography_pop_sf)+
   tm_dots(size=0.5,shape=1,col="black",border.lwd = 2.5)+
   #  tm_shape(baseline_pop_sf)+
   #  tm_dots(size=0.1,shape=1)+
@@ -140,7 +146,7 @@ env_1215 <- tm_shape(clim_diff_1215, bbox=st_bbox(calo)) + #legal boundires
   #  tm_raster(palette = "Reds")+
   tm_shape(calo)+
   tm_borders()+
-  tm_shape(timeseries_pop_sf)+
+  tm_shape(demography_pop_sf)+
   tm_dots(size=0.5,shape=1,col="black",border.lwd = 2.5)+
   #  tm_shape(baseline_pop_sf)+
   #  tm_dots(size=0.1,shape=1)+
