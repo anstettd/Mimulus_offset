@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Calculate slopes of lambda versus year as a metric of the rate of demographic decline during drought
 #### AUTHOR: Amy Angert
-#### DATE LAST MODIFIED: 20230310
+#### DATE LAST MODIFIED: 20230419
 
 
 #*******************************************************************************
@@ -76,8 +76,8 @@ ggplot(dat, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   theme_classic() +
   theme(strip.background = element_blank(), strip.text.x = element_blank(),
         legend.title = element_blank())
-  # Note: Buck Meadows and Mill Creek slopes were getting pulled up by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
-  # Note: Deer Creek slope is getting pushed down by 2012, which had very high recruitment. Have verified that recruitment estimates are as correct as can be for this difficult site where plots wash out frequently. This would not be drought recovery, so less clear whether this year's estimate should be trimmed out or not. This site is perennially tricky and unreliable, so suggest excluding site altogether.
+# Note: Buck Meadows and Mill Creek slopes were getting pulled up by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
+# Note: Deer Creek slope is getting pushed down by 2012, which had very high recruitment. Have verified that recruitment estimates are as correct as can be for this difficult site where plots wash out frequently. This would not be drought recovery, so less clear whether this year's estimate should be trimmed out or not. This site is perennially tricky and unreliable, so suggest excluding site altogether.
 
 ggplot(dat.old, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   geom_point() +
@@ -109,7 +109,7 @@ for (i in 1:length(site.vec)) {
   mod <- lm(lambda ~ Year, dat.site)
   slopes.lam[i] <- coefficients(mod)[2]
   site.lam[i] <- site.vec[i]
-  }
+}
 
 slopes.lambda <- bind_cols(site.lam, slopes.lam) %>% 
   dplyr::select(Site=...1, Lambda.Slope.New=...2) %>% 
@@ -125,11 +125,11 @@ for (i in 1:length(site.vec.old)) {
   mod <- lm(lambda ~ Year, dat.site.old)
   slopes.lam.old[i] <- coefficients(mod)[2]
   site.lam.old[i] <- site.vec.old[i]
-  }
+}
 
 slopes.lambda.old <- bind_cols(site.lam.old, slopes.lam.old) %>% 
   dplyr::select(Site=...1, Lambda.Slope.Old=...2) 
-  
+
 slopes.all <- left_join(slopes.lambda, slopes.lambda.old)
 
 ggplot(data=slopes.all, aes(x=Lambda.Slope.New, y=Lambda.Slope.Old, label=Site)) +
@@ -159,5 +159,42 @@ slopes.lambda <- bind_cols(site.lam, slopes.lam) %>%
 # Remove Mill Creek and Deer Creek (see lines 98-100)
 slopes.lambda <- slopes.lambda %>% filter(Site!="DeerCreek" & Site!="MillCreek")
 
+# Add Latitude and other covariates back in
+covar <- dat.old %>% 
+  select(Site, Latitude, Longitude, Elevation, Region, RegionRank) %>% 
+  unique()
+
+slopes.lambda <- left_join(slopes.lambda, covar, by="Site") 
+
+
+#*******************************************************************************
+### 4. Calculate mean lambda during drought for each site
+#*******************************************************************************
+
+# Note: Mill Creek only has two annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed entirely from downstream analyses.
+
+# Note: should Deer Creek be re-estimated after dropping its 2012 value, or should we exclude Deer Creek from downstream analyses altogether because the plot markers are so unstable that a disproportionate amount of the data are of dubious quality?
+
+dat.mean <- dat %>% 
+  group_by(Latitude, Site) %>% 
+  filter(Year==2012|Year==2013|Year==2014) %>% 
+  summarize(mean.lambda = exp(mean(log(lambda), na.omit=TRUE))) #GEOMETRIC mean
+
+# compare to preliminary older estimates
+dat.mean.old <- dat.old %>% 
+  group_by(Latitude, Site) %>% 
+  filter(Year==2012|Year==2013|Year==2014) %>% 
+  summarize(mean.lambda.old = exp(mean(log(lambda), na.omit=TRUE))) #GEOMETRIC mean
+
+means.all <- left_join(dat.mean, dat.mean.old, by="Latitude")
+
+ggplot(data=means.all, aes(x=mean.lambda, y=mean.lambda.old)) +
+  geom_point() 
+
+# Join to slopes
+demog.response <- left_join(slopes.lambda, means.all, by=c("Site"="Site.y")) %>% 
+  select(Site, Latitude=Latitude.x, Longitude, Elevation, Region, RegionRank, lambda.slope = Lambda.Slope.New, lambda.mean = mean.lambda)
+
 # Save to .csv file 
-write.csv(slopes.lambda,"data/demography data/siteYear.lambda_slopes_2010-2015.csv",row.names=FALSE)
+write.csv(demog.response,"data/demography data/siteYear.lambda_responses_2010-2015.csv",row.names=FALSE)
+
