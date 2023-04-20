@@ -1,5 +1,5 @@
 ##################################################################################
-## Plot offset against lambda.slope
+## Plot offset against lambda.mean
 ## Author Daniel Anstett
 ## 
 ## 
@@ -17,15 +17,15 @@ offset_pop <- read_csv("data/genomic_data/offset_pop_9var.csv")
 offset_pop_10 <- offset_pop %>% filter(Paper_ID<13)
 
 #stats
-lm.1215 <- lm(lambda.slope~offset_1215,data=offset_pop)
-lm.SSP245 <- lm(lambda.slope~offset_SSP245,data=offset_pop)
-lm.SSP585 <- lm(lambda.slope~offset_SSP585,data=offset_pop)
-lm.dist <- lm(lambda.slope~offset_climate,data=offset_pop)
+lm.1215 <- lm(lambda.mean~offset_1215,data=offset_pop)
+lm.SSP245 <- lm(lambda.mean~offset_SSP245,data=offset_pop)
+lm.SSP585 <- lm(lambda.mean~offset_SSP585,data=offset_pop)
+lm.dist <- lm(lambda.mean~offset_climate,data=offset_pop)
 
-lm.1215_10 <- lm(lambda.slope~offset_1215,data=offset_pop_10)
-lm.SSP245_10 <- lm(lambda.slope~offset_SSP245,data=offset_pop_10)
-lm.SSP585_10 <- lm(lambda.slope~offset_SSP585,data=offset_pop_10)
-lm.dist_10 <- lm(lambda.slope~offset_climate,data=offset_pop_10)
+lm.1215_10 <- lm(lambda.mean~offset_1215,data=offset_pop_10)
+lm.SSP245_10 <- lm(lambda.mean~offset_SSP245,data=offset_pop_10)
+lm.SSP585_10 <- lm(lambda.mean~offset_SSP585,data=offset_pop_10)
+lm.dist_10 <- lm(lambda.mean~offset_climate,data=offset_pop_10)
 
 
 
@@ -50,12 +50,12 @@ Anova(lm.dist_10,type="III")
 
 
 #2012-2015 offset plotted against lambda
-ggplot(offset_pop, aes(x=offset_1215, y=lambda.slope, label=Demo_ID)) + 
+ggplot(offset_pop, aes(x=offset_1215, y=lambda.mean, label=Demo_ID)) + 
   geom_point(aes(color=Region), size =4.5)+
   geom_smooth(method=lm,color="black")+
 #  geom_label_repel(aes(label = ID))+
   geom_text(hjust=-.15, vjust=-.2)+
-  scale_y_continuous(name="Lambda Slope")+
+  scale_y_continuous(name="Mean Lambda")+
   scale_x_continuous(name="2012-2015 Genetic Offset")+
   scale_color_manual(values= c("North"="#3399FF", "Center"="#FFCC00", "South"="#FF3333"))+
   theme_classic() + theme(
@@ -64,18 +64,18 @@ ggplot(offset_pop, aes(x=offset_1215, y=lambda.slope, label=Demo_ID)) +
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
     #legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
-    legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
+    legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/1_offset_lambda_1215.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda.mean/1_offset_lambda_1215.pdf",width=8, height = 6, units = "in")
 
 
 #SSP 245 offset plotted against lambda
-ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope, label=Demo_ID)) + 
+ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.mean, label=Demo_ID)) + 
   geom_point(aes(color=Region), size =4.5)+
   geom_smooth(method=lm,color="black")+
   #  geom_label_repel(aes(label = ID))+
   geom_text(hjust=-.15, vjust=-.2)+
-  scale_y_continuous(name="Lambda Slope")+
+  scale_y_continuous(name="Mean Lambda")+
   scale_x_continuous(name="2040-2070 RCP4.5 Genetic Offset")+
   scale_color_manual(values= c("North"="#3399FF", "Center"="#FFCC00", "South"="#FF3333"))+
   theme_classic() + theme(
@@ -86,15 +86,15 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope, label=Demo_ID)) +
     #legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/2_offset_lambda_45.pdf",width=7, height = 5, units = "in")
+ggsave("Graphs/lambda.mean/2_offset_lambda_SSP245.pdf",width=7, height = 5, units = "in")
 
 #SSP 585 offset plotted against lambda
-ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope, label=Demo_ID)) + 
+ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.mean, label=Demo_ID)) + 
   geom_point(aes(color=Region), size =4.5)+
   geom_smooth(method=lm,color="black")+
   #  geom_label_repel(aes(label = ID))+
   geom_text(hjust=-.15, vjust=-.2)+
-  scale_y_continuous(name="Lambda Slope")+
+  scale_y_continuous(name="Mean Lambda")+
   scale_x_continuous(name="2040-2070 RCP4.5 Genetic Offset")+
   scale_color_manual(values= c("North"="#3399FF", "Center"="#FFCC00", "South"="#FF3333"))+
   theme_classic() + theme(
@@ -105,7 +105,7 @@ ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope, label=Demo_ID)) +
     #legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/3_offset_lambda_.pdf",width=7, height = 5, units = "in")
+ggsave("Graphs/lambda.mean/3_offset_lambda_SSP585.pdf",width=7, height = 5, units = "in")
 
 
 
@@ -113,12 +113,12 @@ ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope, label=Demo_ID)) +
 ###########################
 
 #climate distance plotted against lambda
-ggplot(offset_pop, aes(x=offset_climate, y=lambda.slope, label=Demo_ID)) + 
+ggplot(offset_pop, aes(x=offset_climate, y=lambda.mean, label=Demo_ID)) + 
   geom_point(aes(color=Region), size =4.5)+
   geom_smooth(method=lm,color="black")+
   #  geom_label_repel(aes(label = ID))+
   geom_text(hjust=-.15, vjust=-.2)+
-  scale_y_continuous(name="Lambda Slope")+
+  scale_y_continuous(name="Mean Lambda")+
   scale_x_continuous(name="2012-2015 Climate Distance")+
   scale_color_manual(values= c("North"="#3399FF", "Center"="#FFCC00", "South"="#FF3333"))+
   theme_classic() + theme(
@@ -126,9 +126,20 @@ ggplot(offset_pop, aes(x=offset_climate, y=lambda.slope, label=Demo_ID)) +
     axis.text.y = element_text(size=14,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
-    legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
+    legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/4_distance_lambda.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda.mean/4_distance_lambda.pdf",width=8, height = 6, units = "in")
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -138,7 +149,7 @@ ggplot(offset_pop, aes(x=offset_climate, y=lambda.slope, label=Demo_ID)) +
 #Offset pop with 10 initial populations
 
 #2012-2015 offset plotted against lambda only 10
-ggplot(offset_pop_10, aes(x=offset_1215, y=lambda.slope, label=Paper_ID)) + 
+ggplot(offset_pop_10, aes(x=offset_1215, y=lambda.mean, label=Paper_ID)) + 
   geom_point(aes(color=Region), size =4.5)+
   geom_smooth(method=lm,color="black")+
   #  geom_label_repel(aes(label = ID))+
@@ -154,12 +165,12 @@ ggplot(offset_pop_10, aes(x=offset_1215, y=lambda.slope, label=Paper_ID)) +
     #legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/1_offset_lambda_1215_only10.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda.mean/1_offset_lambda_1215_only10.pdf",width=8, height = 6, units = "in")
 
 
 
 #SSP 245 offset plotted against lambda
-ggplot(offset_pop_10, aes(x=offset_SSP245, y=lambda.slope, label=Paper_ID)) + 
+ggplot(offset_pop_10, aes(x=offset_SSP245, y=lambda.mean, label=Paper_ID)) + 
   geom_point(aes(color=Region), size =4.5)+
   geom_smooth(method=lm,color="black")+
   #  geom_label_repel(aes(label = ID))+
@@ -175,10 +186,10 @@ ggplot(offset_pop_10, aes(x=offset_SSP245, y=lambda.slope, label=Paper_ID)) +
     legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     #legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/2_offset_lambda_45_only10.pdf",width=7, height = 5, units = "in")
+ggsave("Graphs/lambda.mean/2_offset_lambda_45_only10.pdf",width=7, height = 5, units = "in")
 
 #SSP 585 offset plotted against lambda
-ggplot(offset_pop_10, aes(x=offset_SSP585, y=lambda.slope, label=Paper_ID)) + 
+ggplot(offset_pop_10, aes(x=offset_SSP585, y=lambda.mean, label=Paper_ID)) + 
   geom_point(aes(color=Region), size =4.5)+
   geom_smooth(method=lm,color="black")+
   #  geom_label_repel(aes(label = ID))+
@@ -194,11 +205,11 @@ ggplot(offset_pop_10, aes(x=offset_SSP585, y=lambda.slope, label=Paper_ID)) +
     legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     #legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/3_offset_lambda_85_only10.pdf",width=7, height = 5, units = "in")
+ggsave("Graphs/lambda.mean/3_offset_lambda_85_only10.pdf",width=7, height = 5, units = "in")
 
 
 #climate distance plotted against lambda
-ggplot(offset_pop_10, aes(x=offset_climate, y=lambda.slope, label=Paper_ID)) + 
+ggplot(offset_pop_10, aes(x=offset_climate, y=lambda.mean, label=Paper_ID)) + 
   geom_point(aes(color=Region), size =4.5)+
   geom_smooth(method=lm,color="black")+
   #  geom_label_repel(aes(label = ID))+
@@ -213,7 +224,7 @@ ggplot(offset_pop_10, aes(x=offset_climate, y=lambda.slope, label=Paper_ID)) +
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
     legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/4_distance_lambda_only10.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda.mean/4_distance_lambda_only10.pdf",width=8, height = 6, units = "in")
 
 
 ##################################################################################################################
@@ -227,7 +238,7 @@ ggplot(offset_pop_10, aes(x=offset_climate, y=lambda.slope, label=Paper_ID)) +
 
 
 #By region
-ggplot(offset_pop,aes(x=offset_1215, y=lambda.slope, color=Region,label=Demo_ID))+
+ggplot(offset_pop,aes(x=offset_1215, y=lambda.mean, color=Region,label=Demo_ID))+
   geom_point(aes(color=Region), size =4.5)+
   geom_smooth(method="lm")+
   geom_text(hjust=-.15, vjust=-.2,color="black")+
