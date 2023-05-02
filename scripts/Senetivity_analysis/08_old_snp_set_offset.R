@@ -123,10 +123,9 @@ rasterStack <- function(x,varList,rType='tif',vConvert=T){
 #Import SNP Data & and reformat
 snp_clim_bf20NA <- read_csv("data/genomic_data/oldonly_snp_set.csv") #pop data
 test_snp <- snp_clim_bf20NA %>% dplyr::select(-Site_Name, -Paper_ID, -Latitude, -Longitude, -Elevation, -MAT, -MAP, -CMD,
-                                       -PAS, -EXT, -Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm)
-
+                                              -PAS, -EXT, -Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm)
 ## Generate specific dataframes for GF model
-env_site <- snp_clim_bf20NA %>% dplyr::select(MAT,MAP,PAS,EXT,CMD,Tave_wt,Tave_sm,PPT_wt,PPT_sm)
+env_site <- snp_clim_bf20NA %>% dplyr::select(MAT,MAP,CMD)
 
 
 #Convert to data frame
@@ -151,7 +150,7 @@ c_range <- st_transform(c_range, crs = 4326) # reproject to WGS 1984 (EPSG 4326)
 ## Raster import and manipulation
 #Import 1981-2010 raster data for West NA & and stack them
 wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_8110"
-vlist <- c("MAT","MAP","PAS","EXT","CMD","Tave_wt","Tave_sm","PPT_wt","PPT_sm")
+vlist <- c("MAT","MAP","CMD")
 stk <- rasterStack(wd,vlist,rType='tif',vConvert=F)
 
 #Reproject to WGS 1984 (EPSG4326)
@@ -181,7 +180,7 @@ stk.df.cell<-cellFromXY(stk.mask, cbind(stk.df$x, stk.df$y))
 #######################
 #Import 2012-2015 raster data for West NA & and stack them
 wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_1215"
-vlist <- c("MAT","MAP","PAS","EXT","CMD","Tave_wt","Tave_sm","PPT_wt","PPT_sm")
+vlist <- c("MAT","MAP","CMD")
 stk_2012 <- rasterStack(wd,vlist,rType='tif',vConvert=F)
 
 #Reproject to WGS 1984 (EPSG4326)
@@ -197,13 +196,7 @@ stk_2012.df <- data.frame(rasterToPoints(stk_2012.mask))
 stk_2012.df <- na.omit(stk_2012.df)
 colnames(stk_2012.df)[3]<-"MAT"
 colnames(stk_2012.df)[4]<-"MAP"
-colnames(stk_2012.df)[5]<-"PAS"
-colnames(stk_2012.df)[6]<-"EXT"
-colnames(stk_2012.df)[7]<-"CMD"
-colnames(stk_2012.df)[8]<-"Tave_wt"
-colnames(stk_2012.df)[9]<-"Tave_sm"
-colnames(stk_2012.df)[10]<-"PPT_wt"
-colnames(stk_2012.df)[11]<-"PPT_sm"
+colnames(stk_2012.df)[5]<-"CMD"
 #Convert xy coordinates into cell ID
 stk_2012.df.cell<-cellFromXY(stk_2012.mask, cbind(stk_2012.df$x, stk_2012.df$y))
 
@@ -263,16 +256,10 @@ predBF20 <- predict(gf, stk.df[,-1:-2]) # remove cell column before transforming
 projBF20_2012 <- predict(gf, stk_2012.df[,-1:-2])
 
 
-# calculate euclidean distance between current and future genetic spaces  
+# calculate euclidean distance between current and future genetic spaces
 offset_BF20_2012 <- sqrt((projBF20_2012[,1]-predBF20[,1])^2
                         +(projBF20_2012[,2]-predBF20[,2])^2
-                        +(projBF20_2012[,3]-predBF20[,3])^2
-                        +(projBF20_2012[,4]-predBF20[,4])^2
-                        +(projBF20_2012[,5]-predBF20[,5])^2
-                        +(projBF20_2012[,6]-predBF20[,6])^2
-                        +(projBF20_2012[,7]-predBF20[,7])^2
-                        +(projBF20_2012[,8]-predBF20[,8])^2
-                        +(projBF20_2012[,9]-predBF20[,9])^2)
+                        +(projBF20_2012[,3]-predBF20[,3])^2)
 
 
 # assign values to raster - can be tricky if current/future climate
@@ -282,6 +269,7 @@ mask_offset_2012[stk_2012.df.cell] <- offset_BF20_2012
 plot(mask_offset_2012)
 
 writeRaster(mask_offset_2012,"data/genomic_data/offset_old_snp_set.tif", format="GTiff", overwrite=TRUE)
+
 
 
 

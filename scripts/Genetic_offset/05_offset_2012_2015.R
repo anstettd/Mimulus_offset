@@ -264,8 +264,8 @@ projBF20_2012 <- predict(gf, stk_2012.df[,-1:-2])
 
 
 # calculate euclidean distance between current and future genetic spaces  
-offset_BF20_2012 <- sqrt((projBF20_2012[,1]-predBF20[,1])^2+(projBF20_2012[,2]-predBF20[,2])^2
-                         +(projBF20_2012[,3]-predBF20[,3])^2)
+#offset_BF20_2012 <- sqrt((projBF20_2012[,1]-predBF20[,1])^2+(projBF20_2012[,2]-predBF20[,2])^2
+#                         +(projBF20_2012[,3]-predBF20[,3])^2)
 
 offset_BF20_2012 <- sqrt((projBF20_2012[,1]-predBF20[,1])^2
                         +(projBF20_2012[,2]-predBF20[,2])^2
@@ -284,7 +284,7 @@ offset_BF20_2012 <- sqrt((projBF20_2012[,1]-predBF20[,1])^2
 mask_offset_2012[stk_2012.df.cell] <- offset_BF20_2012
 plot(mask_offset_2012)
 
-writeRaster(mask_offset_2012,"data/genomic_data/offset_1215.tif", format="GTiff", overwrite=TRUE)
+#writeRaster(mask_offset_2012,"data/genomic_data/offset_1215.tif", format="GTiff", overwrite=TRUE)
 
 
 
@@ -319,7 +319,7 @@ clim_distance_1215 <- sqrt((pred_past_env[,1]-pred_1215_env[,1])^2+(pred_past_en
 mask_offset_2012_dist[stk_2012.df.cell] <- clim_distance_1215
 plot(mask_offset_2012_dist)
 
-writeRaster(mask_offset_2012_dist,"data/genomic_data/clim_distance.tif", format="GTiff", overwrite=TRUE)
+#writeRaster(mask_offset_2012_dist,"data/genomic_data/clim_distance.tif", format="GTiff", overwrite=TRUE)
 
 
 

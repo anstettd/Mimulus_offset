@@ -122,8 +122,8 @@ rasterStack <- function(x,varList,rType='tif',vConvert=T){
 ## Import SNP data and arrange for gradient forest
 #Import SNP Data & and reformat
 snp_clim_bf20NA <- read_csv("data/genomic_data/old_WZA_snp_set.csv") #pop data
-test_snp <- snp_clim_bf20NA %>% dplyr::select(-Site_Name, -Paper_ID, -Latitude, -Longitude, -Elevation, -MAT, -MAP, -CMD)
-
+test_snp <- snp_clim_bf20NA %>% dplyr::select(-Site_Name, -Paper_ID, -Latitude, -Longitude, -Elevation, -MAT, -MAP, -CMD,
+                                              -PAS, -EXT, -Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm)
 ## Generate specific dataframes for GF model
 env_site <- snp_clim_bf20NA %>% dplyr::select(MAT,MAP,CMD)
 
@@ -196,7 +196,7 @@ stk_2012.df <- data.frame(rasterToPoints(stk_2012.mask))
 stk_2012.df <- na.omit(stk_2012.df)
 colnames(stk_2012.df)[3]<-"MAT"
 colnames(stk_2012.df)[4]<-"MAP"
-colnames(stk_2012.df)[7]<-"CMD"
+colnames(stk_2012.df)[5]<-"CMD"
 #Convert xy coordinates into cell ID
 stk_2012.df.cell<-cellFromXY(stk_2012.mask, cbind(stk_2012.df$x, stk_2012.df$y))
 
