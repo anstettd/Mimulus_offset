@@ -121,7 +121,7 @@ rasterStack <- function(x,varList,rType='tif',vConvert=T){
 
 ## Import SNP data and arrange for gradient forest
 #Import SNP Data & and reformat
-snp_clim_bf20NA <- read_csv("data/genomic_data/bf30only_snp_set.csv") #pop data
+snp_clim_bf20NA <- read_csv("data/genomic_data/oldonly_snp_set.csv") #pop data
 test_snp <- snp_clim_bf20NA %>% dplyr::select(-Site_Name, -Paper_ID, -Latitude, -Longitude, -Elevation, -MAT, -MAP, -CMD,
                                        -PAS, -EXT, -Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm)
 
@@ -281,7 +281,7 @@ offset_BF20_2012 <- sqrt((projBF20_2012[,1]-predBF20[,1])^2
 mask_offset_2012[stk_2012.df.cell] <- offset_BF20_2012
 plot(mask_offset_2012)
 
-writeRaster(mask_offset_2012,"data/genomic_data/offset_bf30.tif", format="GTiff", overwrite=TRUE)
+writeRaster(mask_offset_2012,"data/genomic_data/offset_old_snp_set.tif", format="GTiff", overwrite=TRUE)
 
 
 
