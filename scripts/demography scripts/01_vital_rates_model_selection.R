@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Perform model selection for each vital rate for subsequent use in IPMs
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230310
+#### DATE LAST MODIFIED: 20230504
 
 #*******************************************************************************
 #### 0. Clean workspace and load required packages
@@ -30,7 +30,7 @@ for (i in 1:length(packages_needed)){
 #### 2. Read in vital rate data ###
 #*******************************************************************************
 
-data <- read.csv("data/demography data/Mcard_demog_data_2010-2015_cleanindivs.csv")
+data <- read.csv("data/demography data/Mcard_demog_data_2010-2016_cleanindivs.csv")
 data$Site = factor(data$Site)
 data$Year = factor(data$Year)
 
@@ -200,8 +200,8 @@ fr7 <- glmmTMB(Fec1 ~ logSize + (1|Year) + (logSize|Site), data=data[!is.na(data
 anova(fr3, fr4, fr5, fr6, fr7)
 model.sel(fr3, fr4, fr5, fr6, fr7) 
 
-# PREFERRED MODEL IS fr3, but due to singularity issues, we are going with the next best model, fr5
-r.squaredGLMM(fr5)
+# PREFERRED MODEL IS fr3, but due to singularity issues, we are going with the next best model, fr4
+r.squaredGLMM(fr4)
 
 # Save top fruit # model to .rda file 
-save(fr5, file='data/demography data/fruit.reg.rda')   
+save(fr4, file='data/demography data/fruit.reg.rda')   
