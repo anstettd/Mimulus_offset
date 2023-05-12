@@ -66,7 +66,7 @@ ggplot(offset_pop, aes(x=offset_1215, y=lambda.mean, label=Demo_ID)) +
     #legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-ggsave("Graphs/lambda.mean/1_offset_lambda_1215.pdf",width=8, height = 6, units = "in")
+#ggsave("Graphs/lambda.mean/1_offset_lambda_1215.pdf",width=8, height = 6, units = "in")
 
 
 #SSP 245 offset plotted against lambda
@@ -76,7 +76,7 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.mean, label=Demo_ID)) +
   #  geom_label_repel(aes(label = ID))+
   geom_text(hjust=-.15, vjust=-.2)+
   scale_y_continuous(name="Mean Lambda")+
-  scale_x_continuous(name="2040-2070 RCP4.5 Genetic Offset")+
+  scale_x_continuous(name="2040-2070 SSP245 Genetic Offset")+
   scale_color_manual(values= c("North"="#3399FF", "Center"="#FFCC00", "South"="#FF3333"))+
   theme_classic() + theme(
     axis.text.x = element_text(size=14, face="bold"),
@@ -95,7 +95,7 @@ ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.mean, label=Demo_ID)) +
   #  geom_label_repel(aes(label = ID))+
   geom_text(hjust=-.15, vjust=-.2)+
   scale_y_continuous(name="Mean Lambda")+
-  scale_x_continuous(name="2040-2070 RCP4.5 Genetic Offset")+
+  scale_x_continuous(name="2040-2070 SSP585 Genetic Offset")+
   scale_color_manual(values= c("North"="#3399FF", "Center"="#FFCC00", "South"="#FF3333"))+
   theme_classic() + theme(
     axis.text.x = element_text(size=14, face="bold"),

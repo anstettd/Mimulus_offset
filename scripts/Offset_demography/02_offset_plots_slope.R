@@ -66,7 +66,7 @@ ggplot(offset_pop, aes(x=offset_1215, y=lambda.slope, label=Demo_ID)) +
     #legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/1_offset_lambda_1215.pdf",width=8, height = 6, units = "in")
+#ggsave("Graphs/lambda_slope/1_offset_lambda_1215.pdf",width=8, height = 6, units = "in")
 
 
 #SSP 245 offset plotted against lambda
@@ -76,7 +76,7 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope, label=Demo_ID)) +
   #  geom_label_repel(aes(label = ID))+
   geom_text(hjust=-.15, vjust=-.2)+
   scale_y_continuous(name="Lambda Slope")+
-  scale_x_continuous(name="2040-2070 RCP4.5 Genetic Offset")+
+  scale_x_continuous(name="2040-2070 SSP245 Genetic Offset")+
   scale_color_manual(values= c("North"="#3399FF", "Center"="#FFCC00", "South"="#FF3333"))+
   theme_classic() + theme(
     axis.text.x = element_text(size=14, face="bold"),
@@ -86,7 +86,7 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope, label=Demo_ID)) +
     #legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/2_offset_lambda_45.pdf",width=7, height = 5, units = "in")
+ggsave("Graphs/lambda_slope/2_offset_lambda_ssp245.pdf",width=7, height = 5, units = "in")
 
 #SSP 585 offset plotted against lambda
 ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope, label=Demo_ID)) + 
@@ -95,7 +95,7 @@ ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope, label=Demo_ID)) +
   #  geom_label_repel(aes(label = ID))+
   geom_text(hjust=-.15, vjust=-.2)+
   scale_y_continuous(name="Lambda Slope")+
-  scale_x_continuous(name="2040-2070 RCP4.5 Genetic Offset")+
+  scale_x_continuous(name="2040-2070 SSP585 Genetic Offset")+
   scale_color_manual(values= c("North"="#3399FF", "Center"="#FFCC00", "South"="#FF3333"))+
   theme_classic() + theme(
     axis.text.x = element_text(size=14, face="bold"),
@@ -105,7 +105,7 @@ ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope, label=Demo_ID)) +
     #legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/3_offset_lambda_.pdf",width=7, height = 5, units = "in")
+ggsave("Graphs/lambda_slope/3_offset_lambda_ssp585.pdf",width=7, height = 5, units = "in")
 
 
 
@@ -128,7 +128,7 @@ ggplot(offset_pop, aes(x=offset_climate, y=lambda.slope, label=Demo_ID)) +
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
     legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/4_distance_lambda.pdf",width=8, height = 6, units = "in")
+#ggsave("Graphs/lambda_slope/4_distance_lambda.pdf",width=8, height = 6, units = "in")
 
 
 
