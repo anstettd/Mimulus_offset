@@ -1,7 +1,5 @@
 ##################################################################################
-## Gradient forest for peak snp20 SNP dataset
-## Works when raster stuff is done with 3.3_gradient forest
-## run SNP import and GF here
+## Gradient forest for full SNP dataset
 ## Author Daniel Anstett
 ## 
 ## Modified from Keller & Fitzpatric 2015
@@ -113,15 +111,19 @@ rasterStack <- function(x,varList,rType='tif',vConvert=T){
   return(stk)
 }
 
+#Examples
+#varList <- c('mat','map','td','tmin_sp','ahm','tmax_wt')
+#wd <- 'G:/ClimateXX_out/BC2/BC800v600/Normal_1961_1990MSY'
+#stk <- rasterStack(wd,varList,rType='tif',vConvert=T);stk
 
 ############################################################################################################
 ############################################################################################################
 
 ## Import SNP data and arrange for gradient forest
 #Import SNP Data & and reformat
-snp_clim_bf20NA <- read_csv("data/genomic_data/snp_clim_peakbf10_noNA.csv") #pop data
+snp_clim_bf20NA <- read_csv("data/genomic_data/snp_clim_beagle.csv") #pop data
 test_snp <- snp_clim_bf20NA %>% dplyr::select(-Site_Name, -Paper_ID, -Latitude, -Longitude, -Elevation, -MAT, -MAP, -CMD,
-                                              -PAS, -EXT, -Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm)
+                                       -PAS, -EXT, -Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm)
 
 ## Generate specific dataframes for GF model
 env_site <- snp_clim_bf20NA %>% dplyr::select(MAT,MAP,PAS,EXT,CMD,Tave_wt,Tave_sm,PPT_wt,PPT_sm)
@@ -141,6 +143,7 @@ pred<-colnames(env_site)
 
 ## Range wide polygon
 # Import M.cardinalis ensamble range extent as sf polygon
+#c_range <- st_read("SDM/Output/c_range_2.shp")
 c_range <- st_read("data/genomic_data/Shape/c_range50.shp") 
 c_range <- st_transform(c_range, crs = 4326) # reproject to WGS 1984 (EPSG 4326)
 
@@ -172,70 +175,39 @@ stk.df <- na.omit(stk.df)
 #Convert xy coordinates into cell ID
 stk.df.cell<-cellFromXY(stk.mask, cbind(stk.df$x, stk.df$y))
 
-
 ############################################################################################################
-##Import future climate change rasters
-#Import 2041-2070 SSP245 (RCP4.5) raster data for West NA & and stack them
-wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_45"
+##Import 2012-2015 raster average
+
+#######################
+#Import 2012-2015 raster data for West NA & and stack them
+wd <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_1215"
 vlist <- c("MAT","MAP","PAS","EXT","CMD","Tave_wt","Tave_sm","PPT_wt","PPT_sm")
-stk_4.5 <- rasterStack(wd,vlist,rType='tif',vConvert=F)
+stk_2012 <- rasterStack(wd,vlist,rType='tif',vConvert=F)
 
 #Reproject to WGS 1984 (EPSG4326)
-stk_4.5 <- projectRaster(stk_4.5, crs=EPSG4326) #reproject to WGS 1984 (EPSG 4326)
-crs(stk_4.5)
+stk_2012 <- projectRaster(stk_2012, crs=EPSG4326) #reproject to WGS 1984 (EPSG 4326)
+crs(stk_2012)
 
 #Clip raster using range-extent polygon
-stk_4.5.mask <- raster::crop(stk_4.5, extent(c_range))
-stk_4.5.mask <- mask(stk_4.5.mask, c_range)
+stk_2012.mask <- raster::crop(stk_2012, extent(c_range))
+stk_2012.mask <- mask(stk_2012.mask, c_range)
 
 #Extract point from raster stack
-stk_4.5.df <- data.frame(rasterToPoints(stk_4.5.mask))
-stk_4.5.df <- na.omit(stk_4.5.df)
-colnames(stk_4.5.df)[3]<-"MAT"
-colnames(stk_4.5.df)[4]<-"MAP"
-colnames(stk_4.5.df)[5]<-"PAS"
-colnames(stk_4.5.df)[6]<-"EXT"
-colnames(stk_4.5.df)[7]<-"CMD"
-colnames(stk_4.5.df)[8]<-"Tave_wt"
-colnames(stk_4.5.df)[9]<-"Tave_sm"
-colnames(stk_4.5.df)[10]<-"PPT_wt"
-colnames(stk_4.5.df)[11]<-"PPT_sm"
-
-
+stk_2012.df <- data.frame(rasterToPoints(stk_2012.mask))
+stk_2012.df <- na.omit(stk_2012.df)
+colnames(stk_2012.df)[3]<-"MAT"
+colnames(stk_2012.df)[4]<-"MAP"
+colnames(stk_2012.df)[5]<-"PAS"
+colnames(stk_2012.df)[6]<-"EXT"
+colnames(stk_2012.df)[7]<-"CMD"
+colnames(stk_2012.df)[8]<-"Tave_wt"
+colnames(stk_2012.df)[9]<-"Tave_sm"
+colnames(stk_2012.df)[10]<-"PPT_wt"
+colnames(stk_2012.df)[11]<-"PPT_sm"
 #Convert xy coordinates into cell ID
-stk_4.5.df.cell<-cellFromXY(stk_4.5.mask, cbind(stk_4.5.df$x, stk_4.5.df$y))
+stk_2012.df.cell<-cellFromXY(stk_2012.mask, cbind(stk_2012.df$x, stk_2012.df$y))
 
 
-
-#####################################
-#Import 2041-2070 SSP585 (RCP8.5) raster data for West NA & and stack them
-wd_8.5 <- "C:/Users/anstett3/Documents/Genomics/Large_files/Raster_updated/Year_4170_85"
-vlist <- c("MAT","MAP","PAS","EXT","CMD","Tave_wt","Tave_sm","PPT_wt","PPT_sm")
-stk_8.5 <- rasterStack(wd_8.5,vlist,rType='tif',vConvert=F)
-
-#Reproject to WGS 1984 (EPSG4326)
-stk_8.5 <- projectRaster(stk_8.5, crs=EPSG4326) #reproject to WGS 1984 (EPSG 4326)
-crs(stk_8.5)
-
-#Clip raster using range-extent polygon
-stk_8.5.mask <- raster::crop(stk_8.5, extent(c_range))
-stk_8.5.mask <- mask(stk_8.5.mask, c_range)
-
-#Extract point from raster stack
-stk_8.5.df <- data.frame(rasterToPoints(stk_8.5.mask))
-stk_8.5.df <- na.omit(stk_8.5.df)
-colnames(stk_4.5.df)[3]<-"MAT"
-colnames(stk_4.5.df)[4]<-"MAP"
-colnames(stk_4.5.df)[5]<-"PAS"
-colnames(stk_4.5.df)[6]<-"EXT"
-colnames(stk_4.5.df)[7]<-"CMD"
-colnames(stk_4.5.df)[8]<-"Tave_wt"
-colnames(stk_4.5.df)[9]<-"Tave_sm"
-colnames(stk_4.5.df)[10]<-"PPT_wt"
-colnames(stk_4.5.df)[11]<-"PPT_sm"
-
-#Convert xy coordinates into cell ID
-stk_8.5.df.cell<-cellFromXY(stk_8.5.mask, cbind(stk_8.5.df$x, stk_8.5.df$y))
 
 
 
@@ -245,10 +217,10 @@ MAT.clip <- projectRaster(MAT.clip, crs=EPSG4326) #reproject to WGS 1984 (EPSG 4
 rbg_mask <- raster::crop(MAT.clip, extent(c_range))
 rbg_mask <- mask(rbg_mask, c_range)
 rbg_mask <- rbg_mask * 0
-mask_offset_45 <- rbg_mask
-mask_offset_85 <- rbg_mask
-rbg_45 <- rbg_mask
-rbg_85 <- rbg_mask
+mask_offset_2012 <- rbg_mask
+mask_offset_2012_dist <- rbg_mask
+rbg_2012 <- rbg_mask
+
 
 
 
@@ -262,9 +234,7 @@ maxLevel <- log2(0.368*nrow(df_in_1)/2) #account for correlations, see ?gradient
 gf <- gradientForest(df_in_1,predictor.vars = pred, 
                      response.vars = resp,ntree = 500, 
                      maxLevel = maxLevel, trace=T, corr.threshold = 0.5)
-#Save PDF as 7 X 4
 plot(gf) #Importance Plot
-
 
 
 # Conpact version for larger datasets
@@ -289,46 +259,89 @@ predBF20 <- predict(gf, stk.df[,-1:-2]) # remove cell column before transforming
 
 #2011 to 2016 climate variables
 
-#Future Climate Change
-
 # first transform FUTURE env. variables
-projBF20_4.5 <- predict(gf, stk_4.5.df[,-1:-2])
-projBF20_8.5 <- predict(gf, stk_8.5.df[,-1:-2])
+projBF20_2012 <- predict(gf, stk_2012.df[,-1:-2])
 
 
 # calculate euclidean distance between current and future genetic spaces  
-offset_BF20_4.5 <- sqrt((projBF20_4.5[,1]-predBF20[,1])^2
-                         +(projBF20_4.5[,2]-predBF20[,2])^2
-                         +(projBF20_4.5[,3]-predBF20[,3])^2
-                         +(projBF20_4.5[,4]-predBF20[,4])^2
-                         +(projBF20_4.5[,5]-predBF20[,5])^2
-                         +(projBF20_4.5[,6]-predBF20[,6])^2
-                         +(projBF20_4.5[,7]-predBF20[,7])^2
-                         +(projBF20_4.5[,8]-predBF20[,8])^2
-                         +(projBF20_4.5[,9]-predBF20[,9])^2)
+#offset_BF20_2012 <- sqrt((projBF20_2012[,1]-predBF20[,1])^2+(projBF20_2012[,2]-predBF20[,2])^2
+#                         +(projBF20_2012[,3]-predBF20[,3])^2)
 
-offset_BF20_8.5 <- sqrt((projBF20_8.5[,1]-predBF20[,1])^2
-                        +(projBF20_8.5[,2]-predBF20[,2])^2
-                        +(projBF20_8.5[,3]-predBF20[,3])^2
-                        +(projBF20_8.5[,4]-predBF20[,4])^2
-                        +(projBF20_8.5[,5]-predBF20[,5])^2
-                        +(projBF20_8.5[,6]-predBF20[,6])^2
-                        +(projBF20_8.5[,7]-predBF20[,7])^2
-                        +(projBF20_8.5[,8]-predBF20[,8])^2
-                        +(projBF20_8.5[,9]-predBF20[,9])^2)
+offset_BF20_2012 <- sqrt((projBF20_2012[,1]-predBF20[,1])^2
+                        +(projBF20_2012[,2]-predBF20[,2])^2
+                        +(projBF20_2012[,3]-predBF20[,3])^2
+                        +(projBF20_2012[,4]-predBF20[,4])^2
+                        +(projBF20_2012[,5]-predBF20[,5])^2
+                        +(projBF20_2012[,6]-predBF20[,6])^2
+                        +(projBF20_2012[,7]-predBF20[,7])^2
+                        +(projBF20_2012[,8]-predBF20[,8])^2
+                        +(projBF20_2012[,9]-predBF20[,9])^2)
 
 
 # assign values to raster - can be tricky if current/future climate
 # rasters are not identical in terms of # cells, extent, etc.
 
+mask_offset_2012[stk_2012.df.cell] <- offset_BF20_2012
+plot(mask_offset_2012)
 
-mask_offset_45[stk_4.5.df.cell] <- offset_BF20_4.5
-mask_offset_85[stk_8.5.df.cell] <- offset_BF20_8.5
-plot(mask_offset_45)
-plot(mask_offset_85)
+writeRaster(mask_offset_2012,"data/genomic_data/offset_1215_beagle.tif", format="GTiff", overwrite=TRUE)
 
-writeRaster(mask_offset_45,"data/genomic_data/offset_4.5_peakbf2_grain.tif", format="GTiff", overwrite=TRUE)
-writeRaster(mask_offset_85,"data/genomic_data/offset_8.5_peakbf2_grain.tif", format="GTiff", overwrite=TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+#Get Climate Distance
+
+#Make PCAs
+past_pca <- prcomp(stk.df[3:5])
+             
+#Predict using past PCA
+pred_past_env <- predict(past_pca, stk.df[,-1:-2]) # remove cell column before transforming
+pred_1215_env <- predict(past_pca, stk_2012.df[,-1:-2])
+
+
+clim_distance_1215 <- sqrt((pred_past_env[,1]-pred_1215_env[,1])^2+(pred_past_env[,2]-pred_1215_env[,2])^2
+                           +(pred_past_env[,3]-pred_1215_env[,3])^2)
+
+
+# calculate euclidean distance between current and future genetic spaces  
+#clim_distance_1215 <- sqrt((stk.df[,3]-stk_2012.df[,3])^2+(stk.df[,4]-stk_2012.df[,4])^2
+#                           +(stk.df[,5]-stk_2012.df[,5])^2)
+
+mask_offset_2012_dist[stk_2012.df.cell] <- clim_distance_1215
+plot(mask_offset_2012_dist)
+
+#writeRaster(mask_offset_2012_dist,"data/genomic_data/clim_distance.tif", format="GTiff", overwrite=TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
