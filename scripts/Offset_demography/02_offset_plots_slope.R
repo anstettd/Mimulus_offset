@@ -27,6 +27,9 @@ lm.SSP245_10 <- lm(lambda.slope~offset_SSP245,data=offset_pop_10)
 lm.SSP585_10 <- lm(lambda.slope~offset_SSP585,data=offset_pop_10)
 lm.dist_10 <- lm(lambda.slope~offset_climate,data=offset_pop_10)
 
+summary(lm.1215)
+summary(lm.SSP245)
+summary(lm.SSP585)
 
 
 Anova(lm.1215,type="III")

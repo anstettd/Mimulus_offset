@@ -13,9 +13,9 @@ library(Kendall)
 
 #Import files
 
-wza_win_mat <- read_csv("data/genomic_data/WZA_win_mat_bf.csv")
-wza_win_map <- read_csv("data/genomic_data/WZA_win_map_bf.csv")
-wza_win_cmd <- read_csv("data/genomic_data/WZA_win_cmd_bf.csv")
+#wza_win_mat <- read_csv("data/genomic_data/WZA_win_mat_bf.csv")
+#wza_win_map <- read_csv("data/genomic_data/WZA_win_map_bf.csv")
+#wza_win_cmd <- read_csv("data/genomic_data/WZA_win_cmd_bf.csv")
 
 
 #Windows
