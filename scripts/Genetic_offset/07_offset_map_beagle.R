@@ -51,7 +51,7 @@ calo <- states %>%
 
 #Demography Pop
 demography_pop <- read_csv("data/genomic_data/offset_pop_9var.csv")
-demography_pop <- demography_pop  %>% dplyr::select(Long,Lat)
+demography_pop <- demography_pop  %>% dplyr::select(Longitude,Latitude)
 demography_pop_sf <- st_as_sf(demography_pop,coords=c("Longitude","Latitude"), crs=EPSG4326)
 
 
@@ -80,7 +80,7 @@ offset45 <- tm_shape(mask_offset_45_grain, bbox=st_bbox(calo)) + #legal boundire
   #  tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 offset45
-#tmap_save(offset45, filename = "Graphs/offset45_beagle.pdf",width=4, height=7)
+tmap_save(offset45, filename = "Graphs/Offset/offset45_beagle.pdf",width=4, height=7)
 
 ##############################################################################
 #2041-2070 offset - SSP585
@@ -91,7 +91,7 @@ offset45
 #off_pallet85 <- c("#f7c1c8","#f21836","#f21836","#A50F15","#A50F15","black","black")
 #off_pallet85 <- c("#f21836","#A50F15","#A50F15","magenta2","magenta2","black","black")
 #off_pallet85 <- c("#f21836","#A50F15","#A50F15","#5c0915","#5c0915","magenta2","magenta2")
-off_pallet85 <- c("#f7c1c8","#f21836","#A50F15","#5c0915","")
+off_pallet85 <- c("#f7c1c8","#f21836","#A50F15","magenta","grey40")
 
 #Plot offset SSP585 (RCP 8.5)
 tmap_mode("plot")
@@ -106,7 +106,7 @@ offset85 <- tm_shape(mask_offset_85_grain, bbox=st_bbox(calo)) + #legal boundire
   #  tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 offset85
-#tmap_save(offset85, filename = "Graphs/offset85_beagle.pdf",width=4, height=7)
+tmap_save(offset85, filename = "Graphs/Offset/offset85_beagle.pdf",width=4, height=7)
 
 
 ##############################################################################
@@ -118,7 +118,7 @@ off_pallet1215 <- c("#2166AC","#67A9CF","#D1E5F0","#f7c1c8","#f21836","#A50F15")
 
 
 
-c("#2166AC","#67A9CF","#D1E5F0","#f7c1c8","#f21836","#A50F15","#5c0915")
+c("#2166AC","#67A9CF","#D1E5F0","#f7c1c8","#FF3399","#f21836","#A50F15","#5c0915")
 
 #Plot offset 
 tmap_mode("plot")
@@ -135,7 +135,7 @@ offset_1215 <- tm_shape(mask_offset_1215, bbox=st_bbox(calo)) + #legal boundires
   #  tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 offset_1215
-#tmap_save(offset_1215, filename = "Graphs/offset1215_beagle.pdf",width=4, height=7)
+tmap_save(offset_1215, filename = "Graphs/Offset/offset1215_beagle.pdf",width=4, height=7)
 
 
 
@@ -169,7 +169,7 @@ env_1215 <- tm_shape(clim_diff_1215, bbox=st_bbox(calo)) + #legal boundires
   #  tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 env_1215
-tmap_save(env_1215, filename = "Graphs/clim_diff_1215_9var.pdf",width=4, height=7)
+tmap_save(env_1215, filename = "Graphs/Offset/clim_diff_1215_9var.pdf",width=4, height=7)
 
 
 
