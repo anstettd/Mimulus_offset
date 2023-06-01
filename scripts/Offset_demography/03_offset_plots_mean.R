@@ -12,7 +12,7 @@ library(car)
 library(ggrepel)
 
 #Import data
-offset_pop <- read_csv("data/genomic_data/offset_pop_9var.csv")
+offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv")
 #offset_pop <- offset_pop %>% filter(Demo_ID!=24)
 offset_pop_10 <- offset_pop %>% filter(Paper_ID<13)
 
@@ -70,7 +70,7 @@ ggplot(offset_pop, aes(x=offset_1215, y=lambda.mean, label=Demo_ID)) +
     #legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-#ggsave("Graphs/lambda.mean/1_offset_lambda_1215.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda.mean/1_offset_lambda_1215.pdf",width=7, height = 6, units = "in")
 
 
 #SSP 245 offset plotted against lambda
@@ -80,7 +80,7 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.mean, label=Demo_ID)) +
   #  geom_label_repel(aes(label = ID))+
   geom_text(hjust=-.15, vjust=-.2)+
   scale_y_continuous(name="Mean Lambda")+
-  scale_x_continuous(name="2040-2070 SSP245 Genetic Offset")+
+  scale_x_continuous(name="2040-2070 SSP245 Genetic Offset",breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_color_manual(values= c("North"="#3399FF", "Center"="#FFCC00", "South"="#FF3333"))+
   theme_classic() + theme(
     axis.text.x = element_text(size=14, face="bold"),
@@ -90,7 +90,7 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.mean, label=Demo_ID)) +
     #legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-ggsave("Graphs/lambda.mean/2_offset_lambda_SSP245.pdf",width=7, height = 5, units = "in")
+ggsave("Graphs/lambda.mean/2_offset_lambda_SSP245.pdf",width=7, height = 6, units = "in")
 
 #SSP 585 offset plotted against lambda
 ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.mean, label=Demo_ID)) + 
@@ -109,7 +109,7 @@ ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.mean, label=Demo_ID)) +
     #legend.position = c(0.85, 0.85),legend.text=element_text(size=14),
     legend.position = c(0.85, 0.25),legend.text=element_text(size=14),
     legend.title=element_text(size=16,face="bold"))
-ggsave("Graphs/lambda.mean/3_offset_lambda_SSP585.pdf",width=7, height = 5, units = "in")
+ggsave("Graphs/lambda.mean/3_offset_lambda_SSP585.pdf",width=7, height = 6, units = "in")
 
 
 

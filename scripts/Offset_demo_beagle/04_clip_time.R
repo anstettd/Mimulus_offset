@@ -38,10 +38,10 @@ timeseries <- timeseries[order(timeseries$Paper_ID),]
 
 
 ## Import offset rasters
-mask_offset_1215 <- raster("data/genomic_data/offset_1215_beagle.tif") #2012-2015 offset
+mask_offset_1215 <- raster("data/genomic_data/offset_1215.tif") #2012-2015 offset
 clim_diff_1215 <- raster("data/genomic_data/offset_climate.tif") #climate difference offset
-mask_offset_45 <- raster("data/genomic_data/offset_4.5_beagle.tif") #future climte change SSE245
-mask_offset_85 <- raster("data/genomic_data/offset_8.5_beagle.tif") #future climte change SSE585
+mask_offset_45 <- raster("data/genomic_data/offset_4.5_peakbf2_grain.tif") #future climte change SSE245
+mask_offset_85 <- raster("data/genomic_data/offset_8.5_peakbf2_grain.tif") #future climte change SSE585
 
 #Stack rasters
 rasStack_gcc <- stack(mask_offset_1215,clim_diff_1215,mask_offset_45,mask_offset_85)
@@ -70,6 +70,10 @@ offset_pop <- cbind(timeseries,rasStack)
 #Merge new sites codes with offset_pop data
 #offset_pop_meta <- cbind(offset_pop,demo_pop)
 
-write_csv(offset_pop,"/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/offset_pop_timeseries_beagle.csv")
+
+
+
+
+write_csv(offset_pop,"/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/offset_pop_timeseries.csv")
 
 
