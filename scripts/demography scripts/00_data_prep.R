@@ -259,6 +259,17 @@ tail(data.indivs)
 # Sort data by latitude
 data.indivs=data.indivs[order(-data.indivs$Latitude,data.indivs$Year),]
 
+# Summarize for methods
+length(unique(data.indivs$Site))
+length(unique(data.indivs$ID))
+site.n <- data.indivs %>% 
+  group_by(Site) %>% 
+  summarise(n = n_distinct(ID))
+site.n
+min(site.n$n)
+max(site.n$n)
+mean(site.n$n)
+
 # write to .csv
 write.csv(data.indivs,"data/demography data/Mcard_demog_data_2010-2016_cleanindivs.csv",row.names=FALSE)
 write.csv(site_fruit_count_data,"data/demography data/Mcard_demog_data_2010-2016_seedinput.csv",row.names=FALSE)
