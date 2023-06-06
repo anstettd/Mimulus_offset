@@ -397,8 +397,12 @@ site.info$lambda[site.info$SiteYear=="Kitchen Creek:2013"] = 0
 # View final data frame
 str(site.info)
 
-# Save to .csv file 
+# Save to lambdas to .csv file 
 write.csv(site.info,"data/demography data/siteYear.lambda_2010-2016.csv",row.names=FALSE)
+
+# Merge params and lambdas for supplementary table
+full.table <- left_join(site.info, params) %>% mutate_at(9:20, round, 2) %>% arrange(Latitude)
+write.csv(full.table,"data/demography data/siteYear.paramslambda_2010-2016.csv",row.names=FALSE)
 
 #*******************************************************************************
 ### 4. Compare to preliminary estimates 
