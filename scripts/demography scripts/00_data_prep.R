@@ -108,7 +108,7 @@ data_2014.2016 <- data_2014.2016 %>%
 # Note: this is lacking level 2 (=maybe), so is possibly more restrictive than 2010-14 filter
 # TO DO: Repeat this automatic coding for 2010-2014 as a sensitivity analysis
 
-# Read in list of skipped plots and sites in certain years. These cannot be used for recruitment the following year, because these plots are missing from the seed input denominator at time t, and at time t+1 we cannot distinguish 1-yr-old and 2-yr-old plants cannot be distinguished
+# Read in list of skipped plots and sites in certain years. These cannot be used for recruitment the following year, because these plots are missing from the seed input denominator at time t, and at time t+1 we cannot distinguish 1-yr-old and 2-yr-old plants 
 skipped <- read.csv("data/demography data/SkippedPlots.csv") %>% 
   separate(Squawk, sep=" ", c("Status", NA, "Year")) 
 skipped$Year = as.numeric(skipped$Year)
