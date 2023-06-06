@@ -80,7 +80,7 @@ offset45 <- tm_shape(mask_offset_45_grain, bbox=st_bbox(calo)) + #legal boundire
   #  tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 offset45
-tmap_save(offset45, filename = "Graphs/Offset/offset45_beagle.pdf",width=4, height=7)
+#tmap_save(offset45, filename = "Graphs/Offset/offset45_beagle.pdf",width=4, height=7)
 
 ##############################################################################
 #2041-2070 offset - SSP585
@@ -106,7 +106,7 @@ offset85 <- tm_shape(mask_offset_85_grain, bbox=st_bbox(calo)) + #legal boundire
   #  tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 offset85
-tmap_save(offset85, filename = "Graphs/Offset/offset85_beagle.pdf",width=4, height=7)
+#tmap_save(offset85, filename = "Graphs/Offset/offset85_beagle.pdf",width=4, height=7)
 
 
 ##############################################################################
@@ -114,7 +114,7 @@ tmap_save(offset85, filename = "Graphs/Offset/offset85_beagle.pdf",width=4, heig
 #off_pallet <- c("#2166AC","#67A9CF","#D1E5F0","#f7c1c8","#f21836","#A50F15")
 #off_pallet1215 <- c("#67A9CF","#D1E5F0","#f7c1c8","#f21836","#A50F15")
 #off_pallet1215 <- c("#67A9CF","#67A9CF","#D1E5F0","#D1E5F0","#f7c1c8","#f7c1c8","#f21836")
-off_pallet1215 <- c("#2166AC","#67A9CF","#D1E5F0","#f7c1c8","#f21836","#A50F15")
+off_pallet1215 <- c("#2166AC","#2166AC","#67A9CF","#D1E5F0","#f7c1c8","#f21836")
 
 
 
@@ -169,7 +169,7 @@ env_1215 <- tm_shape(clim_diff_1215, bbox=st_bbox(calo)) + #legal boundires
   #  tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.62, 0.48),legend.title.size = 0.001)
 env_1215
-tmap_save(env_1215, filename = "Graphs/Offset/clim_diff_1215_9var.pdf",width=4, height=7)
+#tmap_save(env_1215, filename = "Graphs/Offset/clim_diff_1215_9var.pdf",width=4, height=7)
 
 
 
