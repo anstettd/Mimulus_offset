@@ -108,7 +108,7 @@ data_2014.2016 <- data_2014.2016 %>%
 # Note: this is lacking level 2 (=maybe), so is possibly more restrictive than 2010-14 filter
 # TO DO: Repeat this automatic coding for 2010-2014 as a sensitivity analysis
 
-# Read in list of skipped plots and sites in certain years. These cannot be used for recruitment the following year, because these plots are missing from the seed input denominator at time t, and at time t+1 we cannot distinguish 1-yr-old and 2-yr-old plants cannot be distinguished
+# Read in list of skipped plots and sites in certain years. These cannot be used for recruitment the following year, because these plots are missing from the seed input denominator at time t, and at time t+1 we cannot distinguish 1-yr-old and 2-yr-old plants 
 skipped <- read.csv("data/demography data/SkippedPlots.csv") %>% 
   separate(Squawk, sep=" ", c("Status", NA, "Year")) 
 skipped$Year = as.numeric(skipped$Year)
@@ -258,6 +258,17 @@ tail(data.indivs)
 
 # Sort data by latitude
 data.indivs=data.indivs[order(-data.indivs$Latitude,data.indivs$Year),]
+
+# Summarize for methods
+length(unique(data.indivs$Site))
+length(unique(data.indivs$ID))
+site.n <- data.indivs %>% 
+  group_by(Site) %>% 
+  summarise(n = n_distinct(ID))
+site.n
+min(site.n$n)
+max(site.n$n)
+mean(site.n$n)
 
 # write to .csv
 write.csv(data.indivs,"data/demography data/Mcard_demog_data_2010-2016_cleanindivs.csv",row.names=FALSE)

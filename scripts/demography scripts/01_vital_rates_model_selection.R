@@ -67,7 +67,7 @@ s7 <- glmer(Surv ~ logSize + (1|Year) + (logSize|Site), data=data, family=binomi
 
 # Compare models
 anova(s3, s4, s5, s6, s7)
-model.sel(s3, s4, s5, s6, s7) 
+model.sel(s1, s2, s3, s4, s5, s6, s7) 
 
 # PREFERRED MODEL IS s3, but due to singularity issues, we are going with the next best model that doesn't have singularity issues, s5
 r.squaredGLMM(s5) 
@@ -107,7 +107,7 @@ g7 <- lmer(logSizeNext ~ logSize + (1|Year) + (logSize|Site), data=data, control
 
 # Compare models
 anova(g3, g4, g5, g6, g7)
-model.sel(g3, g4, g5, g6, g7)
+model.sel(g1, g2, g3, g4, g5, g6, g7)
 
 # # PREFERRED MODEL IS g3, but due to singularity issues, we are going with the next best model, g4
 r.squaredGLMM(g4) 
@@ -147,7 +147,7 @@ fl7 <- glmer(Fec0 ~ logSize + (1|Year) + (logSize|Site), data=data, family=binom
 
 # Compare models
 anova(fl3, fl4, fl5, fl6, fl7)
-model.sel(fl3, fl4, fl5, fl6, fl7) 
+model.sel(fl1, fl2, fl3, fl4, fl5, fl6, fl7) 
 
 # # PREFERRED MODEL IS fl3, but due to singularity issues, we are going with the next best model, fl4
 r.squaredGLMM(fl4) 
@@ -196,9 +196,15 @@ fr6 <- glmmTMB(Fec1 ~ logSize + (logSize|Year) + (1|Site), data=data[!is.na(data
 # Random intercepts & random slopes for Site (not nested within Year)
 fr7 <- glmmTMB(Fec1 ~ logSize + (1|Year) + (logSize|Site), data=data[!is.na(data$Fec1),], family=nbinom1) 
 
+# No random effects
+fr8 <- glmmTMB(Fec1 ~ logSize, data=data[!is.na(data$Fec1),], family=nbinom1) 
+
+# Intercept only
+fr9 <- glmmTMB(Fec1 ~ 1, data=data[!is.na(data$Fec1),], family=nbinom1) 
+
 # Compare models
 anova(fr3, fr4, fr5, fr6, fr7)
-model.sel(fr3, fr4, fr5, fr6, fr7) 
+model.sel(fr3, fr4, fr5, fr6, fr7, fr8, fr9) 
 
 # PREFERRED MODEL IS fr3, but due to singularity issues, we are going with the next best model, fr4
 r.squaredGLMM(fr4)
