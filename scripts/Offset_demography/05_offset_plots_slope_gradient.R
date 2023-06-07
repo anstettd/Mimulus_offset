@@ -13,7 +13,7 @@ library(ggrepel)
 library(RColorBrewer)
 
 #Import data
-offset_pop <- read_csv("data/genomic_data/offset_pop_9var.csv")
+offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv")
 #offset_pop <- offset_pop %>% filter(Demo_ID!=24)
 offset_pop_10 <- offset_pop %>% filter(Paper_ID<13)
 
@@ -69,7 +69,10 @@ ggplot(offset_pop, aes(x=offset_1215, y=lambda.slope)) +
     axis.text.y = element_text(size=14,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
-    legend.title = element_blank())
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+    )
 ggsave("Graphs/lambda_gradient/1_offset_lambda_1215.pdf",width=8, height = 6, units = "in")
 
 
@@ -85,7 +88,10 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope)) +
     axis.text.y = element_text(size=14,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
-    legend.title = element_blank())
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+  )
 ggsave("Graphs/lambda_gradient/2_offset_lambda_ssp245.pdf",width=8, height = 6, units = "in")
 
 #SSP 585 offset plotted against lambda
@@ -100,7 +106,10 @@ ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope)) +
     axis.text.y = element_text(size=14,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
-    legend.title = element_blank())
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+  )
 ggsave("Graphs/lambda_gradient/3_offset_lambda_ssp585.pdf",width=8, height = 6, units = "in")
 
 
@@ -120,7 +129,10 @@ ggplot(offset_pop, aes(x=offset_climate, y=lambda.slope)) +
     axis.text.y = element_text(size=14,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
-    legend.title = element_blank())
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+  )
 ggsave("Graphs/lambda_gradient/4_distance_lambda.pdf",width=8, height = 6, units = "in")
 
 

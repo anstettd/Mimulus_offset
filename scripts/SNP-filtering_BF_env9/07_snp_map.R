@@ -75,21 +75,23 @@ chr_all$Position <- as.integer(chr_all$Position)
 
 #############################################################################################
 #Plot all 
-chr1_graph_1 <-ggplot(chr_all, aes(x=Position, y=env)) +
-  geom_point(size=2, shape=4,color="black") +
-  scale_x_continuous(name="Position",  breaks=c(0,1e+07,2e+07,3e+07,4e+07,5e+07,6e+07)) +
-  scale_y_discrete(limits = rev(chr_all$env))+
-  theme_classic() + 
-  #theme(axis.title.y=element_blank())+
-  facet_wrap(~ chr, ncol = 1)+
-  theme(strip.text.x = element_text(size = 11,face="bold"),
-        axis.text.x = element_text(size=12,face="bold"),
-        axis.text.y = element_text(size=12,face="bold"),
-        axis.title.x = element_text(color="black", size=14, vjust = 0.5, face="bold"),
-        axis.title.y=element_blank())
-chr1_graph_1
-ggsave("Graphs/chr_map/chr_map_env.pdf",width=8, height = 15, units = "in")
+# Calculate evenly spaced breaks for the y-axis
+env_breaks <- seq_along(unique(chr_all$env))
+env_labels <- rev(unique(chr_all$env))
 
+chr1_graph_1 <- ggplot(chr_all, aes(x = Position, y = env)) +
+  geom_point(size = 2, shape = 4, color = "black") +
+  scale_x_continuous(name = "Position", breaks = c(0, 1e+07, 2e+07, 3e+07, 4e+07, 5e+07, 6e+07)) +
+  theme_classic() +
+  facet_wrap(~ chr, ncol = 2) +
+  labs(y = "") +  # Clear default y-axis label
+  theme(
+    strip.text.x = element_text(size = 11, face = "bold"),
+    axis.text.x = element_text(size = 12, face = "bold"),
+    axis.text.y = element_text(size = 12, face = "bold"),
+    axis.title.x = element_text(color = "black", size = 14, vjust = 0.5, face = "bold"),
+    axis.title.y = element_blank()
+  )
+chr1_graph_1 + scale_y_discrete(labels = env_labels)  # Add custom y-axis labels
 
-
-
+ggsave("Graphs/chr_map/chr_map_env.pdf",width=8, height = 7, units = "in")

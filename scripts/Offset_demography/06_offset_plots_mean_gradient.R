@@ -55,7 +55,10 @@ ggplot(offset_pop, aes(x=offset_1215, y=lambda.mean)) +
     axis.text.y = element_text(size=14,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
-    legend.title = element_blank())
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+  )
 ggsave("Graphs/lambda_gradient/5_offset_mean_1215.pdf",width=8, height = 6, units = "in")
 
 
@@ -71,7 +74,10 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.mean)) +
     axis.text.y = element_text(size=14,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
-    legend.title = element_blank())
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+  )
 ggsave("Graphs/lambda_gradient/6_offset_mean_ssp245.pdf",width=8, height = 6, units = "in")
 
 #SSP 585 offset plotted against lambda
@@ -86,7 +92,10 @@ ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.mean)) +
     axis.text.y = element_text(size=14,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
-    legend.title = element_blank())
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+  )
 ggsave("Graphs/lambda_gradient/7_offset_mean_ssp585.pdf",width=8, height = 6, units = "in")
 
 
@@ -106,7 +115,10 @@ ggplot(offset_pop, aes(x=offset_climate, y=lambda.mean)) +
     axis.text.y = element_text(size=14,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
-    legend.title = element_blank())
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+  )
 ggsave("Graphs/lambda_gradient/8_distance_mean.pdf",width=8, height = 6, units = "in")
 
 
