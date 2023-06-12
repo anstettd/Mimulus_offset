@@ -69,11 +69,11 @@ s7 <- glmer(Surv ~ logSize + (1|Year) + (logSize|Site), data=data, family=binomi
 anova(s3, s4, s5, s6, s7)
 model.sel(s1, s2, s3, s4, s5, s6, s7) 
 
-# PREFERRED MODEL IS s3, but due to singularity issues, we are going with the next best model that doesn't have singularity issues, s5
-r.squaredGLMM(s5) 
+# PREFERRED MODEL IS s3, but due to singularity issues, we are going with the next best model that doesn't have singularity issues, s4
+r.squaredGLMM(s4) 
 
 # Save top survival model to .rda file
-save(s5, file='data/demography data/surv.reg.rda')   
+save(s4, file='data/demography data/surv.reg.rda')   
 
 #*******************************************************************************
 #### 4. Growth ###
@@ -92,7 +92,6 @@ g3 <- lmer(logSizeNext ~ logSize + (logSize|Year/Site), data=data, control=lmerC
 # Random intercepts & constant slopes for Year
 # Random intercepts & constant slopes for Site (nested within Year)
 g4 <- lmer(logSizeNext ~ logSize + (1|Year/Site), data=data, control=lmerControl(optimizer = "bobyqa")) 
-# NOTE: this model has a singularity warning
 
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
@@ -110,11 +109,11 @@ g7 <- lmer(logSizeNext ~ logSize + (1|Year) + (logSize|Site), data=data, control
 anova(g3, g4, g5, g6, g7)
 model.sel(g1, g2, g3, g4, g5, g6, g7)
 
-# # PREFERRED MODEL IS g3, but due to singularity issues, we are going with the next best model, g5
-r.squaredGLMM(g5) 
+# # PREFERRED MODEL IS g3, but due to singularity issues, we are going with the next best model, g4
+r.squaredGLMM(g4) 
 
 # Save top growth model to .rda file
-save(g5, file='data/demography data/growth.reg.rda')   
+save(g4, file='data/demography data/growth.reg.rda')   
 
 #*******************************************************************************
 #### 5. Flowering ###
