@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Calculate slopes of lambda versus year as a metric of the rate of demographic decline during drought
 #### AUTHOR: Amy Angert
-#### DATE LAST MODIFIED: 20230504
+#### DATE LAST MODIFIED: 20230612
 
 
 #*******************************************************************************
@@ -33,7 +33,6 @@ dat <- read.csv("data/demography data/siteYear.lambda_2010-2016.csv")
 focal.sites <- c("CoastForkofWilliamette",
                  "CantonCreek",
                  "RockCreek",
-                 "DeerCreek",
                  "O'NeilCreek",
                  "DeepCreek",
                  "LittleJamesonCreek",
@@ -46,7 +45,6 @@ focal.sites <- c("CoastForkofWilliamette",
                  "NorthForkMiddleForkTule",
                  "SouthForkMiddleForkTule",
                  "WestForkMojaveRiver",
-                 "MillCreek",
                  "WhitewaterCanyon",
                  "SweetwaterRiver",
                  "KitchenCreek",
@@ -76,8 +74,7 @@ ggplot(dat, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   theme_classic() +
   theme(strip.background = element_blank(), strip.text.x = element_blank(),
         legend.title = element_blank())
-# Note: Buck Meadows and Mill Creek slopes were getting pulled up by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
-# Note: Deer Creek slope is getting pushed down by 2012, which had very high recruitment. Have verified that recruitment estimates are as correct as can be for this difficult site where plots wash out frequently. This would not be drought recovery, so less clear whether this year's estimate should be trimmed out or not. This site is perennially tricky and unreliable, so suggest excluding site altogether.
+# Note: Buck Meadows and Mill Creek slopes are getting pulled up by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
 
 ggplot(dat.old, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   geom_point() +
@@ -95,17 +92,16 @@ ggplot(dat.old, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
 ### 3. Calculate slopes of lambda over time for each site
 #*******************************************************************************
 
-# Note: Mill Creek only has two annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed entirely from downstream analyses.
+# Note: Mill Creek only has three annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed entirely 
+dat <- dat %>% filter(Site!="Mill Creek")
 
-# Note: should Deer Creek be re-estimated after dropping its 2012 value, or should we exclude Deer Creek from downstream analyses altogether because the plot markers are so unstable that a disproportionate amount of the data are of dubious quality?
-
-# with cleaned lambdas
+# with cleaned lambdas, all years
 site.vec <- unique(dat$Site)
 slopes.lam <- c()
 site.lam <- c()
 
 for (i in 1:length(site.vec)) {
-  dat.site <- dat %>% filter(Site==site.vec[i])
+  dat.site <- dat %>% filter(Site==site.vec[i]) 
   mod <- lm(lambda ~ Year, dat.site)
   slopes.lam[i] <- coefficients(mod)[2]
   site.lam[i] <- site.vec[i]
@@ -114,6 +110,24 @@ for (i in 1:length(site.vec)) {
 slopes.lambda <- bind_cols(site.lam, slopes.lam) %>% 
   dplyr::select(Site=...1, Lambda.Slope.New=...2) %>% 
   mutate(Site = gsub(" ", "", Site))
+
+# with cleaned lambdas, only through 2014-15 because of early recovery at some sites
+site.vec <- unique(dat$Site)
+slopes.lam.14 <- c()
+site.lam <- c()
+
+for (i in 1:length(site.vec)) {
+  dat.site <- dat %>% filter(Year<2015) %>% filter(Site==site.vec[i]) 
+  mod <- lm(lambda ~ Year, dat.site)
+  slopes.lam.14[i] <- coefficients(mod)[2]
+  site.lam[i] <- site.vec[i]
+}
+
+slopes.lambda.14 <- bind_cols(site.lam, slopes.lam.14) %>% 
+  dplyr::select(Site=...1, Lambda.Slope.New.14=...2) %>% 
+  mutate(Site = gsub(" ", "", Site))
+
+
 
 # compare to preliminary older estimates
 site.vec.old <- unique(dat.old$Site)
@@ -130,7 +144,7 @@ for (i in 1:length(site.vec.old)) {
 slopes.lambda.old <- bind_cols(site.lam.old, slopes.lam.old) %>% 
   dplyr::select(Site=...1, Lambda.Slope.Old=...2) 
 
-slopes.all <- left_join(slopes.lambda, slopes.lambda.old)
+slopes.all <- left_join(slopes.lambda, slopes.lambda.14) %>% left_join(slopes.lambda.old)
 
 ggplot(data=slopes.all, aes(x=Lambda.Slope.New, y=Lambda.Slope.Old, label=Site)) +
   geom_point() + 
@@ -138,30 +152,9 @@ ggplot(data=slopes.all, aes(x=Lambda.Slope.New, y=Lambda.Slope.Old, label=Site))
   geom_abline() 
 
 
-# Note: Re-estimate Deer Creek after dropping its 2012 value
-dat <- dat %>% filter(SiteYear!="Deer Creek:2012")
-
-site.vec <- unique(dat$Site)
-slopes.lam <- c()
-site.lam <- c()
-
-for (i in 1:length(site.vec)) {
-  dat.site <- dat %>% filter(Site==site.vec[i])
-  mod <- lm(lambda ~ Year, dat.site)
-  slopes.lam[i] <- coefficients(mod)[2]
-  site.lam[i] <- site.vec[i]
-}
-
-slopes.lambda <- bind_cols(site.lam, slopes.lam) %>% 
-  dplyr::select(Site=...1, Lambda.Slope.New=...2) %>% 
-  mutate(Site = gsub(" ", "", Site))
-
-# Remove Mill Creek and Deer Creek (see lines 98-100)
-slopes.lambda <- slopes.lambda %>% filter(Site!="DeerCreek" & Site!="MillCreek")
-
 # Add Latitude and other covariates back in
 covar <- dat.old %>% 
-  select(Site, Latitude, Longitude, Elevation, Region, RegionRank) %>% 
+  dplyr::select(Site, Latitude, Longitude, Elevation, Region, RegionRank) %>% 
   unique()
 
 slopes.lambda <- left_join(slopes.lambda, covar, by="Site") 
@@ -170,10 +163,6 @@ slopes.lambda <- left_join(slopes.lambda, covar, by="Site")
 #*******************************************************************************
 ### 4. Calculate mean lambda during drought for each site
 #*******************************************************************************
-
-# Note: Mill Creek only has two annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed entirely from downstream analyses.
-
-# Note: should Deer Creek be re-estimated after dropping its 2012 value, or should we exclude Deer Creek from downstream analyses altogether because the plot markers are so unstable that a disproportionate amount of the data are of dubious quality?
 
 dat.mean <- dat %>% 
   group_by(Latitude, Site) %>% 
