@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Perform model selection for each vital rate for subsequent use in IPMs
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230504
+#### DATE LAST MODIFIED: 20230612
 
 #*******************************************************************************
 #### 0. Clean workspace and load required packages
@@ -92,6 +92,7 @@ g3 <- lmer(logSizeNext ~ logSize + (logSize|Year/Site), data=data, control=lmerC
 # Random intercepts & constant slopes for Year
 # Random intercepts & constant slopes for Site (nested within Year)
 g4 <- lmer(logSizeNext ~ logSize + (1|Year/Site), data=data, control=lmerControl(optimizer = "bobyqa")) 
+# NOTE: this model has a singularity warning
 
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
@@ -109,11 +110,11 @@ g7 <- lmer(logSizeNext ~ logSize + (1|Year) + (logSize|Site), data=data, control
 anova(g3, g4, g5, g6, g7)
 model.sel(g1, g2, g3, g4, g5, g6, g7)
 
-# # PREFERRED MODEL IS g3, but due to singularity issues, we are going with the next best model, g4
-r.squaredGLMM(g4) 
+# # PREFERRED MODEL IS g3, but due to singularity issues, we are going with the next best model, g5
+r.squaredGLMM(g5) 
 
 # Save top growth model to .rda file
-save(g4, file='data/demography data/growth.reg.rda')   
+save(g5, file='data/demography data/growth.reg.rda')   
 
 #*******************************************************************************
 #### 5. Flowering ###
