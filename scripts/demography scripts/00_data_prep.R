@@ -150,7 +150,7 @@ data_2014.2016$Fec0 = (ifelse(data_2014.2016$Class=="A", 1,
 # Merge transition data with seed count data
 data_2014.2016 <- merge(data_2014.2016,seed.ct,by="Site",all.x=TRUE,all.y=FALSE)
 
-data_2014.2016 <- data_2014.2016 %>% select(colnames(data_2010.2014))
+data_2014.2016 <- data_2014.2016 %>% dplyr::select(colnames(data_2010.2014))
 
 # Combine all years
 data <- rbind(data_2010.2014, data_2014.2016)
@@ -179,6 +179,7 @@ focal.sites <- c("Coast Fork of Williamette",
                  "North Fork Middle Fork Tule",
                  "South Fork Middle Fork Tule",
                  "West Fork Mojave River",
+                 "Mill Creek",
                  "Whitewater Canyon",
                  "Sweetwater River",
                  "Kitchen Creek",
