@@ -1,4 +1,4 @@
-setwd("/scratch/general/vast/u1123911/Mimulus")
+#setwd("/scratch/general/vast/u1123911/Mimulus")
 
 library(dplyr)
 library(rtracklayer)
@@ -7,15 +7,16 @@ library(Biostrings)
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 
-#BiocManager::install("limma")
-#BiocManager::install("GO.db")
+BiocManager::install("rtracklayer")
+BiocManager::install("limma")
+BiocManager::install("GO.db")
 
 library(limma)
 library(GO.db)
 
 #Read GFF3
-Reference.curatedggf<- as.data.frame(readGFF("CE10.with_functional_annotation.sorted.gff3"))
-Interest_SNPs <- read_csv("snp_set_env.csv")
+Reference.curatedggf<- as.data.frame(readGFF("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/CE10.with_functional_annotation.sorted.gff3"))
+Interest_SNPs <- read_csv("data/genomic_data/snp_set_env.csv")
 
 genes_only <- filter(Reference.curatedggf,type == "gene")
 
@@ -87,20 +88,20 @@ Overlapping_SNPs_GFF3.df_curated <-
 
 colnames(Overlapping_SNPs_GFF3.df_curated) <- c("SNP","Gene","Chr","Start","End","GO_definition","IPR","Pfam") 
 
-write_csv(Overlapping_SNPs_GFF3.df_curated,"GO_overlaps.csv")
+write_csv(Overlapping_SNPs_GFF3.df_curated,"data/genomic_data/GO_overlaps.csv")
 
 ####614 snps list
 colnames(Interest_SNPs) <- "SNP"
 Interest_SNPs_full <- merge(Interest_SNPs,Overlapping_SNPs_GFF3.df_curated,by = "SNP", all.x=TRUE)
 
-write_csv(Interest_SNPs_full,"Full_SNP_list_with_GO_overlaps.csv")
+write_csv(Interest_SNPs_full,"data/genomic_data/Full_SNP_list_with_GO_overlaps.csv")
 ####Summary Tables
 
 Genes_Table<- as.data.frame(sort(table(Overlapping_SNPs_GFF3.df_curated$Gene), decreasing = TRUE))
-write_csv(Genes_Table,"Genes_Table.csv")
+write_csv(Genes_Table,"data/genomic_data/Genes_Table.csv")
 
 GO_Table<- as.data.frame(table(Overlapping_SNPs_GFF3.df_curated$Gene,
                                     Overlapping_SNPs_GFF3.df_curated$GO_definition))
 GO_Table <- arrange(filter(GO_Table,Freq > 0), -Freq)
 
-write_csv(Genes_Table,"GO_Genes_Table.csv")
+write_csv(Genes_Table,"data/genomic_data/GO_Genes_Table.csv")

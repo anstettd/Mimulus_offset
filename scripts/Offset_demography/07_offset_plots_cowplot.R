@@ -201,9 +201,9 @@ plot_cumul2 <-ggplot(offset_cumul, aes(x=offset_climate, y=cumul_all)) +
 ###########################################################################################################
 #Make Cowplots
 
-plot_grid(plot_2,plot_3,plot_4,plot_5, labels = "AUTO",ncol = 2,label_x = 0.23) #export at 6 X 8 
+plot_grid(plot_2,plot_3,plot_5,plot_7, labels = "AUTO",ncol = 2,label_x = 0.23) #export at 6 X 8 
 
-plot_grid(plot_cumul1,plot_cumul2,plot_5,plot_6, labels = "AUTO",ncol = 2,label_x = 0.23,label_size = 0) #export at 6 X 8 
+plot_grid(plot_cumul1,plot_cumul2,plot_4,plot_8, labels = "AUTO",ncol = 2,label_x = 0.23,label_size = 0) #export at 6 X 8 
 
 
 
