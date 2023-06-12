@@ -410,23 +410,20 @@ check.list = all$SiteYear[all$check=="YES"]
 
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + geom_abline(x=y) + xlim(0,70)
-# Note: Deer Creek:2012 has come down from >30 to <20 but is unreasonable regardless
+# Note: Buck Meadows:2015 is absurd - what happened??
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(0,0.5) + ylim(0,0.5) + geom_abline(x=y)
-# Note: many more below 1:1 than above
-# Note: Whitewater:2010 went from ~0.0 to ~0.3
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(0.5,1) + ylim(0.5,1) + geom_abline(x=y)
-# Note: symmetrical around 1:1 
+# Note: new values all higher than old values
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(1,2) + ylim(1,2) + geom_abline(x=y)
-# Note: many more above 1:1 line than below. Deep Creek:2014 has come up a lot due to exclusion of plot 4 where all plants were erroneously coded as D instead of E
+# Note: many more below 1:1 line than above 
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(2,3) + ylim(2,3) + geom_abline(x=y)
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(3,10) + ylim(3,10) + geom_abline(x=y)
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(10,50) + ylim(10,50) + geom_abline(x=y)
-# Note: Deer Creek:2012 has come down from >30 to ~20 but is unreasonable regardless
 
 
