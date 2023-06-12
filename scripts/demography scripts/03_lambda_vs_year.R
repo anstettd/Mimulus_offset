@@ -30,29 +30,8 @@ for (i in 1:length(packages_needed)){
 #*******************************************************************************
 dat <- read.csv("data/demography data/siteYear.lambda_2010-2016.csv")
 
-focal.sites <- c("CoastForkofWilliamette",
-                 "CantonCreek",
-                 "RockCreek",
-                 "O'NeilCreek",
-                 "DeepCreek",
-                 "LittleJamesonCreek",
-                 "OregonCreek",
-                 "RainbowPool",
-                 "Carlon",
-                 "BuckMeadows",
-                 "Wawona",
-                 "RedwoodCreek",
-                 "NorthForkMiddleForkTule",
-                 "SouthForkMiddleForkTule",
-                 "WestForkMojaveRiver",
-                 "WhitewaterCanyon",
-                 "SweetwaterRiver",
-                 "KitchenCreek",
-                 "HauserCreek")
-
-dat.old <- read.csv("data/demography data/siteYear.lambda_2010-2016_old.csv") %>% 
-  filter(Site %in% focal.sites)
-
+# Note: Mill Creek only has three annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed from calculations of demographic trajectories  
+dat <- dat %>% filter(Site!="Mill Creek")
 
 #*******************************************************************************
 ### 2. Visualize estimates over time for each site
@@ -74,26 +53,11 @@ ggplot(dat, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
   theme_classic() +
   theme(strip.background = element_blank(), strip.text.x = element_blank(),
         legend.title = element_blank())
-# Note: Buck Meadows and Mill Creek slopes are getting pulled up by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
-
-ggplot(dat.old, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
-  geom_point() +
-  geom_smooth(method="lm") +
-  scale_color_manual(values=color.list) +
-  ylab("Lambda") +
-  #ylim(0,2) +
-  geom_hline(yintercept=1, linetype="dotted") +
-  facet_wrap(~Latitude, scale="free", nrow=3) +
-  theme_classic() +
-  theme(strip.background = element_blank(), strip.text.x = element_blank(),
-        legend.title = element_blank())
+# Note: some sites' slopes (e.g., Buck Meadows) are getting pulled up by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
 
 #*******************************************************************************
 ### 3. Calculate slopes of lambda over time for each site
 #*******************************************************************************
-
-# Note: Mill Creek only has three annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed entirely 
-dat <- dat %>% filter(Site!="Mill Creek")
 
 # with cleaned lambdas, all years
 site.vec <- unique(dat$Site)
@@ -108,8 +72,7 @@ for (i in 1:length(site.vec)) {
 }
 
 slopes.lambda <- bind_cols(site.lam, slopes.lam) %>% 
-  dplyr::select(Site=...1, Lambda.Slope.New=...2) %>% 
-  mutate(Site = gsub(" ", "", Site))
+  dplyr::select(Site=...1, Lambda.Slope.1011.1516=...2) 
 
 # with cleaned lambdas, only through 2014-15 because of early recovery at some sites
 site.vec <- unique(dat$Site)
@@ -124,40 +87,15 @@ for (i in 1:length(site.vec)) {
 }
 
 slopes.lambda.14 <- bind_cols(site.lam, slopes.lam.14) %>% 
-  dplyr::select(Site=...1, Lambda.Slope.New.14=...2) %>% 
-  mutate(Site = gsub(" ", "", Site))
-
-
-
-# compare to preliminary older estimates
-site.vec.old <- unique(dat.old$Site)
-slopes.lam.old <- c()
-site.lam.old <- c()
-
-for (i in 1:length(site.vec.old)) {
-  dat.site.old <- dat.old %>% filter(Site==site.vec.old[i])
-  mod <- lm(lambda ~ Year, dat.site.old)
-  slopes.lam.old[i] <- coefficients(mod)[2]
-  site.lam.old[i] <- site.vec.old[i]
-}
-
-slopes.lambda.old <- bind_cols(site.lam.old, slopes.lam.old) %>% 
-  dplyr::select(Site=...1, Lambda.Slope.Old=...2) 
-
-slopes.all <- left_join(slopes.lambda, slopes.lambda.14) %>% left_join(slopes.lambda.old)
-
-ggplot(data=slopes.all, aes(x=Lambda.Slope.New, y=Lambda.Slope.Old, label=Site)) +
-  geom_point() + 
-  geom_text() + 
-  geom_abline() 
+  dplyr::select(Site=...1, Lambda.Slope.1011.1415=...2) 
 
 
 # Add Latitude and other covariates back in
-covar <- dat.old %>% 
+covar <- dat %>% 
   dplyr::select(Site, Latitude, Longitude, Elevation, Region, RegionRank) %>% 
   unique()
 
-slopes.lambda <- left_join(slopes.lambda, covar, by="Site") 
+slopes.lambda <- left_join(slopes.lambda, slopes.lambda.14) %>% left_join(covar, by="Site") 
 
 
 #*******************************************************************************
@@ -167,22 +105,12 @@ slopes.lambda <- left_join(slopes.lambda, covar, by="Site")
 dat.mean <- dat %>% 
   group_by(Latitude, Site) %>% 
   filter(Year==2012|Year==2013|Year==2014) %>% 
-  summarize(mean.lambda = exp(mean(log(lambda), na.omit=TRUE))) #GEOMETRIC mean
-
-# compare to preliminary older estimates
-dat.mean.old <- dat.old %>% 
-  group_by(Latitude, Site) %>% 
-  filter(Year==2012|Year==2013|Year==2014) %>% 
-  summarize(mean.lambda.old = exp(mean(log(lambda), na.omit=TRUE))) #GEOMETRIC mean
-
-means.all <- left_join(dat.mean, dat.mean.old, by="Latitude")
-
-ggplot(data=means.all, aes(x=mean.lambda, y=mean.lambda.old)) +
-  geom_point() 
+  na.omit() %>% 
+  summarize(mean.lambda = exp(mean(log(lambda)))) #GEOMETRIC mean
 
 # Join to slopes
-demog.response <- left_join(slopes.lambda, means.all, by=c("Site"="Site.y")) %>% 
-  select(Site, Latitude=Latitude.x, Longitude, Elevation, Region, RegionRank, lambda.slope = Lambda.Slope.New, lambda.mean = mean.lambda)
+demog.response <- left_join(slopes.lambda, dat.mean) %>% 
+  dplyr::select(Site, Latitude, Longitude, Elevation, Region, lambda.slope.all=Lambda.Slope.1011.1516, lambda.slope.trunc=Lambda.Slope.1011.1415, lambda.mean=mean.lambda)
 
 # Save to .csv file 
 write.csv(demog.response,"data/demography data/siteYear.lambda_responses_2010-2015.csv",row.names=FALSE)
