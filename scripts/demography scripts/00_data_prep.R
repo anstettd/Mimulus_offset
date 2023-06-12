@@ -193,7 +193,7 @@ data <- subset(data, Class!="D" | is.na(Class))
 data <- subset(data, Class!="E" & Class!="?" | is.na(Class))
 
 # Double check that Deer Creek 2013 Plot 4 Line 1, where existing plants were all marked D in 2014 but should have been marked E, are not in the data frame
-deer2013P04 <- subset(data, Site=="Deer Creek" & Year==2013 & PlotID==238) #no rows
+# deer2013P04 <- subset(data, Site=="Deer Creek" & Year==2013 & PlotID==238) #no rows
 
 # Remove rows for which size at time t AND size at t+1 is NA
 data <- data[!(is.na(data$logSize) & is.na(data$logSizeNext)),]
