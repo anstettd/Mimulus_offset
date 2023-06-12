@@ -162,11 +162,11 @@ data$SiteYear = paste(data$Site, data$Year, sep=":") %>% factor()
 #### 3. Remove unwanted data
 #*******************************************************************************
 
-# Remove sites that were not monitored after 2014; retain focal 21 populations
+# Remove sites that were not monitored after 2014 and two sites with problematic/missing data (Deer Creek, where frequent plot washouts cause identifications to be unreliable, and Mill creek, where a combination of plot washouts and flood closures left only two years with estimable lambda)
+# Retain focal 19 populations
 focal.sites <- c("Coast Fork of Williamette",
                  "Canton Creek",
                  "Rock Creek",
-                 "Deer Creek",
                  "O'Neil Creek",
                  "Deep Creek",
                  "Little Jameson Creek",
@@ -179,7 +179,6 @@ focal.sites <- c("Coast Fork of Williamette",
                  "North Fork Middle Fork Tule",
                  "South Fork Middle Fork Tule",
                  "West Fork Mojave River",
-                 "Mill Creek",
                  "Whitewater Canyon",
                  "Sweetwater River",
                  "Kitchen Creek",
