@@ -9,8 +9,6 @@
 #Library install and import
 library(tidyverse) # for data manipulation
 library(raster) # for handeling rasters
-library(tidyverse)
-library(cowplot)
 library(sf)
 library(rgdal)
 library(rnaturalearth)
