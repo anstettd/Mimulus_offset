@@ -12,7 +12,7 @@ library(car)
 library(ggrepel)
 
 #Import data
-offset_pop <- read_csv("data/genomic_data/offset_pop_9var.csv")
+offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv")
 #offset_pop <- offset_pop %>% filter(Demo_ID!=24)
 offset_pop_10 <- offset_pop %>% filter(Paper_ID<13)
 
