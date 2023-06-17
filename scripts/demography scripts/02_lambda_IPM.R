@@ -354,7 +354,6 @@ site.info=bind_rows(site.info, Hauser)
 # Which site-years have lambda=NA, and why?
 lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::select(SiteYear)
 
-# NOT UPDATED
 # Coast Fork Willamette:2012 --> no fruits; keep as NA
 # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013. Keep as NA because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants died).
 # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; lambda is NA

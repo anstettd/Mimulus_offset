@@ -113,5 +113,5 @@ demog.response <- left_join(slopes.lambda, dat.mean) %>%
   dplyr::select(Site, Latitude, Longitude, Elevation, Region, lambda.slope.all=Lambda.Slope.1011.1516, lambda.slope.trunc=Lambda.Slope.1011.1415, lambda.mean=mean.lambda)
 
 # Save to .csv file 
-write.csv(demog.response,"data/demography data/siteYear.lambda_responses_2010-2015.csv",row.names=FALSE)
+write.csv(demog.response,"data/demography data/siteYear.lambda_responses_2010-2016.csv",row.names=FALSE)
 
