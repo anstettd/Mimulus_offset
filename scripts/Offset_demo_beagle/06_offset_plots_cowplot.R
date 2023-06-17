@@ -26,7 +26,7 @@ color.list <- lat_cols(n.sites)
 
 
 #2012-2015 offset plotted against lambda
-plot_1 <- ggplot(offset_pop, aes(x=offset_1215, y=lambda.slope)) + 
+plot_1 <- ggplot(offset_pop, aes(x=offset_1215, y=lambda.slope.trunc)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Lambda Slope")+
@@ -43,7 +43,7 @@ plot_1 <- ggplot(offset_pop, aes(x=offset_1215, y=lambda.slope)) +
   )
 
 #SSP 245 offset plotted against lambda
-plot_2 <- ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope)) + 
+plot_2 <- ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope.trunc)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Lambda Slope")+
@@ -60,7 +60,7 @@ plot_2 <- ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope)) +
   )
 
 #SSP 585 offset plotted against lambda
-plot_3 <- ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope)) + 
+plot_3 <- ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope.trunc)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Lambda Slope")+
@@ -77,7 +77,7 @@ plot_3 <- ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope)) +
   )
 
 #climate distance plotted against lambda
-plot_4 <- ggplot(offset_pop, aes(x=offset_climate, y=lambda.slope)) + 
+plot_4 <- ggplot(offset_pop, aes(x=offset_climate, y=lambda.slope.trunc)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Lambda Slope")+

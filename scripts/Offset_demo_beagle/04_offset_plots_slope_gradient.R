@@ -18,15 +18,15 @@ offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv")
 offset_pop_10 <- offset_pop %>% filter(Paper_ID<13)
 
 #stats
-lm.1215 <- lm(lambda.slope~offset_1215,data=offset_pop)
-lm.SSP245 <- lm(lambda.slope~offset_SSP245,data=offset_pop)
-lm.SSP585 <- lm(lambda.slope~offset_SSP585,data=offset_pop)
-lm.dist <- lm(lambda.slope~offset_climate,data=offset_pop)
+lm.1215 <- lm(lambda.slope.trunc~offset_1215,data=offset_pop)
+lm.SSP245 <- lm(lambda.slope.trunc~offset_SSP245,data=offset_pop)
+lm.SSP585 <- lm(lambda.slope.trunc~offset_SSP585,data=offset_pop)
+lm.dist <- lm(lambda.slope.trunc~offset_climate,data=offset_pop)
 
-lm.1215_10 <- lm(lambda.slope~offset_1215,data=offset_pop_10)
-lm.SSP245_10 <- lm(lambda.slope~offset_SSP245,data=offset_pop_10)
-lm.SSP585_10 <- lm(lambda.slope~offset_SSP585,data=offset_pop_10)
-lm.dist_10 <- lm(lambda.slope~offset_climate,data=offset_pop_10)
+lm.1215_10 <- lm(lambda.slope.trunc~offset_1215,data=offset_pop_10)
+lm.SSP245_10 <- lm(lambda.slope.trunc~offset_SSP245,data=offset_pop_10)
+lm.SSP585_10 <- lm(lambda.slope.trunc~offset_SSP585,data=offset_pop_10)
+lm.dist_10 <- lm(lambda.slope.trunc~offset_climate,data=offset_pop_10)
 
 summary(lm.1215)
 summary(lm.SSP245)
@@ -58,7 +58,7 @@ color.list <- lat_cols(n.sites)
 
 
 #2012-2015 offset plotted against lambda
-ggplot(offset_pop, aes(x=offset_1215, y=lambda.slope)) + 
+ggplot(offset_pop, aes(x=offset_1215, y=lambda.slope.trunc)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Lambda Slope")+
@@ -77,7 +77,7 @@ ggsave("Graphs/lambda_gradient/1_offset_lambda_1215.pdf",width=8, height = 6, un
 
 
 #SSP 245 offset plotted against lambda
-ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope)) + 
+ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope.trunc)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Lambda Slope")+
@@ -95,7 +95,7 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.slope)) +
 ggsave("Graphs/lambda_gradient/2_offset_lambda_ssp245.pdf",width=8, height = 6, units = "in")
 
 #SSP 585 offset plotted against lambda
-ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope)) + 
+ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.slope.trunc)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Lambda Slope")+
@@ -118,7 +118,7 @@ ggsave("Graphs/lambda_gradient/3_offset_lambda_ssp585.pdf",width=8, height = 6, 
 ###########################
 
 #climate distance plotted against lambda
-ggplot(offset_pop, aes(x=offset_climate, y=lambda.slope)) + 
+ggplot(offset_pop, aes(x=offset_climate, y=lambda.slope.trunc)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Lambda Slope")+
