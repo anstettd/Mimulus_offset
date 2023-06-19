@@ -174,6 +174,11 @@ data_2014.2019 <- data_2014.2019 %>%
 
 
 # Create columns of log-transformed sizes
+# first, replace with NA observations that erroneously have size=0 
+data_2014.2019[68460,"Size"] <- NA
+data_2014.2019[55399,"SizeNext"] <- NA
+data_2014.2019[65542,"SizeNext"] <- NA
+data_2014.2019[65547,"SizeNext"] <- NA
 data_2014.2019$logSize = log(data_2014.2019$Size)
 data_2014.2019$logSizeNext = log(data_2014.2019$SizeNext)
 
