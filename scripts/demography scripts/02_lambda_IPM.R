@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Create data frame of vital rate parameters and build integral projection models to obtain estimates of annual lambdas for each population
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230612
+#### DATE LAST MODIFIED: 20230619
 
 
 #*******************************************************************************
@@ -31,13 +31,13 @@ for (i in 1:length(packages_needed)){
 #### 2. Read in vital rate data frames ###
 #*******************************************************************************
 
-data <- read.csv("data/demography data/Mcard_demog_data_2010-2016_cleanindivs.csv")
+data <- read.csv("data/demography data/Mcard_demog_data_2010-2019_cleanindivs.csv")
 data$Site = factor(data$Site)
 data$Year = factor(data$Year)
 data$Year = factor(data$Year)
 data$SiteYear = factor(data$SiteYear)
 
-site_fruit_count_data <- read.csv("data/demography data/Mcard_demog_data_2010-2016_seedinput.csv")
+site_fruit_count_data <- read.csv("data/demography data/Mcard_demog_data_2010-2019_seedinput.csv")
 site_fruit_count_data$Site = factor(site_fruit_count_data$Site)
 site_fruit_count_data$Year = factor(site_fruit_count_data$Year)
 site_fruit_count_data$Year = factor(site_fruit_count_data$Year)
@@ -73,14 +73,14 @@ fruit=c()
   ### 1B. Growth ###
   #*******************************************************************************
   
-  # Read in top growth model output (Formula: logSizeNext ~ logSize + (1|Year/Site))
+  # Read in top growth model output (Formula: logSizeNext ~ logSize + (logSize|Year/Site))
   growth.reg <- load("data/demography data/growth.reg.rda")
   
   # Store model coefficients
-  growth$SiteYear = rownames(coefficients(g4)$'Site:Year')
-  growth$growth.int=coefficients(g4)$'Site:Year'[,1] 
-  growth$growth.slope=coefficients(g4)$'Site:Year'[,2] 
-  growth$growth.sd=rep(sigma(g4), dim(coefficients(g4)$'Site:Year')[1])
+  growth$SiteYear = rownames(coefficients(g3)$'Site:Year')
+  growth$growth.int=coefficients(g3)$'Site:Year'[,1] 
+  growth$growth.slope=coefficients(g3)$'Site:Year'[,2] 
+  growth$growth.sd=rep(sigma(g3), dim(coefficients(g3)$'Site:Year')[1])
  
   # Note: script "dnorm.R" determines that we do not need to switch to the cdf estimation for the growth function
  
@@ -105,13 +105,22 @@ fruit=c()
     #*******************************************************************************
   ### 1D. Fruit number (untransformed) using negative binomial regression ###
   #*******************************************************************************
-  # Read in top model output for fruit.reg (Formula: Fec1 ~ logSize + (1|Year/Site))   
+  # Read in top model output for fruit.reg (Formula: Fec1 ~ logSize + (logSize|Year) + (logSize|Site)   
   fruit.reg=load("data/demography data/fruit.reg.rda")
 
-  # Store model coefficients (fr4 from glmmTMB)
-  fruit$SiteYear=rownames(ranef(fr4)$cond$'Site:Year')
-  fruit$fruit.int=fixef(fr4)$cond[1]+ranef(fr4)$cond$'Site:Year'[,1] 
-  fruit$fruit.slope=rep(fixef(fr4)$cond[2],times=length(rownames(ranef(fr4)$cond$'Site:Year'))) 
+  # Store model coefficients (fr5 from glmmTMB)
+  # Store model coefficients for each Site:Year
+  Site=rownames(ranef(fr5)$cond$'Site')
+  Year=rownames(ranef(fr5)$cond$'Year')
+  counter=0
+  for (i in 1:length(Site)) {
+    for (j in 1:length(Year)) {
+      counter=counter+1
+      fruit$fruit.int[counter]=fixef(fr5)$cond[1] + ranef(fr5)$cond$'Site'[i,1] + ranef(fr5)$cond$'Year'[j,1]
+      fruit$fruit.slope[counter]=fixef(fr5)$cond[2] + ranef(fr5)$cond$'Site'[i,2] + ranef(fr5)$cond$'Year'[j,2]
+      fruit$SiteYear[counter]=paste(rownames(ranef(fr5)$cond$'Site')[i],":",rownames(ranef(fr5)$cond$'Year')[j], sep="")
+    }
+  }
   
   # make data frame
   fruit=data.frame(fruit) 
@@ -201,17 +210,68 @@ fruit=c()
   # Which site-years are missing parameter estimates?
   params.missing <- params[!complete.cases(params),]
   params.missing$SiteYear
+
   # Canton Creek:2011 --> growth slopes, intercepts, and sd are inestimable because of sparse data, but site was visited and censused and all other parameters are estimable; use mean across other years at this site for this year's growth parameters
-  params$growth.int[params$SiteYear=="Canton Creek:2011"] = mean(params$growth.int[params$Site=="Canton Creek" & params$Year!=2011])
-  params$growth.slope[params$SiteYear=="Canton Creek:2011"] = mean(params$growth.slope[params$Site=="Canton Creek" & params$Year!=2011])
-  params$growth.sd[params$SiteYear=="Canton Creek:2011"] = mean(params$growth.sd[params$Site=="Canton Creek" & params$Year!=2011])
-  # Coast Fork of Willamette:2012 --> no fruits in 2012 so fruit slopes & intercepts are inestimable because of sparse data, but site was visited and censused and all other parameters are estimable; use mean across other years at this site for this year's fruit parameters or set lambda to NA?
-  # Hauser Creek: 2011 --> all plants dead on plots 1-2, but many plants on plot 3 that were  indistinguishable from one another; lambda is NA
+  params$growth.int[params$SiteYear=="Canton Creek:2011"] = mean(params$growth.int[params$Site=="Canton Creek"], na.rm=T)
+  params$growth.slope[params$SiteYear=="Canton Creek:2011"] = mean(params$growth.slope[params$Site=="Canton Creek"], na.rm=T)
+  params$growth.sd[params$SiteYear=="Canton Creek:2011"] = mean(params$growth.sd[params$Site=="Canton Creek"], na.rm=T)
+  # Canton Creek:2016 --> site inaccessible in 2017 due to high water; lambda is NA
+  # Canton Creek 2017 --> site inaccessible in 2017 due to high water; lambda is NA
+  
+  # Rock Creek:2012 --> 2013 data folder lost; lambda is NA
+  # Rock Creek:2013 --> 2013 data folder lost; lambda is NA
+  # Buck Meadows:2012 --> site inaccessible in 2013 due to fire; lambda is NA
+  # Buck Meadows:2013 --> site inaccessible in 2013 due to fire; lambda is NA
+  # Rainbow Pool:2012 --> site inaccessible in 2013 due to fire; lambda is NA
+  # Rainbow Pool:2013 --> site inaccessible in 2013 due to fire; lambda is NA
+  # Carlon:2012 --> site inaccessible in 2013 due to fire; lambda is NA
+  # Carlon:2013 --> site inaccessible in 2013 due to fire; lambda is NA
+  # Carlon:2016 --> growth slopes, intercepts, and sd are inestimable because of sparse data, but site was visited and censused and all other parameters are estimable; use mean across other years at this site for this year's growth parameters
+  params$growth.int[params$SiteYear=="Carlon:2016"] = mean(params$growth.int[params$Site=="Carlon"], na.rm=T)
+  params$growth.slope[params$SiteYear=="Carlon:2016"] = mean(params$growth.slope[params$Site=="Carlon"], na.rm=T)
+  params$growth.sd[params$SiteYear=="Carlon:2016"] = mean(params$growth.sd[params$Site=="Carlon"], na.rm=T)
+  
+  # Hauser Creek: 2011 --> all plants dead on plots 1-2, but many plants on plot 3 that were indistinguishable from one another, making growth parameters too sparse to estimate; use mean across other years
+  params$growth.int[params$SiteYear=="Hauser Creek:2011"] = mean(params$growth.int[params$Site=="Hauser Creek"], na.rm=T)
+  params$growth.slope[params$SiteYear=="Hauser Creek:2011"] = mean(params$growth.slope[params$Site=="Hauser Creek"], na.rm=T)
+  params$growth.sd[params$SiteYear=="Hauser Creek:2011"] = mean(params$growth.sd[params$Site=="Hauser Creek"], na.rm=T)
+  # Hauser Creek:2012 --> all plants dead; manually set lambda to 0 below
+  # Hauser Creek:2013 --> all plants dead; manually set lambda to 0 below
+  # Hauser Creek:2014 --> all plants dead; manually set lambda to 0 below
+  # Hauser Creek:2015 --> all plants dead; manually set lambda to 0 below
+  # Hauser Creek:2016 --> all plants dead; manually set lambda to 0 below
+  # Hauser Creek:2017 --> all plants dead; manually set lambda to 0 below
+  
   # Kitchen Creek: 2013 --> only remaining plant died; manually set lambda to 0 below
+  # Kitchen Creek:2014 --> all plants dead; manually set lambda to 0 below
+  # Kitchen Creek:2015 --> all plants dead; manually set lambda to 0 below
+  # Kitchen Creek:2016 --> all plants dead; manually set lambda to 0 below
+  # Kitchen Creek:2017 --> all plants dead; manually set lambda to 0 below
+  # Kitchen Creek:2018 --> new recruits appeared
+  
   # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; lambda is NA
+  # Mill Creek:2013 --> site inaccessible in 2013 due to flood; lambda is NA
   # Mill Creek:2014 --> site inaccessible in 2013 due to flood; lambda is NA
+  
   # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013. Keep as NA because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants died).
+
   # Whitewater Canyon:2014 --> all plants died; manually lambda to 0 below
+  # Whitewater Canyon:2015
+  # Whitewater Canyon:2016
+  # Whitewater Canyon:2017
+  # Whitewater Canyon:2018
+
+  # North Fork Middle Fork Tule:2016 --> fire closure; lambda is NA
+  # North Fork Middle Fork Tule:2017 --> fire closure; lambda is NA
+  
+  # Redwood Creek:2015 --> fire closure; lambda is NA
+  # Redwood Creek:2016 --> fire closure; lambda is NA
+  
+  # South Fork Middle Fork Tule:2010 --> fire closure; lambda is NA
+  # South Fork Middle Fork Tule:2011 --> fire closure; lambda is NA
+  # South Fork Middle Fork Tule:2016 --> fire closure; lambda is NA
+  # South Fork Middle Fork Tule:2017 --> fire closure; lambda is NA
+  
 
   
 # Store parameters in .csv file for later use
@@ -261,38 +321,39 @@ site.info <- subset(data, select=c(Site,Year,SiteYear,Latitude,Longitude,Elevati
 site.info <- full_join(site.info, siteYear.lambda)
 
 # How many site-year combos are possible? 
-20*6 #120
-focal.sites <- c(rep("Coast Fork of Williamette",6),
-                 rep("Canton Creek",6),
-                 rep("Rock Creek",6),
-                 rep("O'Neil Creek",6),
-                 rep("Deep Creek",6),
-                 rep("Little Jameson Creek",6),
-                 rep("Oregon Creek",6),
-                 rep("Rainbow Pool",6),
-                 rep("Carlon",6),
-                 rep("Buck Meadows",6),
-                 rep("Wawona",6),
-                 rep("Redwood Creek",6),
-                 rep("North Fork Middle Fork Tule",6),
-                 rep("South Fork Middle Fork Tule",6),
-                 rep("West Fork Mojave River",6),
-                 rep("Mill Creek",6),
-                 rep("Whitewater Canyon",6),
-                 rep("Sweetwater River",6),
-                 rep("Kitchen Creek",6),
-                 rep("Hauser Creek",6)) 
-years <- rep(c("2010","2011","2012","2013","2014","2015"), 20) 
+20*9 #180
+focal.sites <- c(rep("Coast Fork of Williamette",9),
+                 rep("Canton Creek",9),
+                 rep("Rock Creek",9),
+                 rep("O'Neil Creek",9),
+                 rep("Deep Creek",9),
+                 rep("Little Jameson Creek",9),
+                 rep("Oregon Creek",9),
+                 rep("Rainbow Pool",9),
+                 rep("Carlon",9),
+                 rep("Buck Meadows",9),
+                 rep("Wawona",9),
+                 rep("Redwood Creek",9),
+                 rep("North Fork Middle Fork Tule",9),
+                 rep("South Fork Middle Fork Tule",9),
+                 rep("West Fork Mojave River",9),
+                 rep("Mill Creek",9),
+                 rep("Whitewater Canyon",9),
+                 rep("Sweetwater River",9),
+                 rep("Kitchen Creek",9),
+                 rep("Hauser Creek",9)) 
+years <- rep(c("2010","2011","2012","2013","2014","2015","2016","2017","2018"), 20) 
 site.years.max <- as.data.frame(cbind(focal.sites, years)) %>% mutate(SiteYear = paste(focal.sites,":", years, sep="")) %>% dplyr::select(SiteYear)
 
 # How many site-years have some observed data but are missing lambda estimates?
-length(unique(data$SiteYear)) #101
+length(unique(data$SiteYear)) #155
 site.years.obs <- as.data.frame(unique(data$SiteYear))
 colnames(site.years.obs) = "SiteYear"
    
 # Which site-years are missing, and why?
 missing.site.years <- anti_join(site.years.max, site.years.obs)
 
+# Canton Creek:2016 --> site inaccessible in 2017 due to high water; this is a real NA
 # Rock Creek:2012 --> 2013 data folder lost; this is a real NA 
 # Rock Creek:2013 --> 2013 data folder lost; this is a real NA 
 # Rainbow Pool:2012 --> site inaccessible in 2013 due to fire; this is a real NA
@@ -302,8 +363,10 @@ missing.site.years <- anti_join(site.years.max, site.years.obs)
 # Buck Meadows:2012 --> site inaccessible in 2013 due to fire; this is a real NA
 # Buck Meadows:2013 --> site inaccessible in 2013 due to fire; this is a real NA
 # Redwood Creek:2015 --> site inaccessible in 2016 due to fire; this is a real NA
+# North Fork Middle Fork Tule: 2016 site inaccessible due to fire; this is a real NA
 # South Fork Middle Fork Tule:2010 --> site inaccessible in 2011; this is a real NA
 # South Fork Middle Fork Tule:2011 --> site inaccessible in 2011; this is a real NA
+# South Fork Middle Fork Tule:2016 --> site inaccessible due to fire; this is a real NA
 # Mill Creek: 2013 --> site inaccessible in 2013 due to flood; this is a real NA
 # Whitewater Canyon:2015 --> site visited but no plants so manually set lambda=0
 Whitewater=filter(site.info, Site=="Whitewater Canyon" & Year==2014)
@@ -320,9 +383,14 @@ Kitchen$lambda=0
 site.info=bind_rows(site.info, Kitchen) 
 
 # Kitchen Creek:2015 --> site visited but no plants so manually set lambda=0
-Kitchen=filter(site.info, Site=="Kitchen Creek" & Year==2014)
 Kitchen$Year=2015 %>% factor()
 Kitchen$SiteYear="Kitchen Creek:2015" %>% factor()
+Kitchen$lambda=0
+site.info=bind_rows(site.info, Kitchen) 
+
+# Kitchen Creek:2017 --> site visited but no plants so manually set lambda=0
+Kitchen$Year=2017 %>% factor()
+Kitchen$SiteYear="Kitchen Creek:2017" %>% factor()
 Kitchen$lambda=0
 site.info=bind_rows(site.info, Kitchen) 
 
@@ -351,28 +419,50 @@ Hauser$SiteYear="Hauser Creek:2015" %>% factor()
 Hauser$lambda=0
 site.info=bind_rows(site.info, Hauser) 
 
+# Hauser Creek:2016 --> site visited but no plants so manually set lambda=0
+Hauser$Year=2016 %>% factor()
+Hauser$SiteYear="Hauser Creek:2016" %>% factor()
+Hauser$lambda=0
+site.info=bind_rows(site.info, Hauser) 
+
+# Hauser Creek:2017 --> site visited but no plants so manually set lambda=0
+Hauser$Year=2017 %>% factor()
+Hauser$SiteYear="Hauser Creek:2017" %>% factor()
+Hauser$lambda=0
+site.info=bind_rows(site.info, Hauser) 
+
+
 # Which site-years have lambda=NA, and why?
 lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::select(SiteYear)
 
-# Coast Fork Willamette:2012 --> no fruits; keep as NA
+# Canton Creek:2017 --> site skipped; real NA
+# Redwood Creek:2016 --> site skipped; real NA
+# NFMF Tule:2017 --> site skipped; real NA
+# SFMF Tule:2017 --> site skipped; real NA
 # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013. Keep as NA because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants died).
 # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; lambda is NA
 # Mill Creek:2014 --> site inaccessible in 2013 due to flood; lambda is NA
 # Whitewater Canyon:2014 --> all plants died, so set lambda to 0 
 site.info$lambda[site.info$SiteYear=="Whitewater Canyon:2014"] = 0
+# Whitewater Canyon:2016 --> all plants died, so set lambda to 0 
+site.info$lambda[site.info$SiteYear=="Whitewater Canyon:2016"] = 0
+# Whitewater Canyon:2017 --> all plants died, so set lambda to 0 
+site.info$lambda[site.info$SiteYear=="Whitewater Canyon:2017"] = 0
 # Kitchen Creek: 2013 --> all plants died, so set lambda to 0
 site.info$lambda[site.info$SiteYear=="Kitchen Creek:2013"] = 0
-# Hauser Creek: 2011 --> all plants dead on plots 1-2, but many plants on plot 3 that were  indistinguishable from one another; lambda is NA
+# Kitchen Creek: 2016 --> all plants died, so set lambda to 0
+site.info$lambda[site.info$SiteYear=="Kitchen Creek:2016"] = 0
+# Kitchen Creek: 2018 --> new recruits, but no survivors to estimate surv and growth functions; keep as NA
 
 # View final data frame
 str(site.info)
 
 # Save to lambdas to .csv file 
-write.csv(site.info,"data/demography data/siteYear.lambda_2010-2016.csv",row.names=FALSE)
+write.csv(site.info,"data/demography data/siteYear.lambda_2010-2019.csv",row.names=FALSE)
 
 # Merge params and lambdas for supplementary table
 full.table <- left_join(site.info, params) %>% mutate_at(9:20, round, 2) %>% arrange(Latitude)
-write.csv(full.table,"data/demography data/siteYear.paramslambda_2010-2016.csv",row.names=FALSE)
+write.csv(full.table,"data/demography data/siteYear.paramslambda_2010-2019.csv",row.names=FALSE)
 
 #*******************************************************************************
 ### 4. Compare to preliminary estimates 
@@ -398,15 +488,13 @@ check.list = all$SiteYear[all$check=="YES"]
 
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + geom_abline(x=y) + xlim(0,70)
-# Note: Buck Meadows:2015 is absurd - what happened??
+# Note: Buck Meadows:2015 and Sweetwater:2016 are absurd - what happened??
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(0,0.5) + ylim(0,0.5) + geom_abline(x=y)
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(0.5,1) + ylim(0.5,1) + geom_abline(x=y)
-# Note: new values all higher than old values
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(1,2) + ylim(1,2) + geom_abline(x=y)
-# Note: many more below 1:1 line than above 
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(2,3) + ylim(2,3) + geom_abline(x=y)
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
