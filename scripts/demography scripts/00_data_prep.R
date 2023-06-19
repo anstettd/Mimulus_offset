@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Tidy raw demographic vital rate data in preparation for IPM analyses 
 #### AUTHOR: Seema Sheth and Amy Angert
-#### DATE LAST MODIFIED: 20230612
+#### DATE LAST MODIFIED: 20230619
 
 #*******************************************************************************
 #### 1. Clean workspace and load required packages
@@ -27,7 +27,7 @@ for (i in 1:length(packages_needed)){
 }
 
 #*******************************************************************************
-#### 2. Bring in and combine M. cardinalis vital rate data from 2010-2016
+#### 2. Bring in and combine M. cardinalis vital rate data from 2010-2019
 #*******************************************************************************
 
 # Read in seed count per fruit data, select and rename relevant columns, and round to nearest integer
@@ -83,11 +83,53 @@ data_2015.2016 = read.csv("data/demography data/SS_Horizontal_2016_Notes.csv") %
 # Note: this file was queried from the database on 2023-02-01
 # We script the creation of NotARecruit and NotAnIndividual columns below (instead of  manually in excel)
 
-# Combine 2014-16 data into one data frame 
-data_2014.2016 = rbind(data_2014.2015,data_2015.2016)
+# Read in vital rate data for 2016-17 transition
+# Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
+data_2016.2017 = read.csv("data/demography data/SS_Horizontal_2017_Notes.csv") %>% 
+  rename(Site = SiteID, #rename to match 2010-2014 data
+         Class = Class_PY,
+         ClassNext = Class_CY,
+         Fec1 = TotFr_PY,
+         Size = TotStLn_PY,
+         SizeNext = TotStLn_CY,
+         Surv = SurvPYCY) %>% 
+  mutate(Year = 2016) #add year at time t (=2016) column)
+# Note: this file was queried from the database on 2023-06-19
+# We script the creation of NotARecruit and NotAnIndividual columns below (instead of  manually in excel)
+
+# Read in vital rate data for 2017-18 transition
+# Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
+data_2017.2018 = read.csv("data/demography data/SS_Horizontal_2018_Notes.csv") %>% 
+  rename(Site = SiteID, #rename to match 2010-2014 data
+         Class = Class_PY,
+         ClassNext = Class_CY,
+         Fec1 = TotFr_PY,
+         Size = TotStLn_PY,
+         SizeNext = TotStLn_CY,
+         Surv = SurvPYCY) %>% 
+  mutate(Year = 2017) #add year at time t (=2017) column)
+# Note: this file was queried from the database on 2023-06-19
+# We script the creation of NotARecruit and NotAnIndividual columns below (instead of  manually in excel)
+
+# Read in vital rate data for 2018-19 transition
+# Note: PY=previous year (time t), CY=current year (time t+1); ignore PPY
+data_2018.2019 = read.csv("data/demography data/SS_Horizontal_2019_Notes.csv") %>% 
+  rename(Site = SiteID, #rename to match 2010-2014 data
+         Class = Class_PY,
+         ClassNext = Class_CY,
+         Fec1 = TotFr_PY,
+         Size = TotStLn_PY,
+         SizeNext = TotStLn_CY,
+         Surv = SurvPYCY) %>% 
+  mutate(Year = 2018) #add year at time t (=2018) column)
+# Note: this file was queried from the database on 2023-06-19
+# We script the creation of NotARecruit and NotAnIndividual columns below (instead of  manually in excel)
+
+# Combine 2014-19 data into one data frame 
+data_2014.2019 = rbind(data_2014.2015,data_2015.2016,data_2016.2017,data_2017.2018,data_2018.2019)
 
 # Add 'NotAnIndividual' column
-data_2014.2016 <- data_2014.2016 %>% 
+data_2014.2019 <- data_2014.2019 %>% 
   mutate(NotAnIndividual = ifelse(str_detect(OtherNotesCY, "lump"), 1, 
                            ifelse(str_detect(OtherNotesCY, "Lump"), 1,
                            ifelse(str_detect(OtherNotesCY, "split"), 1,
@@ -112,13 +154,14 @@ data_2014.2016 <- data_2014.2016 %>%
 skipped <- read.csv("data/demography data/SkippedPlots.csv") %>% 
   separate(Squawk, sep=" ", c("Status", NA, "Year")) 
 skipped$Year = as.numeric(skipped$Year)
+### TO DO: UPDATE THROUGH 2019
 
-data_2014.2016 <- left_join(data_2014.2016, skipped, by=c("Site"="Site","PlotID"="PlotID","Year"="Year")) 
+data_2014.2019 <- left_join(data_2014.2019, skipped, by=c("Site"="Site","PlotID"="PlotID","Year"="Year")) 
 # Note: This file results from the "Skipped In" query, to which Amy added several plots after consulting field notes for 2014-2016
 # For example, Deer Creek plot 4 line 1 was totally reset in 2015. 2014 plants were recorded as dead, but some of them could have survived and not been mapped onto new coordinate system. It looks as if this site had 100% mortality and high recruitment of large individuals, but in reality there are survivors that could not be identified and translated from old to new coordinate system. Exclude entire line for 2014-15 transitions and 2015 recruitment.
 
 # Add 'NotARecruit' column
-data_2014.2016 <- data_2014.2016 %>% 
+data_2014.2019 <- data_2014.2019 %>% 
   mutate(NotARecruit = ifelse(!is.na(Size), NA, 
                        ifelse(str_detect(OtherNotesCY, "old"), 2, 
                        ifelse(str_detect(OtherNotesCY, "Old"), 2,
@@ -131,29 +174,29 @@ data_2014.2016 <- data_2014.2016 %>%
 
 
 # Create columns of log-transformed sizes
-data_2014.2016$logSize = log(data_2014.2016$Size)
-data_2014.2016$logSizeNext = log(data_2014.2016$SizeNext)
+data_2014.2019$logSize = log(data_2014.2019$Size)
+data_2014.2019$logSizeNext = log(data_2014.2019$SizeNext)
 
 # Add a column ranking regions from south to north
-data_2014.2016$RegionRank[data_2014.2016$Region=="S1"]=1
-data_2014.2016$RegionRank[data_2014.2016$Region=="S2"]=2
-data_2014.2016$RegionRank[data_2014.2016$Region=="C1"]=3
-data_2014.2016$RegionRank[data_2014.2016$Region=="C2"]=4
-data_2014.2016$RegionRank[data_2014.2016$Region=="C3"]=5
-data_2014.2016$RegionRank[data_2014.2016$Region=="N1"]=6
-data_2014.2016$RegionRank[data_2014.2016$Region=="N2"]=7
+data_2014.2019$RegionRank[data_2014.2019$Region=="S1"]=1
+data_2014.2019$RegionRank[data_2014.2019$Region=="S2"]=2
+data_2014.2019$RegionRank[data_2014.2019$Region=="C1"]=3
+data_2014.2019$RegionRank[data_2014.2019$Region=="C2"]=4
+data_2014.2019$RegionRank[data_2014.2019$Region=="C3"]=5
+data_2014.2019$RegionRank[data_2014.2019$Region=="N1"]=6
+data_2014.2019$RegionRank[data_2014.2019$Region=="N2"]=7
 
 # Create column for probability of flowering
-data_2014.2016$Fec0 = (ifelse(data_2014.2016$Class=="A", 1, 
-                              ifelse(data_2014.2016$Class=="J",0 , NA))) 
+data_2014.2019$Fec0 = (ifelse(data_2014.2019$Class=="A", 1, 
+                              ifelse(data_2014.2019$Class=="J",0 , NA))) 
 
 # Merge transition data with seed count data
-data_2014.2016 <- merge(data_2014.2016,seed.ct,by="Site",all.x=TRUE,all.y=FALSE)
+data_2014.2019 <- merge(data_2014.2019,seed.ct,by="Site",all.x=TRUE,all.y=FALSE)
 
-data_2014.2016 <- data_2014.2016 %>% dplyr::select(colnames(data_2010.2014))
+data_2014.2019 <- data_2014.2019 %>% dplyr::select(colnames(data_2010.2014))
 
 # Combine all years
-data <- rbind(data_2010.2014, data_2014.2016)
+data <- rbind(data_2010.2014, data_2014.2019)
 
 # Make site x year variable
 data$SiteYear = paste(data$Site, data$Year, sep=":") %>% factor()
@@ -162,8 +205,8 @@ data$SiteYear = paste(data$Site, data$Year, sep=":") %>% factor()
 #### 3. Remove unwanted data
 #*******************************************************************************
 
-# Remove sites that were not monitored after 2014 and two sites with problematic/missing data (Deer Creek, where frequent plot washouts cause identifications to be unreliable, and Mill creek, where a combination of plot washouts and flood closures left only two years with estimable lambda)
-# Retain focal 19 populations
+# Remove sites that were not monitored after 2014 and one site with problematic/missing data (Deer Creek, where frequent plot washouts cause identifications to be unreliable)
+# Retain focal 20 populations
 focal.sites <- c("Coast Fork of Williamette",
                  "Canton Creek",
                  "Rock Creek",
@@ -271,8 +314,8 @@ max(site.n$n)
 mean(site.n$n)
 
 # write to .csv
-write.csv(data.indivs,"data/demography data/Mcard_demog_data_2010-2016_cleanindivs.csv",row.names=FALSE)
-write.csv(site_fruit_count_data,"data/demography data/Mcard_demog_data_2010-2016_seedinput.csv",row.names=FALSE)
+write.csv(data.indivs,"data/demography data/Mcard_demog_data_2010-2019_cleanindivs.csv",row.names=FALSE)
+write.csv(site_fruit_count_data,"data/demography data/Mcard_demog_data_2010-2019_seedinput.csv",row.names=FALSE)
 
 
 #*******************************************************************************
