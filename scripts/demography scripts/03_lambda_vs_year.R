@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Calculate slopes of lambda versus year as a metric of the rate of demographic decline during drought
 #### AUTHOR: Amy Angert
-#### DATE LAST MODIFIED: 20230612
+#### DATE LAST MODIFIED: 20230619
 
 
 #*******************************************************************************
@@ -28,9 +28,9 @@ for (i in 1:length(packages_needed)){
 #*******************************************************************************
 ### 1. Read in lambda estimates for each site and year
 #*******************************************************************************
-dat <- read.csv("data/demography data/siteYear.lambda_2010-2016.csv")
+dat <- read.csv("data/demography data/siteYear.lambda_2010-2019.csv")
 
-# Note: Mill Creek only has three annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed from calculations of demographic trajectories  
+# Note: Mill Creek only has three annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed from calculations of demographic declines  
 dat <- dat %>% filter(Site!="Mill Creek")
 
 #*******************************************************************************
