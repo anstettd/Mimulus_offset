@@ -42,8 +42,8 @@ color.list <- lat_cols(n.sites)
 
 ggplot(dat, aes(x=Year, y=lambda)) + #, color=as.factor(round(Latitude, 1))
   geom_point() +
-  geom_smooth(data=filter(dat, Year<2015), method="lm", col="red") +
-  geom_smooth(data=filter(dat, Year>2014), method="lm", col="blue") +
+  geom_smooth(data=filter(dat, Year<2015), method="lm", se=FALSE, col="red") +
+  geom_smooth(data=filter(dat, Year>2014), method="lm", se=FALSE, col="blue") +
   #scale_color_manual(values=color.list) +
   ylab("Lambda") +
   #ylim(0,2) +
