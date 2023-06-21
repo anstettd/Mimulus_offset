@@ -496,10 +496,13 @@ ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
 # Note: Buck Meadows:2015 and Sweetwater:2016 are absurd - what happened??
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(0,0.5) + ylim(0,0.5) + geom_abline(x=y)
+# looks great - symmetrical and very close to 1:1
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(0.5,1) + ylim(0.5,1) + geom_abline(x=y)
+# looks good - symmetrical and fairly close to 1:1
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(1,2) + ylim(1,2) + geom_abline(x=y)
+# looks good - symmetrical and mostly close to 1:1
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
   geom_point() + geom_text() + xlim(2,3) + ylim(2,3) + geom_abline(x=y)
 ggplot(data=all, aes(x=lambda, y=lambda.old, label=SiteYear)) +
