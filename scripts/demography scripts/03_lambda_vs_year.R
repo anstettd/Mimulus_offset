@@ -42,18 +42,20 @@ lat_cols=colorRampPalette(brewer.pal(11,"Spectral"))
 n.sites <- length(unique(dat$Site))
 color.list <- lat_cols(n.sites)
 
-ggplot(dat, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
+ggplot(dat, aes(x=Year, y=lambda)) + #, color=as.factor(round(Latitude, 1))
   geom_point() +
-  geom_smooth(method="lm") +
-  scale_color_manual(values=color.list) +
+  geom_smooth(data=filter(dat, Year<2015), method="lm", col="red") +
+  geom_smooth(data=filter(dat, Year>2014), method="lm", col="blue") +
+  #scale_color_manual(values=color.list) +
   ylab("Lambda") +
   #ylim(0,2) +
   geom_hline(yintercept=1, linetype="dotted") +
-  facet_wrap(~Latitude, scale="free", nrow=3) +
-  theme_classic() +
-  theme(strip.background = element_blank(), strip.text.x = element_blank(),
+  facet_wrap(~Site, scale="free", nrow=3) +
+  theme_classic() #+
+  #theme(strip.background = element_blank(), strip.text.x = element_blank(),
         legend.title = element_blank())
-# Note: some sites' slopes (e.g., Buck Meadows) are getting pulled up by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
+# Note: some sites' slopes (e.g., Buck Meadows) are affected by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
+# Note: fire and flood accessibility issues limit ability to estimate recovery slopes at several sites (Canton, NFMFTule, SFMFTule, Redwood)
 
 #*******************************************************************************
 ### 3A. Calculate slopes of lambda over time DURING DROUGHT-INDUCED DECLINE for each site
