@@ -157,7 +157,7 @@ skipped$Year = as.numeric(skipped$Year)
 ### TO DO: ADD 2018
 
 data_2014.2019 <- left_join(data_2014.2019, skipped, by=c("Site"="Site","PlotID"="PlotID","Year"="Year")) 
-# Note: This file results from the "Skipped In" query, to which Amy added several plots after consulting field notes for 2014-2016
+# Note: This file results from the "Skipped In" query, to which Amy added several plots after consulting field notes for 2014-2019
 # For example, Deer Creek plot 4 line 1 was totally reset in 2015. 2014 plants were recorded as dead, but some of them could have survived and not been mapped onto new coordinate system. It looks as if this site had 100% mortality and high recruitment of large individuals, but in reality there are survivors that could not be identified and translated from old to new coordinate system. Exclude entire line for 2014-15 transitions and 2015 recruitment.
 
 # Add 'NotARecruit' column
