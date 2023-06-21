@@ -1,27 +1,72 @@
-﻿Squawk,Site,Plot,SubPlot,PlotID
-Skipped in 2010,Carlon,1,1,1
-Skipped in 2010,Carlon,1,3,3
-Skipped in 2010,Carlon,1,4,4
-Skipped in 2010,Carlon,1,5,5
-Skipped in 2010,Carlon,1,6,6
-Skipped in 2010,Carlon,4,1,16
-Skipped in 2010,Carlon,4,2,21
-Skipped in 2010,Wawona,3,1,115
-Skipped in 2013,North Fork Tuolumne,4,1,265
-Skipped in 2013,Warren Fork,4,1,147
-Skipped in 2013,Warren Fork,6,1,149
-Skipped in 2013,Warren Fork,7,1,150
-Skipped in 2013,Warren Fork,10,1,153
-Skipped in 2013,Warren Fork,18,1,161
-Skipped in 2014,Deep Creek,1,1,67
-Skipped in 2014,Deep Creek,1,2,274
-Skipped in 2014,Rainbow Pool,12,1,184
-Skipped in 2014,Rainbow Pool,14,1,186
-Skipped in 2014,Rainbow Pool,18,1,190
-Skipped in 2014,Rainbow Pool,20,1,192
-Skipped in 2015,Rainbow Pool,12,1,184
-Skipped in 2015,Rainbow Pool,14,1,186
-Skipped in 2015,Rainbow Pool,18,1,190
-Skipped in 2015,Rainbow Pool,20,1,192
-Skipped in 2016,Deep Creek,2,1,235
-Skipped in 2014,Deer Creek,4,1,238
+﻿Squawk,Site,Plot,SubPlot,PlotID,
+Skipped in 2010,Carlon,1,1,1,
+Skipped in 2010,Carlon,1,3,3,
+Skipped in 2010,Carlon,1,4,4,
+Skipped in 2010,Carlon,1,5,5,
+Skipped in 2010,Carlon,1,6,6,
+Skipped in 2010,Carlon,4,1,16,
+Skipped in 2010,Carlon,4,2,21,
+Skipped in 2010,Wawona,3,1,115,
+Skipped in 2013,North Fork Tuolumne,4,1,265,
+Skipped in 2013,Warren Fork,4,1,147,
+Skipped in 2013,Warren Fork,6,1,149,
+Skipped in 2013,Warren Fork,7,1,150,
+Skipped in 2013,Warren Fork,10,1,153,
+Skipped in 2013,Warren Fork,18,1,161,
+Skipped in 2014,Deep Creek,1,1,67,
+Skipped in 2014,Deep Creek,1,2,274,
+Skipped in 2014,Rainbow Pool,12,1,184,
+Skipped in 2014,Rainbow Pool,14,1,186,
+Skipped in 2014,Rainbow Pool,18,1,190,
+Skipped in 2014,Rainbow Pool,20,1,192,
+Skipped in 2015,Rainbow Pool,12,1,184,
+Skipped in 2015,Rainbow Pool,14,1,186,
+Skipped in 2015,Rainbow Pool,18,1,190,
+Skipped in 2015,Rainbow Pool,20,1,192,
+Skipped in 2016,Deep Creek,2,1,235,
+Skipped in 2014,Deer Creek,4,1,238,
+Skipped in 2017,Coast Fork Willamette,2,1,,inaccessible high water
+Skipped in 2017,Coast Fork Willamette,4,1,,inaccessible high water
+Skipped in 2017,Coast Fork Willamette,5,2,,new plot forms missing from folder - was this plot redone?
+Skipped in 2017,Coast Fork Willamette,5,3,,new plot?
+Skipped in 2017,Canton,1,1,,inaccessible high water
+Skipped in 2017,Canton,2,1,,inaccessible high water
+Skipped in 2017,Canton,3,1,,inaccessible high water
+Skipped in 2017,Canton,4,1,,inaccessible high water
+Skipped in 2017,Rock Creek,2,1,,inaccessible high water
+Skipped in 2017,Rock Creek,2,2,,inaccessible high water
+Skipped in 2017,O'Neil Creek,3,1,,rebars washed out; possible survivors written in on plot 4
+Skipped in 2017,Deep Creek,4,1,,
+Skipped in 2017,Buck Meadows,1,4,,
+Skipped in 2017,Buck Meadows,1,5,,
+Skipped in 2017,Buck Meadows,1,6,,
+Skipped in 2017,Buck Meadows,1,7,,
+Skipped in 2017,Buck Meadows,4,1,,
+Skipped in 2017,Wawona,2,4,,
+Skipped in 2017,North Fork Middle Fork Tule,2,1,,fire closure
+Skipped in 2017,North Fork Middle Fork Tule,3,1,,fire closure
+Skipped in 2017,North Fork Middle Fork Tule,3,2,,fire closure
+Skipped in 2017,North Fork Middle Fork Tule,3,3,,fire closure
+Skipped in 2017,North Fork Middle Fork Tule,4,1,,fire closure
+Skipped in 2017,South Fork Middle Fork Tule,1,1,,fire closure
+Skipped in 2017,South Fork Middle Fork Tule,1,2,,fire closure
+Skipped in 2017,South Fork Middle Fork Tule,2,1,,fire closure
+Skipped in 2017,South Fork Middle Fork Tule,2,2,,fire closure
+Skipped in 2017,South Fork Middle Fork Tule,3,1,,fire closure
+Skipped in 2017,South Fork Middle Fork Tule,4,1,,fire closure
+Skipped in 2017,South Fork Middle Fork Tule,4,2,,fire closure
+Skipped in 2017,South Fork Middle Fork Tule,5,1,,fire closure
+Skipped in 2017,South Fork Middle Fork Tule,6,1,,fire closure
+Skipped in 2019,Rainbow Pool,6,1,,
+Skipped in 2019,Rainbow Pool,7,1,,
+Skipped in 2019,Rainbow Pool,17,1,,
+Skipped in 2019,Buck Meadows,1,1,,
+Skipped in 2019,Coast Fork Willamette,5,2,,
+Skipped in 2019,Coast Fork Willamette,5,3,,
+Skipped in 2019,Coast Fork Willamette,7,0,,
+Skipped in 2019,O'Neil Creek,6,1,,
+Skipped in 2019,Mill Creek,7,1,,
+Skipped in 2019,South Fork Middle Fork Tule,4,2,,
+Skipped in 2019,Redwood Creek,4,1,,
+Skipped in 2019,Deep Creek,2,1,,
+Skipped in 2019,Deep Creek,3,1,,
