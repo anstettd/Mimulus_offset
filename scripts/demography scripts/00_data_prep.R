@@ -154,7 +154,7 @@ data_2014.2019 <- data_2014.2019 %>%
 skipped <- read.csv("data/demography data/SkippedPlots.csv") %>% 
   separate(Squawk, sep=" ", c("Status", NA, "Year")) 
 skipped$Year = as.numeric(skipped$Year)
-### TO DO: UPDATE THROUGH 2019
+### TO DO: ADD 2018
 
 data_2014.2019 <- left_join(data_2014.2019, skipped, by=c("Site"="Site","PlotID"="PlotID","Year"="Year")) 
 # Note: This file results from the "Skipped In" query, to which Amy added several plots after consulting field notes for 2014-2016
@@ -168,8 +168,12 @@ data_2014.2019 <- data_2014.2019 %>%
                        ifelse(str_detect(OtherNotesCY, "missed"), 2,
                        ifelse(str_detect(OtherNotesCY, "14?"), 2, 
                        ifelse(str_detect(OtherNotesCY, "15?"), 2, 
+                       ifelse(str_detect(OtherNotesCY, "16?"), 2, 
+                       ifelse(str_detect(OtherNotesCY, "17?"), 2, 
+                       ifelse(str_detect(OtherNotesCY, "18?"), 2, 
+                       ifelse(str_detect(OtherNotesCY, "19?"), 2, 
                        ifelse(NewPlot_CY==TRUE, 1,
-                       ifelse(Status=="Skipped", 1, 0)))))))))
+                       ifelse(Status=="Skipped", 1, 0)))))))))))))
 # Note: this is lacking level 3 (=size range of other recruits), which is not reliable
 
 
