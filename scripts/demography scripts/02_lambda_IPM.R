@@ -435,10 +435,10 @@ site.info=bind_rows(site.info, Hauser)
 # Which site-years have lambda=NA, and why?
 lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::select(SiteYear)
 
-# Canton Creek:2017 --> site skipped; real NA
-# Redwood Creek:2016 --> site skipped; real NA
-# NFMF Tule:2017 --> site skipped; real NA
-# SFMF Tule:2017 --> site skipped; real NA
+# Canton Creek:2017 --> site skipped due to high water; real NA
+# Redwood Creek:2016 --> site skipped due to fire closure; real NA
+# NFMF Tule:2017 --> site skipped due to fire closure; real NA
+# SFMF Tule:2017 --> site skipped due to fire closure; real NA
 # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013. Keep as NA because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants died).
 # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; lambda is NA
 # Mill Creek:2014 --> site inaccessible in 2013 due to flood; lambda is NA
