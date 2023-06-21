@@ -220,10 +220,13 @@ fruit=c()
   
   # Rock Creek:2012 --> 2013 data folder lost; lambda is NA
   # Rock Creek:2013 --> 2013 data folder lost; lambda is NA
+  
   # Buck Meadows:2012 --> site inaccessible in 2013 due to fire; lambda is NA
   # Buck Meadows:2013 --> site inaccessible in 2013 due to fire; lambda is NA
+  
   # Rainbow Pool:2012 --> site inaccessible in 2013 due to fire; lambda is NA
   # Rainbow Pool:2013 --> site inaccessible in 2013 due to fire; lambda is NA
+  
   # Carlon:2012 --> site inaccessible in 2013 due to fire; lambda is NA
   # Carlon:2013 --> site inaccessible in 2013 due to fire; lambda is NA
   # Carlon:2016 --> growth slopes, intercepts, and sd are inestimable because of sparse data, but site was visited and censused and all other parameters are estimable; use mean across other years at this site for this year's growth parameters
@@ -247,7 +250,7 @@ fruit=c()
   # Kitchen Creek:2015 --> all plants dead; manually set lambda to 0 below
   # Kitchen Creek:2016 --> all plants dead; manually set lambda to 0 below
   # Kitchen Creek:2017 --> all plants dead; manually set lambda to 0 below
-  # Kitchen Creek:2018 --> new recruits appeared
+  # Kitchen Creek:2018 --> new recruits appeared but all other transitions inestimable because of no survivors; lambda is NA
   
   # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; lambda is NA
   # Mill Creek:2013 --> site inaccessible in 2013 due to flood; lambda is NA
@@ -255,22 +258,22 @@ fruit=c()
   
   # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013. Keep as NA because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants died).
 
-  # Whitewater Canyon:2014 --> all plants died; manually lambda to 0 below
-  # Whitewater Canyon:2015
-  # Whitewater Canyon:2016
-  # Whitewater Canyon:2017
-  # Whitewater Canyon:2018
+  # Whitewater Canyon:2014 --> all plants died; manually set lambda to 0 below
+  # Whitewater Canyon:2015 --> site visited but no plants; manually set lambda to 0 below
+  # Whitewater Canyon:2016 --> site visited but no plants; manually set lambda to 0 below
+  # Whitewater Canyon:2017 --> site visited but no plants; manually set lambda to 0 below
+  # Whitewater Canyon:2018 --> site visited but no plants; manually set lambda to 0 below
 
-  # North Fork Middle Fork Tule:2016 --> fire closure; lambda is NA
-  # North Fork Middle Fork Tule:2017 --> fire closure; lambda is NA
+  # North Fork Middle Fork Tule:2016 --> fire closure in 2017; lambda is NA
+  # North Fork Middle Fork Tule:2017 --> fire closure in 2017; lambda is NA
   
-  # Redwood Creek:2015 --> fire closure; lambda is NA
-  # Redwood Creek:2016 --> fire closure; lambda is NA
+  # Redwood Creek:2015 --> fire closure in 2016; lambda is NA
+  # Redwood Creek:2016 --> fire closure in 2016; lambda is NA
   
-  # South Fork Middle Fork Tule:2010 --> fire closure; lambda is NA
-  # South Fork Middle Fork Tule:2011 --> fire closure; lambda is NA
-  # South Fork Middle Fork Tule:2016 --> fire closure; lambda is NA
-  # South Fork Middle Fork Tule:2017 --> fire closure; lambda is NA
+  # South Fork Middle Fork Tule:2010 --> fire closure in 2011; lambda is NA
+  # South Fork Middle Fork Tule:2011 --> fire closure in 2011; lambda is NA
+  # South Fork Middle Fork Tule:2016 --> fire closure in 2017; lambda is NA
+  # South Fork Middle Fork Tule:2017 --> fire closure in 2017; lambda is NA
   
 
   
@@ -346,7 +349,7 @@ years <- rep(c("2010","2011","2012","2013","2014","2015","2016","2017","2018"), 
 site.years.max <- as.data.frame(cbind(focal.sites, years)) %>% mutate(SiteYear = paste(focal.sites,":", years, sep="")) %>% dplyr::select(SiteYear)
 
 # How many site-years have some observed data but are missing lambda estimates?
-length(unique(data$SiteYear)) #155
+length(unique(data$SiteYear)) #153
 site.years.obs <- as.data.frame(unique(data$SiteYear))
 colnames(site.years.obs) = "SiteYear"
    
@@ -363,10 +366,12 @@ missing.site.years <- anti_join(site.years.max, site.years.obs)
 # Buck Meadows:2012 --> site inaccessible in 2013 due to fire; this is a real NA
 # Buck Meadows:2013 --> site inaccessible in 2013 due to fire; this is a real NA
 # Redwood Creek:2015 --> site inaccessible in 2016 due to fire; this is a real NA
-# North Fork Middle Fork Tule: 2016 site inaccessible due to fire; this is a real NA
-# South Fork Middle Fork Tule:2010 --> site inaccessible in 2011; this is a real NA
-# South Fork Middle Fork Tule:2011 --> site inaccessible in 2011; this is a real NA
-# South Fork Middle Fork Tule:2016 --> site inaccessible due to fire; this is a real NA
+# North Fork Middle Fork Tule: 2016 --> site inaccessible in 2017 due to fire; this is a real NA
+# North Fork Middle Fork Tule: 2017 --> site inaccessible in 2017 due to fire; this is a real NA
+# South Fork Middle Fork Tule:2010 --> site inaccessible in 2011 due to fire; this is a real NA
+# South Fork Middle Fork Tule:2011 --> site inaccessible in 2011 due to fire; this is a real NA
+# South Fork Middle Fork Tule:2016 --> site inaccessible in 2017 due to fire; this is a real NA
+# South Fork Middle Fork Tule:2017 --> site inaccessible in 2017 due to fire; this is a real NA
 # Mill Creek: 2013 --> site inaccessible in 2013 due to flood; this is a real NA
 # Whitewater Canyon:2015 --> site visited but no plants so manually set lambda=0
 Whitewater=filter(site.info, Site=="Whitewater Canyon" & Year==2014)
@@ -437,8 +442,6 @@ lambda.calc.failed <- site.info %>% dplyr::filter(is.na(lambda)) %>% dplyr::sele
 
 # Canton Creek:2017 --> site skipped due to high water; real NA
 # Redwood Creek:2016 --> site skipped due to fire closure; real NA
-# NFMF Tule:2017 --> site skipped due to fire closure; real NA
-# SFMF Tule:2017 --> site skipped due to fire closure; real NA
 # West Fork Mojave River:2013 --> existing plots 1-5 all dead, so some parameters inestimable. But new plot 6 established in 2014, so the entire site was not dead, only the main area where we were observing 2010-2013. Keep as NA because the entire site was not dead (in contrast to Hauser, Kitchen, Whitewater, where we set lambda to 0 when all plants died).
 # Mill Creek:2010 --> all 2010 plots washed out and new plots established in 2011; lambda is NA
 # Mill Creek:2014 --> site inaccessible in 2013 due to flood; lambda is NA
@@ -448,6 +451,8 @@ site.info$lambda[site.info$SiteYear=="Whitewater Canyon:2014"] = 0
 site.info$lambda[site.info$SiteYear=="Whitewater Canyon:2016"] = 0
 # Whitewater Canyon:2017 --> all plants died, so set lambda to 0 
 site.info$lambda[site.info$SiteYear=="Whitewater Canyon:2017"] = 0
+# Whitewater Canyon:2018 --> all plants died, so set lambda to 0 
+site.info$lambda[site.info$SiteYear=="Whitewater Canyon:2018"] = 0
 # Kitchen Creek: 2013 --> all plants died, so set lambda to 0
 site.info$lambda[site.info$SiteYear=="Kitchen Creek:2013"] = 0
 # Kitchen Creek: 2016 --> all plants died, so set lambda to 0
