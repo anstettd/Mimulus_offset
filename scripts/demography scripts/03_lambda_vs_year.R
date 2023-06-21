@@ -1,7 +1,7 @@
 #### PROJECT: Genomic offsets and demographic trajectories of Mimulus cardinalis populations during extreme drought
 #### PURPOSE OF THIS SCRIPT: Calculate slopes of lambda versus year as a metric of the rate of demographic decline during drought
 #### AUTHOR: Amy Angert
-#### DATE LAST MODIFIED: 20230619
+#### DATE LAST MODIFIED: 20230621
 
 
 #*******************************************************************************
@@ -30,7 +30,7 @@ for (i in 1:length(packages_needed)){
 #*******************************************************************************
 dat <- read.csv("data/demography data/siteYear.lambda_2010-2019.csv")
 
-# Note: Mill Creek only has three annual transition estimates (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed from calculations of demographic declines  
+# Note: Mill Creek only has three annual transition estimates during drought (because of 100% plot wash-out in 2010 and flooding that prevented site access in 2013), so Mill Creek should be removed from calculations of demographic declines  
 dat <- dat %>% filter(Site!="Mill Creek")
 
 #*******************************************************************************
@@ -56,62 +56,81 @@ ggplot(dat, aes(x=Year, y=lambda, color=as.factor(round(Latitude, 1)))) +
 # Note: some sites' slopes (e.g., Buck Meadows) are getting pulled up by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
 
 #*******************************************************************************
-### 3. Calculate slopes of lambda over time for each site
+### 3A. Calculate slopes of lambda over time DURING DROUGHT-INDUCED DECLINE for each site
 #*******************************************************************************
 
-# with cleaned lambdas, all years
+# with cleaned lambdas, 2010-11 through 2014-15
 site.vec <- unique(dat$Site)
-slopes.lam <- c()
+slopes.lam.decline <- c()
 site.lam <- c()
 
 for (i in 1:length(site.vec)) {
-  dat.site <- dat %>% filter(Site==site.vec[i]) 
+  dat.site <- dat %>% filter(Site==site.vec[i],
+                             Year<2015) 
   mod <- lm(lambda ~ Year, dat.site)
-  slopes.lam[i] <- coefficients(mod)[2]
+  slopes.lam.decline[i] <- coefficients(mod)[2]
   site.lam[i] <- site.vec[i]
 }
 
-slopes.lambda <- bind_cols(site.lam, slopes.lam) %>% 
-  dplyr::select(Site=...1, Lambda.Slope.1011.1516=...2) 
-
-# with cleaned lambdas, only through 2014-15 because of early recovery at some sites
-site.vec <- unique(dat$Site)
-slopes.lam.14 <- c()
-site.lam <- c()
-
-for (i in 1:length(site.vec)) {
-  dat.site <- dat %>% filter(Year<2015) %>% filter(Site==site.vec[i]) 
-  mod <- lm(lambda ~ Year, dat.site)
-  slopes.lam.14[i] <- coefficients(mod)[2]
-  site.lam[i] <- site.vec[i]
-}
-
-slopes.lambda.14 <- bind_cols(site.lam, slopes.lam.14) %>% 
+slopes.lambda.decline <- bind_cols(site.lam, slopes.lam.decline) %>% 
   dplyr::select(Site=...1, Lambda.Slope.1011.1415=...2) 
 
+
+#*******************************************************************************
+### 3B. Calculate slopes of lambda over time DURING POST-DROUGHT RECOVERY for each site
+#*******************************************************************************
+
+# with cleaned lambdas, 2015-16 through 2018-19
+site.vec <- unique(dat$Site)
+slopes.lam.recovery <- c()
+site.lam <- c()
+
+for (i in 1:length(site.vec)) {
+  dat.site <- dat %>% filter(Site==site.vec[i],
+                             Year>2014) 
+  mod <- lm(lambda ~ Year, dat.site)
+  slopes.lam.recovery[i] <- coefficients(mod)[2]
+  site.lam[i] <- site.vec[i]
+}
+
+slopes.lambda.recovery <- bind_cols(site.lam, slopes.lam.recovery) %>% 
+  dplyr::select(Site=...1, Lambda.Slope.1516.1819=...2) 
+# some of these are negative because of an extremely high early value
 
 # Add Latitude and other covariates back in
 covar <- dat %>% 
   dplyr::select(Site, Latitude, Longitude, Elevation, Region, RegionRank) %>% 
   unique()
 
-slopes.lambda <- left_join(slopes.lambda, slopes.lambda.14) %>% left_join(covar, by="Site") 
+slopes.lambda <- left_join(slopes.lambda.decline, slopes.lambda.recovery) %>% left_join(covar, by="Site") 
 
 
 #*******************************************************************************
-### 4. Calculate mean lambda during drought for each site
+### 4A. Calculate mean lambda DURING CORE DROUGHT for each site
 #*******************************************************************************
 
-dat.mean <- dat %>% 
+dat.mean.drought <- dat %>% 
   group_by(Latitude, Site) %>% 
   filter(Year==2012|Year==2013|Year==2014) %>% 
   na.omit() %>% 
-  summarize(mean.lambda = exp(mean(log(lambda)))) #GEOMETRIC mean
+  summarize(mean.lambda.drought = exp(mean(log(lambda)))) #GEOMETRIC mean
+
+#*******************************************************************************
+### 4B. Calculate mean lambda DURING POST-DROUGHT for each site
+#*******************************************************************************
+
+dat.mean.recovery <- dat %>% 
+  group_by(Latitude, Site) %>% 
+  filter(Year==2015|Year==2016|Year==2017|Year==2018|Year==2019) %>% 
+  # NOTE: should we restrict this to a core 3 years, as above?
+  na.omit() %>% 
+  summarize(mean.lambda.recovery = exp(mean(log(lambda)))) #GEOMETRIC mean
 
 # Join to slopes
-demog.response <- left_join(slopes.lambda, dat.mean) %>% 
-  dplyr::select(Site, Latitude, Longitude, Elevation, Region, lambda.slope.all=Lambda.Slope.1011.1516, lambda.slope.trunc=Lambda.Slope.1011.1415, lambda.mean=mean.lambda)
+demog.response <- left_join(slopes.lambda, dat.mean.drought) %>%
+  left_join(dat.mean.recovery) %>% 
+  dplyr::select(Site, Latitude, Longitude, Elevation, Region, lambda.slope.decline=Lambda.Slope.1011.1415, lambda.slope.recovery=Lambda.Slope.1516.1819, lambda.mean.drought=mean.lambda.drought, lambda.mean.recovery=mean.lambda.recovery)
 
 # Save to .csv file 
-write.csv(demog.response,"data/demography data/siteYear.lambda_responses_2010-2016.csv",row.names=FALSE)
+write.csv(demog.response,"data/demography data/siteYear.lambda_responses_2010-2019.csv",row.names=FALSE)
 
