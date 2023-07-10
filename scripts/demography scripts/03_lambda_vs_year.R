@@ -51,7 +51,7 @@ ggplot(dat, aes(x=Year, y=lambda)) + #, color=as.factor(round(Latitude, 1))
   facet_wrap(~Site, scale="free", nrow=3) +
   theme_classic() #+
   #theme(strip.background = element_blank(), strip.text.x = element_blank(),
-        legend.title = element_blank())
+   #     legend.title = element_blank())
 
 # Note: some sites' slopes (e.g., Buck Meadows, Mill) are affected by 2015-16, which had very high recruitment and we assume indicated relatively early recovery. This is part of the rationale for calculating rates of decline as slope until 2014-15.
 
