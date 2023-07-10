@@ -1,0 +1,512 @@
+##########################################################################################################
+## Run Site*Year*Drought Mixed Models
+trait.SLA <- lmer(SLA ~ Site.Lat*Year*Drought + Block + (1|Family),data=y3)
+trait.fl <- lmer(Experiment_Date ~ Site.Lat*Year*Drought + Block + (1|Family),data=y3)
+for (i in 1:2){
+vis_SLA<-visreg(trait.SLA, xvar="Year", by="Site.Lat", cond=list(Drought=treatment.v[i]))
+Res_SLA<-vis_SLA$res
+for (j in 1:12){
+Ref_SLA_filter<-Res_SLA %>% filter(Site.Lat==pop.v[j])
+Ref_SLA_filter<- Ref_SLA_filter %>% mutate(Res.scale=scale(visregRes))
+lm_SLA<-lm(Res.scale~Year, data=Ref_SLA_filter)
+summary_SLA<-summary(lm_SLA)
+trait_dat_SLA[order.row,5]<-summary_SLA$coefficients[2,1]
+trait_dat_SLA[order.row,6]<-summary_SLA$coefficients[2,2]
+order.row<-order.row+1
+}
+}
+order.row<-1
+for (i in 1:2){
+vis_fl<-visreg(trait.fl, xvar="Year", by="Site.Lat", cond=list(Drought=treatment.v[i]))
+Res_fl<-vis_fl$res
+for (j in 1:12){
+Ref_fl_filter<-Res_fl %>% filter(Site.Lat==pop.v[j])
+Ref_fl_filter<- Ref_fl_filter %>% mutate(Res.scale=scale(visregRes))
+lm_fl<-lm(Res.scale~Year, data=Ref_fl_filter)
+summary_fl<-summary(lm_fl)
+trait_dat_fl[order.row,5]<-summary_fl$coefficients[2,1]
+trait_dat_fl[order.row,6]<-summary_fl$coefficients[2,2]
+order.row<-order.row+1
+}
+}
+#Join slope tables
+slope.trait <- rbind(trait_dat_SLA,trait_dat_fl)
+colnames(slope.trait) <- c("Site_ID","Paper_ID","Treatment","Trait","Slope","STDER")
+write.csv(slope.trait,"data/trait_data/slope.trait.SE.csv")
+#Make df wider
+slope.t <- slope.trait %>% unite(Trait_WD,Trait,Treatment,sep="_") %>% select(-STDER) %>% spread(Trait_WD,Slope)
+write.csv(slope.t,"data/trait_data/slope.trait.csv")
+##########################################################################################################
+## Run trait model
+## Author Daniel Anstett
+##
+##
+## Last Modified June 19, 2023
+##########################################################################################################
+#Import libraries
+library(tidyverse)
+library(lme4)
+library(lmtest)
+library(visreg)
+##########################################################################################################
+#Import files
+y3 <- read.csv("data/trait_data/y3.csv", header=T) #Import trait data
+#Set factors
+y3$Block <- as.factor(y3$Block) ; y3$Family <- as.factor(y3$Family) # prep factors
+# Set up vectors with treatment and regional information
+treatment.v<-c("W", "D")
+pop.v<-c("32.9_S02", "34.3_S07", "36.7_S08", "36.2_S10", "34.1_S11", "43.4_S15",
+"41.8_S16", "41.7_S17", "39.7_S18", "39.4_S29","37.5_S32", "42.3_S36")
+site.v<-c("1","12","2","3","4","5","6","7","8","9","10","11")
+order.row<-1
+#Make input data frame
+trait_dat <- data.frame()
+trait_dat[1:24,1] <- as.data.frame(pop.v)
+trait_dat[1:24,2] <- as.data.frame(site.v)
+trait_dat[1:12,3] <- "Wet"
+trait_dat[13:24,3] <- "Dry"
+trait_dat_SLA <- trait_dat
+trait_dat_SLA$trait <- "SLA"
+trait_dat_fl <- trait_dat
+trait_dat_fl$trait <- "fl"
+##########################################################################################################
+##########################################################################################################
+## Run Site*Year*Drought Mixed Models
+trait.SLA <- lmer(SLA ~ Site.Lat*Year*Drought + Block + (1|Family),data=y3)
+trait.fl <- lmer(Experiment_Date ~ Site.Lat*Year*Drought + Block + (1|Family),data=y3)
+for (i in 1:2){
+vis_SLA<-visreg(trait.SLA, xvar="Year", by="Site.Lat", cond=list(Drought=treatment.v[i]))
+Res_SLA<-vis_SLA$res
+for (j in 1:12){
+Ref_SLA_filter<-Res_SLA %>% filter(Site.Lat==pop.v[j])
+Ref_SLA_filter<- Ref_SLA_filter %>% mutate(Res.scale=scale(visregRes))
+lm_SLA<-lm(Res.scale~Year, data=Ref_SLA_filter)
+summary_SLA<-summary(lm_SLA)
+trait_dat_SLA[order.row,5]<-summary_SLA$coefficients[2,1]
+trait_dat_SLA[order.row,6]<-summary_SLA$coefficients[2,2]
+order.row<-order.row+1
+}
+}
+order.row<-1
+for (i in 1:2){
+vis_fl<-visreg(trait.fl, xvar="Year", by="Site.Lat", cond=list(Drought=treatment.v[i]))
+Res_fl<-vis_fl$res
+for (j in 1:12){
+Ref_fl_filter<-Res_fl %>% filter(Site.Lat==pop.v[j])
+Ref_fl_filter<- Ref_fl_filter %>% mutate(Res.scale=scale(visregRes))
+lm_fl<-lm(Res.scale~Year, data=Ref_fl_filter)
+summary_fl<-summary(lm_fl)
+trait_dat_fl[order.row,5]<-summary_fl$coefficients[2,1]
+trait_dat_fl[order.row,6]<-summary_fl$coefficients[2,2]
+order.row<-order.row+1
+}
+}
+#Join slope tables
+slope.trait <- rbind(trait_dat_SLA,trait_dat_fl)
+colnames(slope.trait) <- c("Site_ID","Paper_ID","Treatment","Trait","Slope","STDER")
+write.csv(slope.trait,"data/trait_data/slope.trait.SE.csv")
+#Make df wider
+slope.t <- slope.trait %>% unite(Trait_WD,Trait,Treatment,sep="_") %>% select(-STDER) %>% spread(Trait_WD,Slope)
+write.csv(slope.t,"data/trait_data/slope.trait.csv")
+##########################################################################################################
+## Run trait model
+## Author Daniel Anstett
+##
+##
+## Last Modified June 19, 2023
+##########################################################################################################
+#Import libraries
+library(tidyverse)
+slope.trait <-read_csv("data/trait_data/slope.trait.csv")
+offset_pop <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/binomial_data/time_cumul_beagle.csv")
+#Join
+evol <- left_join(offset_pop,slope.trait,by="Paper_ID")
+View(evol)
+library(tidyverse)
+library(RColorBrewer)
+library(car)
+View(evol)
+names(evol)
+##########################################################################################################
+## Run trait model
+## Author Daniel Anstett
+##
+##
+## Last Modified June 19, 2023
+##########################################################################################################
+#Import libraries
+library(tidyverse)
+library(RColorBrewer)
+library(car)
+slope.trait <-read_csv("data/trait_data/slope.trait.csv")
+offset_pop <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/binomial_data/time_cumul_beagle.csv")
+#Join
+evol <- left_join(offset_pop,slope.trait,by="Paper_ID")
+##########################################################################################################
+#Run models
+lm.1215 <- lm(lambda.slope.trunc~offset_1215,data=offset_pop)
+# N-S color gradient
+lat_cols=colorRampPalette(brewer.pal(12,"Spectral"))
+n.sites <- length(unique(offset_pop$Site))
+color.list <- lat_cols(n.sites)
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_pos, y=SLA_Dry)) +
+geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Dry")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_pos, y=SLA_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Dry")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+# Check if color.list has enough colors
+if (length(color.list) < 12) {
+message("Color list does not have enough colors. Adjusting palette or color selection.")
+# Adjust palette or select a different color palette
+color.list <- colorRampPalette(brewer.pal(12, "Spectral"))(12)
+}
+# N-S color gradient
+lat_cols=colorRampPalette(brewer.pal(11,"Spectral"))
+n.sites <- length(unique(offset_pop$Site))
+color.list <- lat_cols(n.sites)
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_pos, y=SLA_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Dry")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+if (length(color.list) < 12) {
+message("Color list does not have enough colors. Adjusting palette or color selection.")
+# Adjust palette or select a different color palette
+color.list <- colorRampPalette(brewer.pal(12, "Spectral"))(12)
+}
+# N-S color gradient
+lat_cols=colorRampPalette(brewer.pal(12,"Spectral"))
+n.sites <- length(unique(offset_pop$Site))
+color.list <- lat_cols(n.sites)
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_pos, y=SLA_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Dry")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+if (length(color.list) < 12) {
+message("Color list does not have enough colors. Adjusting palette or color selection.")
+# Adjust palette or select a different color palette
+color.list <- colorRampPalette(brewer.pal(12, "Spectral"))(12)
+}
+# N-S color gradient
+lat_cols=colorRampPalette(brewer.pal(17,"Spectral"))
+# N-S color gradient
+lat_cols=colorRampPalette(brewer.pal(11,"Spectral"))
+View(evol)
+# N-S color gradient
+lat_cols=colorRampPalette(brewer.pal(11,"Spectral"))
+n.sites <- length(unique(evol$Paper_ID))
+color.list <- lat_cols(n.sites)
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_pos, y=SLA_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Dry")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_all, y=SLA_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Dry")+
+scale_x_continuous(name="Cumulative Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/2_cumul_all_SLA_Dry.pdf",width=8, height = 6, units = "in")
+##########################################################################################################
+#SLA Dry
+ggplot(evol, aes(x=cumul_pos, y=SLA_Wet)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Wet")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/1_cumul_pos_SLA_wet.pdf",width=8, height = 6, units = "in")
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_all, y=SLA_Wet)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Wet")+
+scale_x_continuous(name="Cumulative Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/2_cumul_all_SLA_wet.pdf",width=8, height = 6, units = "in")
+##########################################################################################################
+#SLA_Dry
+ggplot(evol, aes(x=cumul_pos, y=SLA_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Dry")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/3_cumul_pos_SLA_dry.pdf",width=8, height = 6, units = "in")
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_all, y=SLA_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Dry")+
+scale_x_continuous(name="Cumulative Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/4_cumul_all_SLA_dry.pdf",width=8, height = 6, units = "in")
+names(evol)
+lm.sla.dry.cumul <- lm(SLA_Wet~cumul_pos,data=evol)
+##########################################################################################################
+#SLA Wet
+ggplot(evol, aes(x=cumul_pos, y=SLA_Wet)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Wet")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/1_cumul_pos_SLA_wet.pdf",width=8, height = 6, units = "in")
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_all, y=SLA_Wet)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="SLA_Wet")+
+scale_x_continuous(name="Cumulative Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/2_cumul_all_SLA_wet.pdf",width=8, height = 6, units = "in")
+##########################################################################################################
+#Run models
+lm.sla.dry.cumul <- lm(SLA_Wet~cumul_pos,data=evol)
+Anova(lm.sla.dry.cumul,type="III")
+names(evol)
+lm.sla.dry.cumul <- lm(SLA_Wet~cumul_all,data=evol)
+Anova(lm.sla.dry.cumul,type="III")
+lm.sla.wet.cumul <- lm(SLA_Wet~cumul_all,data=evol)
+Anova(lm.sla.wet.cumul,type="III")
+summary(lm.sla.wet.cumul)
+##########################################################################################################
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_pos, y=fl_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="fl_Dry")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+##########################################################################################################
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_pos, y=fl_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="fl_wet")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/5_cumul_pos_fl_Dry.pdf",width=8, height = 6, units = "in")
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_all, y=fl_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="fl_wet")+
+scale_x_continuous(name="Cumulative Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/6_cumul_all_fl_Dry.pdf",width=8, height = 6, units = "in")
+##########################################################################################################
+#fl_Dry
+ggplot(evol, aes(x=cumul_pos, y=fl_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="fl_Dry")+
+scale_x_continuous(name="Cumulative Positive Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/7_cumul_pos_fl_dry.pdf",width=8, height = 6, units = "in")
+#2012-2015 offset plotted against lambda
+ggplot(evol, aes(x=cumul_all, y=fl_Dry)) +
+geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =4.5)+
+geom_smooth(method=lm,color="black")+
+scale_y_continuous(name="fl_Dry")+
+scale_x_continuous(name="Cumulative Evolution")+
+#,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+scale_fill_manual(values=color.list) +
+theme_classic() + theme(
+axis.text.x = element_text(size=14, face="bold"),
+axis.text.y = element_text(size=14,face="bold"),
+axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+legend.title = element_blank(),
+legend.text = element_text(size = 14),  # Increase the size of the legend text
+legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
+)
+ggsave("Graphs/traits/8_cumul_all_fl_dry.pdf",width=8, height = 6, units = "in")
+##################################################################################
+## Extract offset values for each timeseires population
+## Author Daniel Anstett
+##
+##
+## Last Modified September 19, 2022
+###################################################################################
+#Library install and import
+library(tidyverse) # for data manipulation
+library(raster) # for handeling rasters
