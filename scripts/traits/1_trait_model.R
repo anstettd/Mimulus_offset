@@ -78,10 +78,14 @@ for (i in 1:2){
 
 #Join slope tables
 slope.trait <- rbind(trait_dat_SLA,trait_dat_fl)
-colnames(slope.trait) <- c("Site_ID","Pop","Treatment","Trait","Slope","STDER")
+colnames(slope.trait) <- c("Site_ID","Paper_ID","Treatment","Trait","Slope","STDER")
 
+#write.csv(slope.trait,"data/trait_data/slope.trait.SE.csv")
 
-write.csv(slope.trait,"data/trait_data/slope.trait.csv")
+#Make df wider
+slope.t <- slope.trait %>% unite(Trait_WD,Trait,Treatment,sep="_") %>% select(-STDER) %>% spread(Trait_WD,Slope)
+write.csv(slope.t,"data/trait_data/slope.trait.csv")
+
 
 
 

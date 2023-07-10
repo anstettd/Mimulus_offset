@@ -70,6 +70,6 @@ offset_pop <- cbind(timeseries,rasStack)
 #Merge new sites codes with offset_pop data
 #offset_pop_meta <- cbind(offset_pop,demo_pop)
 
-write_csv(offset_pop,"/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/offset_pop_timeseries_beagle.csv")
+#write_csv(offset_pop,"/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/offset_pop_timeseries_beagle.csv")
 
 
