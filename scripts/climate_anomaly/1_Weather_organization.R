@@ -14,30 +14,28 @@
 library(tidyverse)
 
 ###################################################################################
-# Read meta data
-wna1 <- read_csv("Climate/timeseries_lat_2010-2016.csv")
-impact_all <- wna1 %>% select(ID_Year1,Year,Elevation)
-impact_all_sum <- wna1 %>% select(ID_Year1,Year,Elevation)
-
 #Import datasets and add year_actual variable
-weather_2008 <- read.csv("Climate/timeseries_monthly_2008.csv", header=T)
-weather_2009 <- read.csv("Climate/timeseries_monthly_2009.csv", header=T)
-weather_2010 <- read.csv("Climate/timeseries_monthly_2010.csv", header=T)
-weather_2011 <- read.csv("Climate/timeseries_monthly_2011.csv", header=T)
-weather_2012 <- read.csv("Climate/timeseries_monthly_2012.csv", header=T)
-weather_2013 <- read.csv("Climate/timeseries_monthly_2013.csv", header=T)
-weather_2014 <- read.csv("Climate/timeseries_monthly_2014.csv", header=T)
-weather_2015 <- read.csv("Climate/timeseries_monthly_2015.csv", header=T)
-weather_2016 <- read.csv("Climate/timeseries_monthly_2016.csv", header=T)
+weather_2009 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2009M.csv", header=T)
+weather_2010 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2010M.csv", header=T)
+weather_2011 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2011M.csv", header=T)
+weather_2012 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2012M.csv", header=T)
+weather_2013 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2013M.csv", header=T)
+weather_2014 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2014M.csv", header=T)
+weather_2015 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2015M.csv", header=T)
+weather_2016 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2016M.csv", header=T)
+weather_2017 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2017M.csv", header=T)
+weather_2018 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2018M.csv", header=T)
+weather_2019 <- read.csv("data/climate_data/Monthly/demography_pop_20_Year_2019M.csv", header=T)
 
+impact_all <- weather_2009 %>% select(Site,Paper_ID,Latitude,Longitude)
 
 ###################################################################################
 ###################################################################################
 # Get weather data into Oct 1 to Sept 31 format
 impact_summary <- data.frame()
-for(i in 2010:2016){
-  impact<- eval(parse(text=(paste("weather",i-1,sep="_")))) %>% select(ID,ID2,Latitude,Longitude)
-#  impact<-cbind(impact,c(rep(i,12)))
+for(i in 2010:2019){
+  impact<- eval(parse(text=(paste("weather",i-1,sep="_")))) %>% select(Site,Paper_ID,Latitude,Longitude)
+  impact<-cbind(impact,c(rep(i,20)))
   #MAT  
   impact_aT <- eval(parse(text=(paste("weather",i-1,sep="_")))) %>% select(Tave10,Tave11,Tave12)
   impact_bT <- eval(parse(text=(paste("weather",i,sep="_"))))%>% select(Tave01,Tave02,Tave03,Tave04,Tave05,
@@ -59,6 +57,8 @@ for(i in 2010:2016){
   impact <- cbind(impact,CMD)
   impact_summary <- rbind(impact_summary,impact)
 }
-impact_all <- cbind(impact_all,impact_summary)
-write.csv(impact_all,'Data/weather.csv') #Export file
+
+colnames(impact_summary)[5] <- "Year"
+
+write.csv(impact_summary,'data/climate_data/demo_weather_wateryear.csv') #Export file
 ###################################################################################
