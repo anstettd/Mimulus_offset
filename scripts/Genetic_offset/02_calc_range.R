@@ -45,13 +45,13 @@ spp_shp_aea <- spTransform(spp_shp, CRS(aea_NA))
 #spp_mcp_aea10k <- gIntersection(temp10k,us_shp_aea)
 
 # Buffered Polygon 1: points with buffer 10km
-temp10k1 <- gBuffer(spp_shp_aea, width = 10000)
-spp_pb_aea10k1 <- gIntersection(temp10k1,us_shp_aea)
+#temp10k1 <- gBuffer(spp_shp_aea, width = 10000)
+#spp_pb_aea10k1 <- gIntersection(temp10k1,us_shp_aea)
 
 # Buffered Polygon 2: points with buffer 50km first and reduce by 40km (to avoid gaps between points)
 temp50k <- gBuffer(spp_shp_aea, width = 50000)
 spp_pb_aea50k <- gIntersection(temp50k,us_shp_aea)
-temp10k2 <- gBuffer(temp50k, width = -20000) # reduce the buffer (-40km)
+temp10k2 <- gBuffer(temp50k, width = -20000) # reduce the buffer (-20km)
 spp_pb_aea10k2 <- gIntersection(temp10k2,us_shp_aea)
 plot(spp_pb_aea10k2)
 
@@ -63,10 +63,10 @@ plot(spp_pb_aea10k2)
 
 
 
+##############################################################################################################
+
+
 #writeOGR(spp_pb_aea10k2, dsn = '.', layer = 'poly', driver = "ESRI Shapefile")
-
-
-
 
 ### (2) Range Polygon 2 by locality density
 # ref: 'rangemap' package

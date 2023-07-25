@@ -12,7 +12,7 @@ library(car)
 
 
 slope.trait <-read_csv("data/trait_data/slope.trait.csv")
-offset_pop <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/binomial_data/time_cumul_beagle.csv")
+offset_pop <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/binomial_data_half/time_cumul_beagle.csv")
 pi.df <- read_csv("data/genomic_data/raw_pi.csv")
 
 #Join
