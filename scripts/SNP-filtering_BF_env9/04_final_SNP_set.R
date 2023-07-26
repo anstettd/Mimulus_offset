@@ -135,6 +135,17 @@ env7_united_bf30 <- env7_allBF %>% filter(BF>30)
 env8_united_bf30 <- env8_allBF %>% filter(BF>30)
 env9_united_bf30 <- env9_allBF %>% filter(BF>30)
 
+#BF>20 for all windows
+env1_united_bf20 <- env1_allBF %>% filter(BF>20)
+env2_united_bf20 <- env2_allBF %>% filter(BF>20)
+env3_united_bf20 <- env3_allBF %>% filter(BF>20)
+env4_united_bf20 <- env4_allBF %>% filter(BF>20)
+env5_united_bf20 <- env5_allBF %>% filter(BF>20)
+env6_united_bf20 <- env6_allBF %>% filter(BF>20)
+env7_united_bf20 <- env7_allBF %>% filter(BF>20)
+env8_united_bf20 <- env8_allBF %>% filter(BF>20)
+env9_united_bf20 <- env9_allBF %>% filter(BF>20)
+
 #Make SNPs in Window Summary Data Frame
 snps_in_win <- data.frame()
 
@@ -204,6 +215,17 @@ snps_in_win[6,8] <- dim(snp_env7_peakbf2_win)[1]
 snps_in_win[6,9] <- dim(snp_env8_peakbf2_win)[1]
 snps_in_win[6,10] <- dim(snp_env9_peakbf2_win)[1]
 
+snps_in_win[7,1] <- ">20 all win" 
+snps_in_win[7,2] <- dim(env1_united_bf20)[1]
+snps_in_win[7,3] <- dim(env2_united_bf20)[1]
+snps_in_win[7,4] <- dim(env3_united_bf20)[1]
+snps_in_win[7,5] <- dim(env4_united_bf20)[1]
+snps_in_win[7,6] <- dim(env5_united_bf20)[1]
+snps_in_win[7,7] <- dim(env6_united_bf20)[1]
+snps_in_win[7,8] <- dim(env7_united_bf20)[1]
+snps_in_win[7,9] <- dim(env8_united_bf20)[1]
+snps_in_win[7,10] <- dim(env9_united_bf20)[1]
+
 #Unique SNPs
 snps_bf30_all <- rbind(env1_united_bf30,
                        env2_united_bf30,
@@ -271,6 +293,17 @@ snps_bf2 <- rbind(snp_env1_peakbf2_win,
                    snp_env9_peakbf2_win)
 snps_bf2_u <- as.data.frame(unique(snps_bf2$chr_snp))
 
+snps_bf20_all <- rbind(env1_united_bf20,
+                       env2_united_bf20,
+                       env3_united_bf20,
+                       env4_united_bf20,
+                       env5_united_bf20,
+                       env6_united_bf20,
+                       env7_united_bf20,
+                       env8_united_bf20,
+                       env9_united_bf20)
+snps_bf20_all_u <- as.data.frame(unique(snps_bf20_all$chr_snp))
+
 #Input total
 snps_in_win[1,11] <- dim(snps_bf30_all)[1]
 snps_in_win[2,11] <- dim(snps_bf30)[1]
@@ -278,6 +311,7 @@ snps_in_win[3,11] <- dim(snps_bf20)[1]
 snps_in_win[4,11] <- dim(snps_bf10)[1]
 snps_in_win[5,11] <- dim(snps_bf5)[1]
 snps_in_win[6,11] <- dim(snps_bf2)[1]
+snps_in_win[7,11] <- dim(snps_bf30_all)[1]
 
 #Input unique
 snps_in_win[1,12] <- dim(snps_bf30_all_u)[1]
@@ -286,6 +320,7 @@ snps_in_win[3,12] <- dim(snps_bf20_u)[1]
 snps_in_win[4,12] <- dim(snps_bf10_u)[1]
 snps_in_win[5,12] <- dim(snps_bf5_u)[1]
 snps_in_win[6,12] <- dim(snps_bf2_u)[1]
+snps_in_win[7,12] <- dim(snps_bf20_all_u)[1]
 
 colnames(snps_in_win) <- c("log10BF","env1","env2","env3","env4","env5","env6","env7","env8","env9","total","unique")
 
@@ -381,7 +416,7 @@ write_csv(windows_in,"data/genomic_data/windows_in_bf.csv")
 
 
 #############################################################################################################
-
+#Merge BF>30 + WZA BF>10
 #Setup bf10 snps for merger
 bf10_env1 <- snp_env1_peakbf10_win %>% select(chr_snp,Env,BF) %>% filter(BF<30)
 bf10_env2 <- snp_env2_peakbf10_win %>% select(chr_snp,Env,BF) %>% filter(BF<30)
@@ -405,7 +440,10 @@ snp_set_env7 <- rbind(env7_united_bf30,bf10_env7)
 snp_set_env8 <- rbind(env8_united_bf30,bf10_env8)
 snp_set_env9 <- rbind(env9_united_bf30,bf10_env9)
 
+
+
 #Make unique set
+# BF>30 + WZA BF>10
 snp_set_all <- rbind(snp_set_env1,
                      snp_set_env2,
                      snp_set_env3,
@@ -418,20 +456,103 @@ snp_set_all <- rbind(snp_set_env1,
 snp_set_env <- as.data.frame(unique(snp_set_all$chr_snp))
 colnames(snp_set_env) <- "chr_snp"
 
-  
+#BF>30
+snp_set_all_bf30 <- rbind(env1_united_bf30,
+                          env2_united_bf30,
+                          env3_united_bf30,
+                          env4_united_bf30,
+                          env5_united_bf30,
+                          env6_united_bf30,
+                          env7_united_bf30,
+                          env8_united_bf30,
+                          env9_united_bf30
+                          )
+snp_set_env_bf30 <- as.data.frame(unique(snp_set_all_bf30$chr_snp))
+colnames(snp_set_env_bf30) <- "chr_snp"
 
-write_csv(snp_set_env1,"data/genomic_data/snp_set_env1.csv")
-write_csv(snp_set_env2,"data/genomic_data/snp_set_env2.csv")
-write_csv(snp_set_env3,"data/genomic_data/snp_set_env3.csv")
-write_csv(snp_set_env4,"data/genomic_data/snp_set_env4.csv")
-write_csv(snp_set_env5,"data/genomic_data/snp_set_env5.csv")
-write_csv(snp_set_env6,"data/genomic_data/snp_set_env6.csv")
-write_csv(snp_set_env7,"data/genomic_data/snp_set_env7.csv")
-write_csv(snp_set_env8,"data/genomic_data/snp_set_env8.csv")
-write_csv(snp_set_env9,"data/genomic_data/snp_set_env9.csv")
-write_csv(snp_set_env,"data/genomic_data/snp_set_env.csv")
+#BF>20
+snp_set_all_bf20 <- rbind(env1_united_bf20,
+                          env2_united_bf20,
+                          env3_united_bf20,
+                          env4_united_bf20,
+                          env5_united_bf20,
+                          env6_united_bf20,
+                          env7_united_bf20,
+                          env8_united_bf20,
+                          env9_united_bf20
+)
+snp_set_env_bf20 <- as.data.frame(unique(snp_set_all_bf20$chr_snp))
+colnames(snp_set_env_bf20) <- "chr_snp"
+
+#WZA BF>10
+snp_set_all_wza10 <- rbind(snp_env1_peakbf10_win,
+                           snp_env2_peakbf10_win,
+                           snp_env3_peakbf10_win,
+                           snp_env4_peakbf10_win,
+                           snp_env5_peakbf10_win,
+                           snp_env6_peakbf10_win,
+                           snp_env7_peakbf10_win,
+                           snp_env8_peakbf10_win,
+                           snp_env9_peakbf10_win
+)
+snp_set_env_wza10 <- as.data.frame(unique(snp_set_all_wza10$chr_snp))
+colnames(snp_set_env_wza10) <- "chr_snp"
 
 
+
+#Write out WZA BayPass SNP set
+
+#write_csv(snp_set_env1,"data/genomic_data/snp_set_env1.csv")
+#write_csv(snp_set_env2,"data/genomic_data/snp_set_env2.csv")
+#write_csv(snp_set_env3,"data/genomic_data/snp_set_env3.csv")
+#write_csv(snp_set_env4,"data/genomic_data/snp_set_env4.csv")
+#write_csv(snp_set_env5,"data/genomic_data/snp_set_env5.csv")
+#write_csv(snp_set_env6,"data/genomic_data/snp_set_env6.csv")
+#write_csv(snp_set_env7,"data/genomic_data/snp_set_env7.csv")
+#write_csv(snp_set_env8,"data/genomic_data/snp_set_env8.csv")
+#write_csv(snp_set_env9,"data/genomic_data/snp_set_env9.csv")
+#write_csv(snp_set_env,"data/genomic_data/snp_set_env.csv")
+
+
+#Write only SNP set for BF>30 only
+
+write_csv(env1_united_bf30,"data/genomic_data/snp_set_bf30_env1.csv")
+write_csv(env2_united_bf30,"data/genomic_data/snp_set_bf30_env2.csv")
+write_csv(env3_united_bf30,"data/genomic_data/snp_set_bf30_env3.csv")
+write_csv(env4_united_bf30,"data/genomic_data/snp_set_bf30_env4.csv")
+write_csv(env5_united_bf30,"data/genomic_data/snp_set_bf30_env5.csv")
+write_csv(env6_united_bf30,"data/genomic_data/snp_set_bf30_env6.csv")
+write_csv(env7_united_bf30,"data/genomic_data/snp_set_bf30_env7.csv")
+write_csv(env8_united_bf30,"data/genomic_data/snp_set_bf30_env8.csv")
+write_csv(env9_united_bf30,"data/genomic_data/snp_set_bf30_env9.csv")
+write_csv(snp_set_env_bf30,"data/genomic_data/snp_set_bf30.csv")
+
+#Write only SNP set for BF>20 only
+
+write_csv(env1_united_bf20,"data/genomic_data/snp_set_bf20_env1.csv")
+write_csv(env2_united_bf20,"data/genomic_data/snp_set_bf20_env2.csv")
+write_csv(env3_united_bf20,"data/genomic_data/snp_set_bf20_env3.csv")
+write_csv(env4_united_bf20,"data/genomic_data/snp_set_bf20_env4.csv")
+write_csv(env5_united_bf20,"data/genomic_data/snp_set_bf20_env5.csv")
+write_csv(env6_united_bf20,"data/genomic_data/snp_set_bf20_env6.csv")
+write_csv(env7_united_bf20,"data/genomic_data/snp_set_bf20_env7.csv")
+write_csv(env8_united_bf20,"data/genomic_data/snp_set_bf20_env8.csv")
+write_csv(env9_united_bf20,"data/genomic_data/snp_set_bf20_env9.csv")
+write_csv(snp_set_env_bf20,"data/genomic_data/snp_set_bf20.csv")
+
+#Write out for WZA BF>10 only
+
+
+write_csv(snp_env1_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
+write_csv(snp_env2_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
+write_csv(snp_env3_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
+write_csv(snp_env4_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
+write_csv(snp_env5_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
+write_csv(snp_env6_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
+write_csv(snp_env7_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
+write_csv(snp_env8_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
+write_csv(snp_env9_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
+write_csv(snp_set_env_wza10,"data/genomic_data/snp_set_wza10.csv")
 
 
 
