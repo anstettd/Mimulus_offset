@@ -542,15 +542,15 @@ write_csv(snp_set_env_bf20,"data/genomic_data/snp_set_bf20.csv")
 
 #Write out for WZA BF>10 only
 
-write_csv(snp_env1_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
-write_csv(snp_env2_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
-write_csv(snp_env3_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
-write_csv(snp_env4_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
-write_csv(snp_env5_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
-write_csv(snp_env6_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
-write_csv(snp_env7_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
-write_csv(snp_env8_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
-write_csv(snp_env9_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
+write_csv(snp_env1_peakbf10_win,"data/genomic_data/snp_set_wza10_env1.csv")
+write_csv(snp_env2_peakbf10_win,"data/genomic_data/snp_set_wza10_env2.csv")
+write_csv(snp_env3_peakbf10_win,"data/genomic_data/snp_set_wza10_env3.csv")
+write_csv(snp_env4_peakbf10_win,"data/genomic_data/snp_set_wza10_env4.csv")
+write_csv(snp_env5_peakbf10_win,"data/genomic_data/snp_set_wza10_env5.csv")
+write_csv(snp_env6_peakbf10_win,"data/genomic_data/snp_set_wza10_env6.csv")
+write_csv(snp_env7_peakbf10_win,"data/genomic_data/snp_set_wza10_env7.csv")
+write_csv(snp_env8_peakbf10_win,"data/genomic_data/snp_set_wza10_env8.csv")
+write_csv(snp_env9_peakbf10_win,"data/genomic_data/snp_set_wza10_env9.csv")
 write_csv(snp_set_env_wza10,"data/genomic_data/snp_set_wza10.csv")
 
 
