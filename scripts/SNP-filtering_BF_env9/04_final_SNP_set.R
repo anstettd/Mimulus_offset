@@ -542,7 +542,6 @@ write_csv(snp_set_env_bf20,"data/genomic_data/snp_set_bf20.csv")
 
 #Write out for WZA BF>10 only
 
-
 write_csv(snp_env1_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
 write_csv(snp_env2_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
 write_csv(snp_env3_peakbf10_win,"data/genomic_data/snp_set_wza10.csv")
