@@ -130,23 +130,107 @@ rm(pop12)
 pop12_filter <-pop12_all %>% filter (chr_snp %in% as.character(loci_united$chr_snp))
 rm(pop12_all)
 
+#Demography only pops
+
+#pop14 Hauser Creek
+pop14<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/Pi/pop_demo_14.sites.pi", header=F, sep="\t")
+colnames(pop14) <- c("Chromosome","SNP","PI")
+pop14_all <- pop14 %>% unite(chr_snp,"Chromosome","SNP",sep="_")
+rm(pop14)
+##Filter Pi datatset by 2.1 Million SNPs
+pop14_filter <-pop14_all %>% filter (chr_snp %in% as.character(loci_united$chr_snp))
+rm(pop14_all)
+
+#pop15 Kitchen Creek
+pop15<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/Pi/pop_demo_15.sites.pi", header=F, sep="\t")
+colnames(pop15) <- c("Chromosome","SNP","PI")
+pop15_all <- pop15 %>% unite(chr_snp,"Chromosome","SNP",sep="_")
+rm(pop15)
+##Filter Pi datatset by 2.1 Million SNPs
+pop15_filter <-pop15_all %>% filter (chr_snp %in% as.character(loci_united$chr_snp))
+rm(pop15_all)
+
+#pop17 Whitewater Caynon
+pop17<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/Pi/pop_demo_17.sites.pi", header=F, sep="\t")
+colnames(pop17) <- c("Chromosome","SNP","PI")
+pop17_all <- pop17 %>% unite(chr_snp,"Chromosome","SNP",sep="_")
+rm(pop17)
+##Filter Pi datatset by 2.1 Million SNPs
+pop17_filter <-pop17_all %>% filter (chr_snp %in% as.character(loci_united$chr_snp))
+rm(pop17_all)
+
+#pop27 Buck Meadows
+pop27<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/Pi/pop_demo_27.sites.pi", header=F, sep="\t")
+colnames(pop27) <- c("Chromosome","SNP","PI")
+pop27_all <- pop27 %>% unite(chr_snp,"Chromosome","SNP",sep="_")
+rm(pop27)
+##Filter Pi datatset by 2.1 Million SNPs
+pop27_filter <-pop27_all %>% filter (chr_snp %in% as.character(loci_united$chr_snp))
+rm(pop27_all)
+
+#pop28 Carlon
+pop28<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/Pi/pop_demo_28.sites.pi", header=F, sep="\t")
+colnames(pop28) <- c("Chromosome","SNP","PI")
+pop28_all <- pop28 %>% unite(chr_snp,"Chromosome","SNP",sep="_")
+rm(pop28)
+##Filter Pi datatset by 2.1 Million SNPs
+pop28_filter <-pop28_all %>% filter (chr_snp %in% as.character(loci_united$chr_snp))
+rm(pop28_all)
+
+#pop29 Rainbow Pool
+pop29<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/Pi/pop_demo_29.sites.pi", header=F, sep="\t")
+colnames(pop29) <- c("Chromosome","SNP","PI")
+pop29_all <- pop29 %>% unite(chr_snp,"Chromosome","SNP",sep="_")
+rm(pop29)
+##Filter Pi datatset by 2.1 Million SNPs
+pop29_filter <-pop29_all %>% filter (chr_snp %in% as.character(loci_united$chr_snp))
+rm(pop29_all)
+
+#pop55 Coast Fork Willamette 
+pop55<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/Large_files/Pi/pop_demo_55.sites.pi", header=F, sep="\t")
+colnames(pop55) <- c("Chromosome","SNP","PI")
+pop55_all <- pop55 %>% unite(chr_snp,"Chromosome","SNP",sep="_")
+rm(pop55)
+##Filter Pi datatset by 2.1 Million SNPs
+pop55_filter <-pop55_all %>% filter (chr_snp %in% as.character(loci_united$chr_snp))
+rm(pop55_all)
+
+
+
 #Filter out snp set
-snp_set_p1 <-pop1_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p1"="PI")
-snp_set_p2 <-pop2_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p2"="PI")
-snp_set_p3 <-pop3_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p3"="PI")
-snp_set_p4 <-pop4_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p4"="PI")
-snp_set_p5 <-pop5_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p5"="PI")
-snp_set_p6 <-pop6_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p6"="PI")
-snp_set_p7 <-pop7_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p7"="PI")
-snp_set_p8 <-pop8_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p8"="PI")
-snp_set_p9 <-pop9_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p9"="PI")
-snp_set_p10 <-pop10_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p10"="PI")
-snp_set_p11 <-pop11_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p11"="PI")
-snp_set_p12 <-pop12_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp)) %>% rename("PI_p12"="PI")
+snp_set_p1 <-pop1_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p2 <-pop2_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p3 <-pop3_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p4 <-pop4_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p5 <-pop5_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p6 <-pop6_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p7 <-pop7_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p8 <-pop8_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p9 <-pop9_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p10 <-pop10_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p11 <-pop11_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p12 <-pop12_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+
+snp_set_p14 <-pop14_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p15 <-pop15_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p17 <-pop17_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p27 <-pop27_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p28 <-pop28_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p29 <-pop29_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+snp_set_p55 <-pop55_filter %>% filter (chr_snp %in% as.character(snp_set$chr_snp))
+
 
 #Calc pi
 pi_df <- 1:12
+pi_df[13] <- 14
+pi_df[14] <- 15
+pi_df[15] <- 17
+pi_df[16] <- 27
+pi_df[17] <- 28
+pi_df[18] <- 29
+pi_df[19] <- 55
 pi_df <- as.data.frame(pi_df)
+
 #SNP set PI
 pi_df[1,2] <- mean(as.numeric(snp_set_p1$PI))
 pi_df[2,2] <- mean(as.numeric(snp_set_p2$PI))
@@ -160,6 +244,16 @@ pi_df[9,2] <- mean(as.numeric(snp_set_p9$PI))
 pi_df[10,2] <- mean(as.numeric(snp_set_p10$PI))
 pi_df[11,2] <- mean(as.numeric(snp_set_p11$PI))
 pi_df[12,2] <- mean(as.numeric(snp_set_p12$PI))
+
+pi_df[13,2] <- mean(as.numeric(snp_set_p14$PI))
+pi_df[14,2] <- mean(as.numeric(snp_set_p15$PI))
+pi_df[15,2] <- mean(as.numeric(snp_set_p17$PI))
+pi_df[16,2] <- mean(as.numeric(snp_set_p27$PI))
+pi_df[17,2] <- mean(as.numeric(snp_set_p28$PI))
+pi_df[18,2] <- mean(as.numeric(snp_set_p29$PI))
+pi_df[19,2] <- mean(as.numeric(snp_set_p55$PI))
+
+
 #Full set PI
 pi_df[1,3] <- mean(as.numeric(pop1_filter$PI))
 pi_df[2,3] <- mean(as.numeric(pop2_filter$PI))
@@ -173,6 +267,14 @@ pi_df[9,3] <- mean(as.numeric(pop9_filter$PI))
 pi_df[10,3] <- mean(as.numeric(pop10_filter$PI))
 pi_df[11,3] <- mean(as.numeric(pop11_filter$PI))
 pi_df[12,3] <- mean(as.numeric(pop12_filter$PI))
+
+pi_df[13,3] <- mean(as.numeric(pop14_filter$PI))
+pi_df[14,3] <- mean(as.numeric(pop15_filter$PI))
+pi_df[15,3] <- mean(as.numeric(pop17_filter$PI))
+pi_df[16,3] <- mean(as.numeric(pop27_filter$PI))
+pi_df[17,3] <- mean(as.numeric(pop28_filter$PI))
+pi_df[18,3] <- mean(as.numeric(pop29_filter$PI))
+pi_df[19,3] <- mean(as.numeric(pop55_filter$PI))
 
 colnames(pi_df) <- c("Site","pi_snp_set","pi_all_snps")
 
