@@ -14,18 +14,18 @@ library(RColorBrewer)
 
 #Import data
 offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv") %>% select(Site, Paper_ID) #just to get translation of pop names <--> numbers
-demog_decline <- read_csv("data/demography data/siteYear.lambda_responses_2010-2019.csv")
+demog_recovery <- read_csv("data/demography data/siteYear.lambda_responses_2010-2019.csv")
 pi_raw <- read_csv("data/genomic_data/raw_pi.csv")
 
-demog_decline <- left_join(demog_decline,offset_pop,by=c("Site"="Site")) %>% rename(Site_Name=Site)
-pi_pop <- left_join(demog_decline,pi_raw,by=c("Paper_ID"="Site")) 
+demog_recovery <- left_join(demog_recovery,offset_pop,by=c("Site"="Site")) %>% rename(Site_Name=Site)
+pi_pop <- left_join(demog_recovery,pi_raw,by=c("Paper_ID"="Site")) 
 
 
 #stats
-lm1 <- lm(lambda.slope.decline~pi_snp_set,data=pi_pop)
-lm2 <- lm(lambda.slope.decline~pi_all_snps,data=pi_pop)
-lm3 <- lm(lambda.mean.drought~pi_snp_set,data=pi_pop)
-lm4 <- lm(lambda.mean.drought~pi_all_snps,data=pi_pop)
+lm1 <- lm(lambda.slope.recovery~pi_snp_set,data=pi_pop)
+lm2 <- lm(lambda.slope.recovery~pi_all_snps,data=pi_pop)
+lm3 <- lm(lambda.mean.recovery~pi_snp_set,data=pi_pop)
+lm4 <- lm(lambda.mean.recovery~pi_all_snps,data=pi_pop)
 
 
 summary(lm1)
@@ -61,10 +61,10 @@ color.list <- lat_cols(n.sites)
 #Lambda Slope
 
 #pi snp set
-ggplot(pi_pop, aes(x=pi_snp_set, y=lambda.slope.decline)) + 
+ggplot(pi_pop, aes(x=pi_snp_set, y=lambda.slope.recovery)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
-  scale_y_continuous(name="Rate of Decline in Lambda")+
+  scale_y_continuous(name="Rate of Increase in Lambda")+
   scale_x_continuous(name="Pi (Climate SNP)")+
                      #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
@@ -78,14 +78,14 @@ ggplot(pi_pop, aes(x=pi_snp_set, y=lambda.slope.decline)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce height
   )
-ggsave("Graphs/lambda_pi/1_pi_lambda_decline_snpset.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda_pi/1_pi_lambda_recovery_snpset.pdf",width=8, height = 6, units = "in")
 
 
 #global pi
-ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.slope.decline)) + 
+ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.slope.recovery)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
-  scale_y_continuous(name="Rate of Decline in Lambda")+
+  scale_y_continuous(name="Rate of Increase in Lambda")+
   scale_x_continuous(name="Pi (Genome-Wide)")+
                      #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
@@ -99,16 +99,16 @@ ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.slope.decline)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/lambda_pi/2_pi_lambda_decline_global.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda_pi/2_pi_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
 
 
 #Mean Lambda
 
 #pi snp set
-ggplot(pi_pop, aes(x=pi_snp_set, y=lambda.mean.drought)) + 
+ggplot(pi_pop, aes(x=pi_snp_set, y=lambda.mean.recovery)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
-  scale_y_continuous(name="Mean Lambda during Drought")+
+  scale_y_continuous(name="Mean Lambda after Drought")+
   scale_x_continuous(name="Pi (Climate SNP)")+
                     # ,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
@@ -122,14 +122,14 @@ ggplot(pi_pop, aes(x=pi_snp_set, y=lambda.mean.drought)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/lambda_pi/3_pi_mean_lambda_drought_snpset.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda_pi/3_pi_mean_lambda_recovery_snpset.pdf",width=8, height = 6, units = "in")
 
 
 #global pi
-ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.mean.drought)) + 
+ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.mean.recovery)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
-  scale_y_continuous(name="Mean Lambda during Drought")+
+  scale_y_continuous(name="Mean Lambda after Drought")+
   scale_x_continuous(name="Pi (Genome-Wide)")+
                      #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
@@ -143,4 +143,4 @@ ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.mean.drought)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/lambda_pi/4_pi_mean_lambda_drought_global.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda_pi/4_pi_mean_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
