@@ -14,11 +14,13 @@ library(RColorBrewer)
 
 #Import data
 offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv") %>% select(Site, Paper_ID) #just to get translation of pop names <--> numbers
+offset_pop[20,1] <- "Mill Creek"
+offset_pop[20,2] <- 12
 demog_decline <- read_csv("data/demography data/siteYear.lambda_responses_2010-2019.csv")
 pi_raw <- read_csv("data/genomic_data/raw_pi.csv")
 
 demog_decline <- left_join(demog_decline,offset_pop,by=c("Site"="Site")) %>% rename(Site_Name=Site)
-pi_pop <- left_join(demog_decline,pi_raw,by=c("Paper_ID"="Site")) 
+pi_pop <- left_join(demog_decline,pi_raw,by=c("Paper_ID"="Site")) %>% filter(Paper_ID!=12) 
 
 
 #stats
