@@ -26,6 +26,8 @@ lm1 <- lm(lambda.slope.recovery~pi_snp_set,data=pi_pop)
 lm2 <- lm(lambda.slope.recovery~pi_all_snps,data=pi_pop)
 lm3 <- lm(lambda.mean.recovery~pi_snp_set,data=pi_pop)
 lm4 <- lm(lambda.mean.recovery~pi_all_snps,data=pi_pop)
+lm5 <- lm(pi_snp_set~Latitude,data=pi_pop)
+lm6 <- lm(pi_all_snps~Latitude,data=pi_pop)
 
 
 summary(lm1)
@@ -40,7 +42,11 @@ Anova(lm3,type="III")
 summary(lm4)
 Anova(lm4,type="III")
 
+summary(lm5)
+Anova(lm5,type="III")
 
+summary(lm6)
+Anova(lm6,type="III")
 
 
 
@@ -143,4 +149,48 @@ ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.mean.recovery)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
+<<<<<<< HEAD
 ggsave("Graphs/lambda_pi/Recovery/4_pi_mean_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
+=======
+ggsave("Graphs/lambda_pi/4_pi_mean_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
+
+#global pi vs Latitude
+ggplot(pi_pop, aes(x=Latitude, y=pi_all_snps)) + 
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_smooth(method=lm,color="black")+
+  scale_y_continuous(name="Genome-wide Pi")+
+  scale_x_continuous(name="Latitude")+
+  #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
+  scale_fill_manual(values=color.list) +
+  theme_classic() + theme(
+    axis.text.x = element_text(size=14, face="bold"),
+    axis.text.y = element_text(size=14,face="bold"),
+    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
+    legend.key.height = unit(1.6, "lines") #Reduce hight
+  )
+ggsave("Graphs/lambda_pi/5_pi_global_latitude.pdf",width=8, height = 6, units = "in")
+
+#climate pi vs Latitude
+ggplot(pi_pop, aes(x=Latitude, y=pi_snp_set)) + 
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_smooth(method=lm,color="black")+
+  scale_y_continuous(name="Climate-associated Pi")+
+  scale_x_continuous(name="Latitude")+
+  #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
+  scale_fill_manual(values=color.list) +
+  theme_classic() + theme(
+    axis.text.x = element_text(size=14, face="bold"),
+    axis.text.y = element_text(size=14,face="bold"),
+    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
+    legend.key.height = unit(1.6, "lines") #Reduce hight
+  )
+ggsave("Graphs/lambda_pi/6_pi_climate_latitude.pdf",width=8, height = 6, units = "in")
+>>>>>>> 3b850e943e751c053651c1a30d7be7ccfa559ddd
