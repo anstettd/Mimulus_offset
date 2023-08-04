@@ -72,6 +72,6 @@ offset_pop_meta <- cbind(offset_pop,demo_pop)
 
 
 
-write_csv(offset_pop_meta,"data/genomic_data/offset_pop_beagle.csv")
+#write_csv(offset_pop_meta,"data/genomic_data/offset_pop_beagle.csv")
 
 

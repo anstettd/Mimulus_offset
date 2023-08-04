@@ -12,26 +12,32 @@ library(car)
 library(ggrepel)
 library(RColorBrewer)
 
+
 #Import data
-offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv")
-#offset_pop <- offset_pop %>% filter(Demo_ID!=24)
+offset <- read_csv("data/genomic_data/offset_pop_beagle.csv") %>% select(Site,offset_1215,offset_climate,offset_SSP245,offset_SSP585)
+demog_recovery <- read_csv("data/demography data/siteYear.lambda_responses_2010-2019.csv")
+
+offset_pop <- left_join(offset,demog_recovery,by="Site")
+
 
 #stats
-lm.1215 <- lm(lambda.mean~offset_1215,data=offset_pop)
-lm.SSP245 <- lm(lambda.mean~offset_SSP245,data=offset_pop)
-lm.SSP585 <- lm(lambda.mean~offset_SSP585,data=offset_pop)
-lm.dist <- lm(lambda.mean~offset_climate,data=offset_pop)
-
+lm.1215 <- lm(lambda.mean.drought~offset_1215,data=offset_pop)
+lm.SSP245 <- lm(lambda.mean.drought~offset_SSP245,data=offset_pop)
+lm.SSP585 <- lm(lambda.mean.drought~offset_SSP585,data=offset_pop)
+lm.dist <- lm(lambda.mean.drought~offset_climate,data=offset_pop)
 
 summary(lm.1215)
-summary(lm.SSP245)
-summary(lm.SSP585)
-
-
 Anova(lm.1215,type="III")
+
+summary(lm.SSP245)
 Anova(lm.SSP245,type="III")
+
+summary(lm.SSP585)
 Anova(lm.SSP585,type="III")
+
+summary(lm.dist)
 Anova(lm.dist,type="III")
+
 
 
 ###########################################################################################################
@@ -44,7 +50,7 @@ color.list <- lat_cols(n.sites)
 
 
 #2012-2015 offset plotted against lambda
-ggplot(offset_pop, aes(x=offset_1215, y=lambda.mean)) + 
+ggplot(offset_pop, aes(x=offset_1215, y=lambda.mean.drought)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Mean Lambda")+
@@ -63,7 +69,7 @@ ggsave("Graphs/lambda_gradient/5_offset_mean_1215.pdf",width=8, height = 6, unit
 
 
 #SSP 245 offset plotted against lambda
-ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.mean)) + 
+ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.mean.drought)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Mean Lambda")+
@@ -81,7 +87,7 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.mean)) +
 ggsave("Graphs/lambda_gradient/6_offset_mean_ssp245.pdf",width=8, height = 6, units = "in")
 
 #SSP 585 offset plotted against lambda
-ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.mean)) + 
+ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.mean.drought)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Mean Lambda")+
@@ -104,7 +110,7 @@ ggsave("Graphs/lambda_gradient/7_offset_mean_ssp585.pdf",width=8, height = 6, un
 ###########################
 
 #climate distance plotted against lambda
-ggplot(offset_pop, aes(x=offset_climate, y=lambda.mean)) + 
+ggplot(offset_pop, aes(x=offset_climate, y=lambda.mean.drought)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Mean Lambda")+
