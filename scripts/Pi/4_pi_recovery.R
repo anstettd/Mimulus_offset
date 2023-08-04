@@ -26,6 +26,8 @@ lm1 <- lm(lambda.slope.recovery~pi_snp_set,data=pi_pop)
 lm2 <- lm(lambda.slope.recovery~pi_all_snps,data=pi_pop)
 lm3 <- lm(lambda.mean.recovery~pi_snp_set,data=pi_pop)
 lm4 <- lm(lambda.mean.recovery~pi_all_snps,data=pi_pop)
+lm5 <- lm(pi_snp_set~Latitude,data=pi_pop)
+lm6 <- lm(pi_all_snps~Latitude,data=pi_pop)
 
 
 summary(lm1)
@@ -40,7 +42,11 @@ Anova(lm3,type="III")
 summary(lm4)
 Anova(lm4,type="III")
 
+summary(lm5)
+Anova(lm5,type="III")
 
+summary(lm6)
+Anova(lm6,type="III")
 
 
 
