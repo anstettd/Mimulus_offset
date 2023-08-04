@@ -78,7 +78,7 @@ ggplot(pi_pop, aes(x=pi_snp_set, y=lambda.slope.decline)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce height
   )
-ggsave("Graphs/lambda_pi/1_pi_lambda_decline_snpset.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda_pi/Decline/1_pi_lambda_decline_snpset.pdf",width=8, height = 6, units = "in")
 
 
 #global pi
@@ -99,7 +99,7 @@ ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.slope.decline)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/lambda_pi/2_pi_lambda_decline_global.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda_pi/Decline/2_pi_lambda_decline_global.pdf",width=8, height = 6, units = "in")
 
 
 #Mean Lambda
@@ -122,7 +122,7 @@ ggplot(pi_pop, aes(x=pi_snp_set, y=lambda.mean.drought)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/lambda_pi/3_pi_mean_lambda_drought_snpset.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda_pi/Decline/3_pi_mean_lambda_drought_snpset.pdf",width=8, height = 6, units = "in")
 
 
 #global pi
@@ -143,4 +143,4 @@ ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.mean.drought)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/lambda_pi/4_pi_mean_lambda_drought_global.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda_pi/Decline/4_pi_mean_lambda_drought_global.pdf",width=8, height = 6, units = "in")
