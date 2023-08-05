@@ -110,7 +110,7 @@ admix_map <- ggplot(west_coast, aes(x=long, y=lat, group=group)) +
   ylab("Latitude") +
   geom_polygon(fill = "white", colour = "grey50") + 
   geom_scatterpie(aes(x = Longitude, y = Latitude, group=Site), data = admix, cols=colnames(admix[,c(3:6)]), size = 0.1)+
-  scale_fill_manual(values=c("red2","green","yellow","deepskyblue")) +
+  scale_fill_manual(values=c("red2","yellow","green","deepskyblue")) +
   theme_classic()
 
 ggsave(admix_map, filename = "Graphs/Maps/admixture.png",width=6, height=7)
