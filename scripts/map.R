@@ -36,6 +36,11 @@ baseline_pop_sf <- st_as_sf(baseline_pop,coords=c("Long","Lat"), crs=EPSG4326)
 demo_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv")
 demo_pop_sf <- st_as_sf(demo_pop ,coords=c("Longitude","Latitude"), crs=EPSG4326)
 
+#Admixture
+admix <- read_csv("data/genomic_data/Pop_admixture.csv") %>% 
+  filter(!is.na(Latitude),
+         !is.na(Longitude))
+admix_sf <- st_as_sf(admix ,coords=c("Longitude","Latitude"), crs=EPSG4326)
 
 # California & Oregon Map Setup
 states<-ne_states(country=c("canada","united states of america"),returnclass= "sf")
@@ -95,3 +100,17 @@ mim_time <-
   tm_layout(legend.position = c(1.03, 0.73),legend.title.size = 0.001,frame.lwd = NA)
 mim_time
 tmap_save(mim_time, filename = "Graphs/Maps/demography.png",width=4, height=7)
+
+
+#Plot Admixture
+west_coast <- map_data("state", c("oregon", "california","nevada")) 
+
+admix_map <- ggplot(west_coast, aes(x=long, y=lat, group=group)) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  geom_polygon(fill = "white", colour = "grey50") + 
+  geom_scatterpie(aes(x = Longitude, y = Latitude, group=Site), data = admix, cols=colnames(admix[,c(3:6)]), size = 0.2)+
+  theme_classic()
+
+ggsave(admix_map, filename = "Graphs/Maps/admixture.png",width=6, height=7)
+
