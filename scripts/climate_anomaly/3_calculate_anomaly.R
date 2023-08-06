@@ -32,7 +32,7 @@ wna2$Site <- as.factor(wna2$Site) ; wna2$Year <- as.numeric(wna2$Year) #define v
 wna_all <- left_join(wna2, wna, by=c("Site","Paper_ID")) %>% 
   mutate(CMD.anom = CMD.weath - CMD.clim, 
          MAT.anom = MAT.weath - MAT.clim,
-         MAP.anom =  log.MAP.clim - log.MAP.weath) #reverted to log scale
+         MAP.anom =  log.MAP.weath - log.MAP.clim)  #reverted to log scale
 wna_final <- wna_all %>% select(Site,Paper_ID,Latitude,Longitude,Year,CMD.anom,MAT.anom,MAP.anom)
 
 ###################################################################################
