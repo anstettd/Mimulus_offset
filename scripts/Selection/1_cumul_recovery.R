@@ -269,7 +269,7 @@ c <- ggplot(demo_pop, aes(x=MAP_1619, y=lambda.mean.recovery)) +
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm, color="black", lty="dashed", se=FALSE)+
   #scale_y_continuous(name="Mean Lambda after Drought")+
-  scale_x_continuous(name="Annual precipitation anomaly")+
+  scale_x_continuous(name="Average precipitation anomaly")+
   #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
@@ -323,7 +323,7 @@ f <- ggplot(demo_pop, aes(x=MAT_1619, y=lambda.mean.recovery)) +
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
   geom_smooth(method=lm, color="black", lty="dashed", se=FALSE)+
   #scale_y_continuous(name="Mean Lambda after Drought")+
-  scale_x_continuous(name="Annual temperature anomaly")+
+  scale_x_continuous(name="Average temperature anomaly")+
   #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
