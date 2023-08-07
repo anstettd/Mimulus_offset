@@ -43,7 +43,7 @@ recovery.period <- demo_pop %>%
   dplyr::select(cumul_pos, cumul_all, lambda.slope.recovery, lambda.mean.recovery, MAT_1619, MAP_1619, PAS_1619, CMD_1619, Tave_wt_1619, Tave_sm_1619, PPT_wt_1619, PPT_sm_1619)
 
 ggpairs(recovery.period)
-# cumulative positive selection positively associated with MAP anomaly: wetter sites associated with greater response to selection?
+# cumulative positive selection positively associated with MAP anomaly: drier sites associated with greater response to selection
 # lambda mean during recovery period not associated with any climate variables or cumulative selection
 
 #stats
@@ -356,3 +356,5 @@ g <- ggplot(demo_pop, aes(x=CMD_1619, y=lambda.mean.recovery)) +
   )
 library(patchwork)
 (a+b+c)/(d+e+f) + plot_layout(guides='collect')
+
+c + f + plot_layout(guides="collect")
