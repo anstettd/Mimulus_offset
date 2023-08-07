@@ -97,8 +97,8 @@ seasonal <- rbind(seasonal_2010,
 seasonal_final <- left_join(seasonal,seasonal_8110,by="Site") %>% 
   mutate(Tave_wt.anom = Tave_wt - Tave_wt.clim,
          Tave_sm.anom = Tave_sm - Tave_sm.clim,
-         PPT_wt.anom = PPT_wt - PPT_wt.clim,
-         PPT_sm.anom = PPT_sm - PPT_sm.clim,
+         PPT_wt.anom = log10(PPT_wt) - log10(PPT_wt.clim),
+         PPT_sm.anom = log10(PPT_sm) - log10(PPT_sm.clim),
          ) %>%
   select(-Elevation,-Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm, -Tave_wt.clim, -Tave_sm.clim, -PPT_wt.clim, -PPT_sm.clim)
 
