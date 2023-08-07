@@ -13,7 +13,7 @@ library(ggrepel)
 library(RColorBrewer)
 
 #Import data
-offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv") %>% select(Site, Paper_ID) #just to get translation of pop names <--> numbers
+offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv") %>% dplyr::select(Site, Paper_ID) #just to get translation of pop names <--> numbers
 offset_pop[20,1] <- "Mill Creek"
 offset_pop[20,2] <- 12
 demog_recovery <- read_csv("data/demography data/siteYear.lambda_responses_2010-2019.csv")
@@ -62,7 +62,7 @@ Anova(lm6,type="III")
 
 # N-S color gradient
 lat_cols=colorRampPalette(brewer.pal(11,"Spectral"))
-n.sites <- length(unique(pi_pop$Site_Name))
+n.sites <- length(unique(pi_pop$Site_Name)) -2
 color.list <- lat_cols(n.sites)
 
 
@@ -136,7 +136,7 @@ ggsave("Graphs/lambda_pi/Recovery/3_pi_mean_lambda_recovery_snpset.pdf",width=8,
 #global pi
 ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.mean.recovery)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
-  geom_smooth(method=lm,color="black")+
+  geom_smooth(method=lm,color="black", lty="dashed", se=FALSE)+
   scale_y_continuous(name="Mean Lambda after Drought")+
   scale_x_continuous(name="Pi (Genome-Wide)")+
                      #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
@@ -151,7 +151,7 @@ ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.mean.recovery)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-<<<<<<< HEAD
+
 ggsave("Graphs/lambda_pi/Recovery/4_pi_mean_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
 =======
 ggsave("Graphs/lambda_pi/4_pi_mean_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
