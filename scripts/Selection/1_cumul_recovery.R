@@ -138,7 +138,7 @@ ggplot(demo_pop, aes(x=cumul_pos, y=lambda.slope.recovery)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce height
   )
-ggsave("Graphs/Selection_demo/1_cumul_pos_recovery_lambda.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/Selection_demo/Cumul/1_cumul_pos_recovery_lambda.pdf",width=8, height = 6, units = "in")
 
 
 #Total Selection
@@ -159,7 +159,7 @@ ggplot(demo_pop, aes(x=cumul_all, y=lambda.slope.recovery)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/Selection_demo/2_cumul_all_recovery_lambda.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/Selection_demo/Cumul/2_cumul_all_recovery_lambda.pdf",width=8, height = 6, units = "in")
 
 
 ###########################################################################################################
@@ -183,7 +183,7 @@ ggplot(demo_pop, aes(x=cumul_pos, y=lambda.mean.recovery)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/Selection_demo/3_cumul_pos_recovery_mean.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/Selection_demo/Cumul/3_cumul_pos_recovery_mean.pdf",width=8, height = 6, units = "in")
 
 
 #Total Selection
@@ -204,7 +204,7 @@ ggplot(demo_pop, aes(x=cumul_all, y=lambda.mean.recovery)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/Selection_demo/4_cumul_all_recovery_mean.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/Selection_demo/Cumul/4_cumul_all_recovery_mean.pdf",width=8, height = 6, units = "in")
 
 
 #Population decline and drought anomaly
