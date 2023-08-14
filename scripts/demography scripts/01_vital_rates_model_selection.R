@@ -38,9 +38,6 @@ data <- read.csv("data/demography data/Mcard_demog_data_2010-2019_cleanindivs.cs
 data$Site = factor(data$Site)
 data$Year = factor(data$Year)
 
-data.drought <- data %>% filter(Period=="drought")
-data.recovery <- data %>% filter(Period=="recovery")
-
 #*******************************************************************************
 #### 2. Survival models ###
 #*******************************************************************************
@@ -57,71 +54,37 @@ ggplot(data=data, aes(x=logSize, y=Surv, color=Period)) +
   geom_point(position="jitter") +
   stat_smooth(method="glm", method.args = list(family=binomial))
 
-## Drought period
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (nested within Year)
-s3.d <- glmer(Surv  ~logSize + (logSize|Year/Site), data=data.drought, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+s3 <- glmer(Surv  ~logSize*Period + (logSize|Year/Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
 # NOTE: this model has a singularity warning
 
 # Random intercepts & constant slopes for Year
 # Random intercepts & constant slopes for Site (nested within Year)
-s4.d <- glmer(Surv ~ logSize  +(1|Year/Site), data=data.drought, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-# NOTE: this model has a singularity warning
+s4 <- glmer(Surv ~ logSize*Period  +(1|Year/Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
 
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
-s5.d <- glmer(Surv ~ logSize + (logSize|Year) + (logSize|Site), data=data.drought, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+s5 <- glmer(Surv ~ logSize*Period + (logSize|Year) + (logSize|Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
 
 # Random intercepts & random slopes for Year
 # Random intercepts & constant slopes for Site (not nested within Year)
-s6.d <- glmer(Surv ~ logSize + (logSize|Year) + (1|Site), data=data.drought, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+s6 <- glmer(Surv ~ logSize*Period + (logSize|Year) + (1|Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+# NOTE: this model has a singularity warning when interaction with Period is included
 
 # Random intercepts & constant slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
-s7.d <- glmer(Surv ~ logSize + (1|Year) + (logSize|Site), data=data.drought, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+s7 <- glmer(Surv ~ logSize*Period + (1|Year) + (logSize|Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
 
 # Compare models
-anova(s3.d, s4.d, s5.d, s6.d, s7.d)
-model.sel(s3.d, s4.d, s5.d, s6.d, s7.d) 
+anova(s3, s4, s5, s6, s7)
+model.sel(s1, s2, s3, s4, s5, s6, s7) 
 
-# PREFERRED MODEL IS s3.d, then s4.d, but due to singularity issues, we are going with the next best model that doesn't have singularity issues, s7.d
-r.squaredGLMM(s7.d) 
-
-# Save top survival model to .rda file
-save(s7.d, file='data/demography data/surv.drought.reg.rda')   
-
-## Recovery period
-# Random intercepts & random slopes for Year
-# Random intercepts & random slopes for Site (nested within Year)
-s3.r <- glmer(Surv  ~logSize + (logSize|Year/Site), data=data.recovery, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-# NOTE: this model has a singularity warning
-
-# Random intercepts & constant slopes for Year
-# Random intercepts & constant slopes for Site (nested within Year)
-s4.r <- glmer(Surv ~ logSize  +(1|Year/Site), data=data.recovery, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-
-# Random intercepts & random slopes for Year
-# Random intercepts & random slopes for Site (not nested within Year)
-s5.r <- glmer(Surv ~ logSize + (logSize|Year) + (logSize|Site), data=data.recovery, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-
-# Random intercepts & random slopes for Year
-# Random intercepts & constant slopes for Site (not nested within Year)
-s6.r <- glmer(Surv ~ logSize + (logSize|Year) + (1|Site), data=data.recovery, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-#NOTE: this model has a singularity warning
-
-# Random intercepts & constant slopes for Year
-# Random intercepts & random slopes for Site (not nested within Year)
-s7.r <- glmer(Surv ~ logSize + (1|Year) + (logSize|Site), data=data.recovery, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-
-# Compare models
-anova(s3.r, s4.r, s5.r, s6.r, s7.r)
-model.sel(s3.r, s4.r, s5.r, s6.r, s7.r) 
-
-# PREFERRED MODEL IS s3.r, but due to singularity issues, we are going with the next best model that doesn't have singularity issues, s4.r
-r.squaredGLMM(s4.r) 
+# PREFERRED MODEL IS s3, but due to singularity issues, we are going with the next best model that doesn't have singularity issues, s4
+r.squaredGLMM(s4) 
 
 # Save top survival model to .rda file
-save(s4.r, file='data/demography data/surv.recovery.reg.rda')   
+save(s4, file='data/demography data/surv.reg.rda')   
 
 #*******************************************************************************
 #### 4. Growth ###
@@ -139,71 +102,35 @@ ggplot(data=data, aes(x=logSize, y=logSizeNext, color=Period)) +
   geom_point(position="jitter") +
   stat_smooth(method="lm")
 
-## Drought period
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (nested within Year)
-g3.d <- lmer(logSizeNext ~ logSize + (logSize|Year/Site), data=data.drought, control=lmerControl(optimizer = "bobyqa")) 
-#NOTE: singularity warning
+g3 <- lmer(logSizeNext ~ logSize*Period + (logSize|Year/Site), data=data, control=lmerControl(optimizer = "bobyqa")) 
 
 # Random intercepts & constant slopes for Year
 # Random intercepts & constant slopes for Site (nested within Year)
-g4.d <- lmer(logSizeNext ~ logSize + (1|Year/Site), data=data.drought, control=lmerControl(optimizer = "bobyqa")) 
-#NOTE: singularity warning
+g4 <- lmer(logSizeNext ~ logSize*Period + (1|Year/Site), data=data, control=lmerControl(optimizer = "bobyqa")) 
 
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
-g5.d <- lmer(logSizeNext ~ logSize + (logSize|Year) + (logSize|Site), data=data.drought, control=lmerControl(optimizer = "bobyqa")) 
+g5 <- lmer(logSizeNext ~ logSize*Period + (logSize|Year) + (logSize|Site), data=data, control=lmerControl(optimizer = "bobyqa")) 
 
 # Random intercepts & random slopes for Year
 # Random intercepts & constant slopes for Site (not nested within Year)
-g6.d <- lmer(logSizeNext ~ logSize + (logSize|Year) + (1|Site), data=data.drought, control=lmerControl(optimizer = "bobyqa")) 
+g6 <- lmer(logSizeNext ~ logSize*Period + (logSize|Year) + (1|Site), data=data, control=lmerControl(optimizer = "bobyqa")) 
 
 # Random intercepts & constant slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
-g7.d <- lmer(logSizeNext ~ logSize + (1|Year) + (logSize|Site), data=data.drought, control=lmerControl(optimizer = "bobyqa")) 
+g7 <- lmer(logSizeNext ~ logSize*Period + (1|Year) + (logSize|Site), data=data, control=lmerControl(optimizer = "bobyqa")) 
 
 # Compare models
-anova(g3.d, g4.d, g5.d, g6.d, g7.d)
-model.sel(g3.d, g4.d, g5.d, g6.d, g7.d)
+anova(g3, g4, g5, g6, g7)
+model.sel(g3, g4, g5, g6, g7)
 
-# # PREFERRED MODEL IS g3.d, then g4.d,  but these have  singularity issues so the next best model is g5.d
-r.squaredGLMM(g5.d) 
-
-# Save top growth model to .rda file
-save(g5.d, file='data/demography data/growth.drought.reg.rda')   
-
-## Recovery period
-# Random intercepts & random slopes for Year
-# Random intercepts & random slopes for Site (nested within Year)
-g3.r <- lmer(logSizeNext ~ logSize + (logSize|Year/Site), data=data.recovery, control=lmerControl(optimizer = "bobyqa")) 
-#NOTE: singularity warning
-
-# Random intercepts & constant slopes for Year
-# Random intercepts & constant slopes for Site (nested within Year)
-g4.r <- lmer(logSizeNext ~ logSize + (1|Year/Site), data=data.recovery, control=lmerControl(optimizer = "bobyqa")) 
-
-# Random intercepts & random slopes for Year
-# Random intercepts & random slopes for Site (not nested within Year)
-g5.r <- lmer(logSizeNext ~ logSize + (logSize|Year) + (logSize|Site), data=data.recovery, control=lmerControl(optimizer = "bobyqa")) 
-#NOTE: singularity warning
-
-# Random intercepts & random slopes for Year
-# Random intercepts & constant slopes for Site (not nested within Year)
-g6.r <- lmer(logSizeNext ~ logSize + (logSize|Year) + (1|Site), data=data.recovery, control=lmerControl(optimizer = "bobyqa")) 
-
-# Random intercepts & constant slopes for Year
-# Random intercepts & random slopes for Site (not nested within Year)
-g7.r <- lmer(logSizeNext ~ logSize + (1|Year) + (logSize|Site), data=data.recovery, control=lmerControl(optimizer = "bobyqa")) 
-
-# Compare models
-anova(g3.r, g4.r, g5.r, g6.r, g7.r)
-model.sel(g3.r, g4.r, g5.r, g6.r, g7.r)
-
-# # PREFERRED MODEL IS g3.r, but this has a singularity issue so the next best model is g4.r
-r.squaredGLMM(g4.r) 
+# # PREFERRED MODEL IS g3 and this has no singularity issues after addition of 2017-19 data
+r.squaredGLMM(g3) 
 
 # Save top growth model to .rda file
-save(g4.r, file='data/demography data/growth.recovery.reg.rda')   
+save(g3, file='data/demography data/growth.reg.rda')   
 
 #*******************************************************************************
 #### 5. Flowering ###
@@ -221,73 +148,37 @@ ggplot(data=data, aes(x=logSize, y=Fec0, color=Period)) +
   geom_point(position="jitter") +
   stat_smooth(method="glm", method.args =list(family=binomial))
 
-## Drought period
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (nested within Year)
-fl3.d <- glmer(Fec0 ~ logSize + (logSize|Year/Site), data=data.drought, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+fl3 <- glmer(Fec0 ~ logSize*Period + (logSize|Year/Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
 # NOTE: singularity warning
 
 # Random intercepts & constant slopes for Year
 # Random intercepts & constant slopes for Site (nested within Year)
-fl4.d <- glmer(Fec0 ~ logSize + (1|Year/Site), data=data.drought, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-# NOTE: this model has a singularity warning 
+fl4 <- glmer(Fec0 ~ logSize*Period + (1|Year/Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+# NOTE: this model has a singularity warning when interaction with Period is included
 
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
-fl5.d <- glmer(Fec0 ~ logSize + (logSize|Year) + (logSize|Site), data=data.drought, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-# NOTE: this model has a singularity warning 
+fl5 <- glmer(Fec0 ~ logSize*Period + (logSize|Year) + (logSize|Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
 
 # Random intercepts & random slopes for Year
 # Random intercepts & constant slopes for Site (not nested within Year)
-fl6.d <- glmer(Fec0 ~ logSize + (logSize|Year) + (1|Site), data=data.drought, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-# NOTE: this model has a singularity warning 
+fl6 <- glmer(Fec0 ~ logSize*Period + (logSize|Year) + (1|Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
 
 # Random intercepts & constant slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
-fl7.d <- glmer(Fec0 ~ logSize + (1|Year) + (logSize|Site), data=data.drought, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
+fl7 <- glmer(Fec0 ~ logSize*Period + (1|Year) + (logSize|Site), data=data, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
 
 # Compare models
-anova(fl3.d, fl4.d, fl5.d, fl6.d, fl7.d)
-model.sel(fl3.d, fl4.d, fl5.d, fl6.d, fl7.d) 
+anova(fl3, fl4, fl5, fl6, fl7)
+model.sel(fl3, fl4, fl5, fl6, fl7) 
 
-# # PREFERRED MODEL IS fl7.d
-r.squaredGLMM(fl7.d) 
-
-# Save top flowering model to .rda file
-save(fl7.d, file='data/demography data/flowering.drought.reg.rda')   
-## Recovery period
-# Random intercepts & random slopes for Year
-# Random intercepts & random slopes for Site (nested within Year)
-fl3.r <- glmer(Fec0 ~ logSize + (logSize|Year/Site), data=data.recovery, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-# NOTE: singularity warning
-
-# Random intercepts & constant slopes for Year
-# Random intercepts & constant slopes for Site (nested within Year)
-fl4.r <- glmer(Fec0 ~ logSize + (1|Year/Site), data=data.recovery, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-# NOTE: this model has a singularity warning 
-
-# Random intercepts & random slopes for Year
-# Random intercepts & random slopes for Site (not nested within Year)
-fl5.r <- glmer(Fec0 ~ logSize + (logSize|Year) + (logSize|Site), data=data.recovery, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-
-# Random intercepts & random slopes for Year
-# Random intercepts & constant slopes for Site (not nested within Year)
-fl6.r <- glmer(Fec0 ~ logSize + (logSize|Year) + (1|Site), data=data.recovery, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-# NOTE: this model has a singularity warning 
-
-# Random intercepts & constant slopes for Year
-# Random intercepts & random slopes for Site (not nested within Year)
-fl7.r <- glmer(Fec0 ~ logSize + (1|Year) + (logSize|Site), data=data.recovery, family=binomial, control=glmerControl(optimizer = "bobyqa")) 
-
-# Compare models
-anova(fl3.r, fl4.r, fl5.r, fl6.r, fl7.r)
-model.sel(fl3.r, fl4.r, fl5.r, fl6.r, fl7.r) 
-
-# # PREFERRED MODEL IS fl3.r or fl4.r, but due to singularity we go with fl5.r
-r.squaredGLMM(fl5.r) 
+# # PREFERRED MODEL IS fl3, then fl4, but due to singularity issues, we are going with the next best model, fl5
+r.squaredGLMM(fl5) 
 
 # Save top flowering model to .rda file
-save(fl5.r, file='data/demography data/flowering.recovery.reg.rda')  
+save(fl5, file='data/demography data/flowering.reg.rda')   
 
 #*******************************************************************************
 #### 6. Fruit number ###
@@ -316,78 +207,39 @@ ggplot(data=data, aes(x=logSize, y=Fec1, color=Period)) +
 
 ##6B. Model selection of random effects structure
 
-## Drought period
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (nested within Year)
-fr3.d <- glmmTMB(Fec1 ~ logSize + (logSize|Year/Site), data=data.drought[!is.na(data.drought$Fec1),], family=nbinom1()) 
+fr3 <- glmmTMB(Fec1 ~ logSize*Period + (logSize|Year/Site), data=data[!is.na(data$Fec1),], family=nbinom1()) 
+# NOTE: singularity warning for logSize model; runs without errors when interaction with Period is included
 
 # Random intercepts & constant slopes for Year
 # Random intercepts & constant slopes for Site (nested within Year)
-fr4.d <- glmmTMB(Fec1 ~ logSize + (1|Year/Site), data=data.drought[!is.na(data.drought$Fec1),], family=nbinom1()) 
+fr4 <- glmmTMB(Fec1 ~ logSize*Period + (1|Year/Site), data=data[!is.na(data$Fec1),], family=nbinom1()) 
       
 # Random intercepts & random slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
-fr5.d <- glmmTMB(Fec1 ~ logSize + (logSize|Year) + (logSize|Site), data=data.drought[!is.na(data.drought$Fec1),], family=nbinom1) 
+fr5 <- glmmTMB(Fec1 ~ logSize*Period + (logSize|Year) + (logSize|Site), data=data[!is.na(data$Fec1),], family=nbinom1) 
 
 # Random intercepts & random slopes for Year
 # Random intercepts & constant slopes for Site (not nested within Year)
-fr6.d <- glmmTMB(Fec1 ~ logSize + (logSize|Year) + (1|Site), data=data.drought[!is.na(data.drought$Fec1),], family=nbinom1()) 
+fr6 <- glmmTMB(Fec1 ~ logSize*Period + (logSize|Year) + (1|Site), data=data[!is.na(data$Fec1),], family=nbinom1()) 
 
 # Random intercepts & constant slopes for Year
 # Random intercepts & random slopes for Site (not nested within Year)
-fr7.d <- glmmTMB(Fec1 ~ logSize + (1|Year) + (logSize|Site), data=data.drought[!is.na(data.drought$Fec1),], family=nbinom1) 
+fr7 <- glmmTMB(Fec1 ~ logSize*Period + (1|Year) + (logSize|Site), data=data[!is.na(data$Fec1),], family=nbinom1) 
 
 # No random effects
-fr8.d <- glmmTMB(Fec1 ~ logSize, data=data.drought[!is.na(data.drought$Fec1),], family=nbinom1) 
+fr8 <- glmmTMB(Fec1 ~ logSize*Period, data=data[!is.na(data$Fec1),], family=nbinom1) 
 
 # Intercept only
-fr9.d <- glmmTMB(Fec1 ~ 1, data=data.drought[!is.na(data.drought$Fec1),], family=nbinom1) 
+fr9 <- glmmTMB(Fec1 ~ 1, data=data[!is.na(data$Fec1),], family=nbinom1) 
 
 # Compare models
-anova(fr3.d, fr4.d, fr5.d, fr6.d, fr7.d)
-model.sel(fr3.d, fr4.d, fr5.d, fr6.d, fr7.d, fr8.d, fr9.d) 
+anova(fr3, fr4, fr5, fr6, fr7)
+model.sel(fr3, fr4, fr5, fr6, fr7, fr8, fr9) 
 
-# PREFERRED MODEL IS fr3.d (no singularity issues)
-r.squaredGLMM(fr3.d)
-
-# Save top fruit # model to .rda file 
-save(fr3.d, file='data/demography data/fruit.drought.reg.rda')   
-
-## Recovery period
-# Random intercepts & random slopes for Year
-# Random intercepts & random slopes for Site (nested within Year)
-fr3.r <- glmmTMB(Fec1 ~ logSize + (logSize|Year/Site), data=data.recovery[!is.na(data.recovery$Fec1),], family=nbinom1()) 
-# NOTE: singularity warning
-
-# Random intercepts & constant slopes for Year
-# Random intercepts & constant slopes for Site (nested within Year)
-fr4.r <- glmmTMB(Fec1 ~ logSize + (1|Year/Site), data=data.recovery[!is.na(data.recovery$Fec1),], family=nbinom1()) 
-
-# Random intercepts & random slopes for Year
-# Random intercepts & random slopes for Site (not nested within Year)
-fr5.r <- glmmTMB(Fec1 ~ logSize + (logSize|Year) + (logSize|Site), data=data.recovery[!is.na(data.recovery$Fec1),], family=nbinom1) 
-# NOTE: singularity warning
-
-# Random intercepts & random slopes for Year
-# Random intercepts & constant slopes for Site (not nested within Year)
-fr6.r <- glmmTMB(Fec1 ~ logSize + (logSize|Year) + (1|Site), data=data.recovery[!is.na(data.recovery$Fec1),], family=nbinom1()) 
-
-# Random intercepts & constant slopes for Year
-# Random intercepts & random slopes for Site (not nested within Year)
-fr7.r <- glmmTMB(Fec1 ~ logSize + (1|Year) + (logSize|Site), data=data.recovery[!is.na(data.recovery$Fec1),], family=nbinom1) 
-
-# No random effects
-fr8.r <- glmmTMB(Fec1 ~ logSize, data=data.recovery[!is.na(data.recovery$Fec1),], family=nbinom1) 
-
-# Intercept only
-fr9.r <- glmmTMB(Fec1 ~ 1, data=data.recovery[!is.na(data.recovery$Fec1),], family=nbinom1) 
-
-# Compare models
-anova(fr3.r, fr4.r, fr5.r, fr6.r, fr7.r)
-model.sel(fr3.r, fr4.r, fr5.r, fr6.r, fr7.r, fr8.r, fr9.r) 
-
-# PREFERRED MODEL IS fr3.r then fr5.r, but due to singularity issues, going with fr7.r
-r.squaredGLMM(fr7.r)
+# PREFERRED MODEL IS fr3 (no singularity issues when Period is included)
+r.squaredGLMM(fr3)
 
 # Save top fruit # model to .rda file 
-save(fr7.r, file='data/demography data/fruit.recovery.reg.rda')   
+save(fr3, file='data/demography data/fruit.reg.rda')   
