@@ -157,8 +157,8 @@ ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.mean.recovery)) +
   )
 
 ggsave("Graphs/lambda_pi/Recovery/4_pi_mean_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
-=======
-ggsave("Graphs/lambda_pi/4_pi_mean_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
+#=======
+#ggsave("Graphs/lambda_pi/4_pi_mean_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
 
 #global pi vs Latitude
 ggplot(pi_pop, aes(x=Latitude, y=pi_all_snps)) + 
@@ -178,7 +178,7 @@ ggplot(pi_pop, aes(x=Latitude, y=pi_all_snps)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/lambda_pi/5_pi_global_latitude.pdf",width=8, height = 6, units = "in")
+ggsave("Graphs/lambda_pi/Recovery/5_pi_global_latitude.pdf",width=8, height = 6, units = "in")
 
 #climate pi vs Latitude
 ggplot(pi_pop, aes(x=Latitude, y=pi_snp_set)) + 
@@ -198,5 +198,11 @@ ggplot(pi_pop, aes(x=Latitude, y=pi_snp_set)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce hight
   )
-ggsave("Graphs/lambda_pi/6_pi_climate_latitude.pdf",width=8, height = 6, units = "in")
->>>>>>> 3b850e943e751c053651c1a30d7be7ccfa559ddd
+ggsave("Graphs/lambda_pi/Recovery/6_pi_climate_latitude.pdf",width=8, height = 6, units = "in")
+
+
+
+
+
+
+
