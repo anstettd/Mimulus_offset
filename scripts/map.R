@@ -42,6 +42,9 @@ admix <- read_csv("data/genomic_data/Pop_admixture.csv") %>%
          !is.na(Longitude))
 admix_sf <- st_as_sf(admix ,coords=c("Longitude","Latitude"), crs=EPSG4326)
 
+#Pi
+pi_df <- read_csv("data/genomic_data/baseline_pi.csv")
+
 # California & Oregon Map Setup
 states<-ne_states(country=c("canada","united states of america"),returnclass= "sf")
 calo <- states %>%

@@ -20,7 +20,8 @@ offset_pop[20,2] <- 12
 
 demog_recovery <- read_csv("data/demography data/siteYear.lambda_responses_2010-2019.csv")
 
-cumul <- read_csv("~/Documents/Git repos/snp_change/data/binomial_data_half/time_cumul_beagle.csv")
+#cumul <- read_csv("~/Documents/Git repos/snp_change/data/binomial_data_half/time_cumul_beagle.csv")
+cumul <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/time_cumul_beagle.csv")
 
 demog_recovery <- left_join(demog_recovery,offset_pop,by=c("Site"="Site")) %>% rename(Site_Name=Site)
 
@@ -33,14 +34,16 @@ demo_pop <- left_join(demo_pop, anoms)
 
 # inspect effect of climate anomalies on demographic trends
 drought.period <- demo_pop %>% 
-  dplyr::select(cumul_pos, cumul_all, lambda.slope.decline, lambda.mean.drought, MAT_1215, MAP_1215, PAS_1215, CMD_1215, Tave_wt_1215, Tave_sm_1215, PPT_wt_1215, PPT_sm_1215)
+  dplyr::select(lambda.slope.decline, lambda.mean.drought, 
+                MAT_1215, MAP_1215, PAS_1215, CMD_1215, Tave_wt_1215, Tave_sm_1215, PPT_wt_1215, PPT_sm_1215)
 
 ggpairs(drought.period)
 # populations with lower mean lambda during drought have higher cumulative positive selection (r=-0.692*); when lambda was lower selection was stronger 
 # populations with lower mean lambda during drought had stronger summer precipitation anomalies (r=+-0.667*); when drought was stronger lambda was lower
 
 recovery.period <- demo_pop %>% 
-  dplyr::select(cumul_pos, cumul_all, lambda.slope.recovery, lambda.mean.recovery, MAT_1619, MAP_1619, PAS_1619, CMD_1619, Tave_wt_1619, Tave_sm_1619, PPT_wt_1619, PPT_sm_1619)
+  dplyr::select(lambda.slope.recovery, lambda.mean.recovery, 
+                MAT_1619, MAP_1619, PAS_1619, CMD_1619, Tave_wt_1619, Tave_sm_1619, PPT_wt_1619, PPT_sm_1619)
 
 ggpairs(recovery.period)
 # cumulative positive selection positively associated with MAP anomaly: drier sites associated with greater response to selection
