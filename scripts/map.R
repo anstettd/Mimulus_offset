@@ -20,7 +20,7 @@ library(rnaturalearthdata)
 library(rnaturalearthhires)
 library(rgeos)
 library(RColorBrewer)
-##############################################################################
+###################################################################################
 #Define CRS
 EPSG4326<-"+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" #setup WGS 1984 CRS
 
@@ -44,11 +44,16 @@ admix_sf <- st_as_sf(admix ,coords=c("Longitude","Latitude"), crs=EPSG4326)
 
 #Pi
 pi_df <- read_csv("data/genomic_data/baseline_pi.csv")
+pi_all_pop <-left_join(all_pop,pi_df,by=c("Paper_ID"="Site"))
+pi_all_pop_sf <- st_as_sf(pi_all_pop,coords=c("Long","Lat"), crs=EPSG4326)
 
 # California & Oregon Map Setup
 states<-ne_states(country=c("canada","united states of america"),returnclass= "sf")
 calo <- states %>%
   filter(name_en=="Oregon" | name_en=="California") #| name_en=="Nevada")
+
+###################################################################################
+
 
 #Baseline + Timeseries
 tmap_mode("plot")
@@ -62,7 +67,7 @@ mim <-
   tm_dots(size=0.6,shape=21,col="red",border.col ="black")+
   tm_layout(legend.position = c(1.03, 0.73),legend.title.size = 0.001,frame.lwd = NA)
 mim
-tmap_save(mim, filename = "Graphs/Maps/base_time.png",width=4, height=7)
+#tmap_save(mim, filename = "Graphs/Maps/base_time.png",width=4, height=7)
 
 
 #Plot Baseline
@@ -75,7 +80,7 @@ mim_base <-
   tm_dots(size=0.6,shape=21,col="red2",border.col ="black")+
   tm_layout(legend.position = c(1.03, 0.73),legend.title.size = 0.001,frame.lwd = NA)
 mim_base
-tmap_save(mim_base, filename = "Graphs/Maps/baseline.png",width=4, height=7)
+#tmap_save(mim_base, filename = "Graphs/Maps/baseline.png",width=4, height=7)
 
 
 
@@ -89,7 +94,7 @@ mim_time <-
   tm_dots(size=0.9,shape=21,col="blue",border.col ="black")+
   tm_layout(legend.position = c(1.03, 0.73),legend.title.size = 0.001,frame.lwd = NA)
 mim_time
-tmap_save(mim_time, filename = "Graphs/Maps/timeseries.png",width=4, height=7)
+#tmap_save(mim_time, filename = "Graphs/Maps/timeseries.png",width=4, height=7)
 
 
 #Plot Timeseries
@@ -102,7 +107,7 @@ mim_time <-
   tm_dots(size=0.9,shape=21,col="magenta2",border.col ="black")+
   tm_layout(legend.position = c(1.03, 0.73),legend.title.size = 0.001,frame.lwd = NA)
 mim_time
-tmap_save(mim_time, filename = "Graphs/Maps/demography.png",width=4, height=7)
+#tmap_save(mim_time, filename = "Graphs/Maps/demography.png",width=4, height=7)
 
 
 #Plot Admixture
@@ -116,5 +121,44 @@ admix_map <- ggplot(west_coast, aes(x=long, y=lat, group=group)) +
   scale_fill_manual(values=c("red2","yellow","green","deepskyblue")) +
   theme_classic()
 
-ggsave(admix_map, filename = "Graphs/Maps/admixture.png",width=6, height=7)
+#ggsave(admix_map, filename = "Graphs/Maps/admixture.png",width=6, height=7)
 
+
+# Load the RdBu palette
+#palette_name <- "RdBu"
+#n_colors <- 7  # Number of colors in the palette
+#my_palette <- rev(brewer.pal(n_colors, palette_name))
+
+
+snp_pallet <- c("#2166AC","#67A9CF","#D1E5F0","#FDDBC7","#EF8A62","#B2182B")
+
+#Plot SNP set pi
+tmap_mode("plot")
+#tmap_mode("view")
+mim_base <-
+  tm_shape(calo)+
+  tm_borders()+
+  tm_shape(pi_all_pop_sf)+
+  tm_dots(size=0.4,shape=21, col="pi_snp_set",palette = snp_pallet, border.col="black" )+
+  tm_layout(legend.position = c(0.50, 0.47),legend.title.size = 0.001,legend.text.size=0.85)
+mim_base
+tmap_save(mim_base, filename = "Graphs/Maps/pi_snp_set.png",width=4, height=7)
+
+
+# Load the RdBu palette
+
+
+  
+global_pallet <- c("#08417b","#2166AC","#67A9CF","#D1E5F0")
+
+#Plot Global pi
+tmap_mode("plot")
+#tmap_mode("view")
+mim_base <-
+  tm_shape(calo)+
+  tm_borders()+
+  tm_shape(pi_all_pop_sf)+
+  tm_dots(size=0.4,shape=21, col="pi_all_snps",palette = global_pallet, border.col="black" )+
+  tm_layout(legend.position = c(0.50, 0.52),legend.title.size = 0.001,legend.text.size=0.85)
+mim_base
+tmap_save(mim_base, filename = "Graphs/Maps/pi_global.png",width=4, height=7)
