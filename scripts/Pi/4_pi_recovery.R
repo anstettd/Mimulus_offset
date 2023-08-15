@@ -11,6 +11,7 @@ library(tidyverse)
 library(car)
 library(ggrepel)
 library(RColorBrewer)
+library(cowplot)
 
 #Import data
 offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv") %>% dplyr::select(Site, Paper_ID) #just to get translation of pop names <--> numbers
