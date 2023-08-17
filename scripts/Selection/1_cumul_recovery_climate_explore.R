@@ -21,7 +21,7 @@ offset_pop[20,2] <- 12
 demog_recovery <- read_csv("data/demography data/siteYear.lambda_responses_2010-2019.csv")
 
 #cumul <- read_csv("~/Documents/Git repos/snp_change/data/binomial_data_half/time_cumul_beagle.csv")
-cumul <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/time_cumul_beagle.csv")
+cumul <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/binomial_data_half/time_cumul_beagle.csv")
 
 demog_recovery <- left_join(demog_recovery,offset_pop,by=c("Site"="Site")) %>% rename(Site_Name=Site)
 
@@ -77,10 +77,10 @@ Anova(lm2,type="III")
 # lam mean ~ pos sel
 summary(lm3)
 Anova(lm3,type="III")
-summary(lm3b) #w/ CMD covariate
-Anova(lm3b,type="III")
-summary(lm3c) #w/ PPT_sm covariate
-Anova(lm3c,type="III")
+#summary(lm3b) #w/ CMD covariate
+#Anova(lm3b,type="III")
+#summary(lm3c) #w/ PPT_sm covariate
+#Anova(lm3c,type="III")
 
 # lam mean ~ all sel
 summary(lm4)
@@ -141,7 +141,7 @@ ggplot(demo_pop, aes(x=cumul_pos, y=lambda.slope.recovery)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce height
   )
-ggsave("Graphs/Selection_demo/Cumul/1_cumul_pos_recovery_lambda.pdf",width=8, height = 6, units = "in")
+#ggsave("Graphs/Selection_demo/Cumul/1_cumul_pos_recovery_lambda.pdf",width=8, height = 6, units = "in")
 
 
 #Total Selection
