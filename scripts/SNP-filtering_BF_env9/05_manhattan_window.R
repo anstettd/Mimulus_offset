@@ -13,11 +13,6 @@ library(Kendall)
 
 #Import files
 
-#wza_win_mat <- read_csv("data/genomic_data/WZA_win_mat_bf.csv")
-#wza_win_map <- read_csv("data/genomic_data/WZA_win_map_bf.csv")
-#wza_win_cmd <- read_csv("data/genomic_data/WZA_win_cmd_bf.csv")
-
-
 #Windows
 wza_win_env1 <- read_csv("data/genomic_data/WZA_win_env1_bf.csv")
 wza_win_env2 <- read_csv("data/genomic_data/WZA_win_env2_bf.csv")
@@ -63,7 +58,7 @@ ggsave("Graphs/WZA/wza_env1_bf.png", wza_empri_mat, width=10, height = 5, units 
 #ENV2
 wza_empri_map <- ggplot(data = wza_win_env2, aes( x = pos/1e6, y = -log10(Z_pVal)))+
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
-  scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,10))+
+  scale_y_continuous("-log10(p-value)", limits=c(0,10))+
   scale_x_continuous("Position (Mbp)")+
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_env2)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "deepskyblue"), 22 )) +
@@ -77,13 +72,13 @@ wza_empri_map <- ggplot(data = wza_win_env2, aes( x = pos/1e6, y = -log10(Z_pVal
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=18, face="bold"),
+    axis.text.y = element_text(size=18,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5)
   )
 wza_empri_map
-ggsave("Graphs/WZA/wza_env2_bf.png", wza_empri_map, width=10, height = 5, units = "in")
+ggsave("Graphs/WZA/wza_env2_bf.png", wza_empri_map, width=13, height = 4.5, units = "in")
 
 #ENV3
 wza_empri_map <- ggplot(data = wza_win_env3, aes( x = pos/1e6, y = -log10(Z_pVal)))+

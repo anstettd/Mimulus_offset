@@ -119,17 +119,17 @@ ggsave("Graphs/lambda_pi/Recovery/2_pi_lambda_recovery_global.pdf",width=8, heig
 
 #pi snp set
 ggplot(pi_pop, aes(x=pi_snp_set, y=lambda.mean.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
-  scale_y_continuous(name="Mean Lambda after Drought")+
+  scale_y_continuous(name="Mean Lambda after Drought",breaks=seq(0,5,1))+
   scale_x_continuous(name="Pi (Climate SNP)")+
                     # ,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -140,17 +140,17 @@ ggsave("Graphs/lambda_pi/Recovery/3_pi_mean_lambda_recovery_snpset.pdf",width=8,
 
 #global pi
 ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.mean.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black", lty="dashed", se=FALSE)+
   scale_y_continuous(name="Mean Lambda after Drought")+
   scale_x_continuous(name="Pi (Genome-Wide)")+
                      #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -158,8 +158,7 @@ ggplot(pi_pop, aes(x=pi_all_snps, y=lambda.mean.recovery)) +
   )
 
 ggsave("Graphs/lambda_pi/Recovery/4_pi_mean_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
-#=======
-#ggsave("Graphs/lambda_pi/4_pi_mean_lambda_recovery_global.pdf",width=8, height = 6, units = "in")
+
 
 #global pi vs Latitude
 ggplot(pi_pop, aes(x=Latitude, y=pi_all_snps)) + 

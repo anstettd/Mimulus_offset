@@ -57,17 +57,17 @@ color.list <- lat_cols(n.sites)
 
 #Median slope vs. lambda.mean.recovery
 ggplot(demo_pop, aes(x=median, y=lambda.mean.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Mean Population Growth Rate")+
   scale_x_continuous(name="Median Slope")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -78,17 +78,17 @@ ggsave("Graphs/Selection_demo/Slope_summary/1_median_mean_recovery_lambda.pdf",w
 
 #Positive slope vs. lambda.mean.recovery
 ggplot(demo_pop, aes(x=pos_slope, y=lambda.mean.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Mean Population Growth Rate")+
   scale_x_continuous(name="Positive Selection")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -98,17 +98,17 @@ ggsave("Graphs/Selection_demo/Slope_summary/2_pos_mean_recovery_lambda.pdf",widt
 
 #Total slope vs. lambda.mean.recovery
 ggplot(demo_pop, aes(x=abs_slope, y=lambda.mean.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Mean Population Growth Rate")+
   scale_x_continuous(name="Total Selection")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -120,17 +120,17 @@ ggsave("Graphs/Selection_demo/Slope_summary/3_abs_mean_recovery_lambda.pdf",widt
 
 #Median slope vs. lambda.slope.recovery
 ggplot(demo_pop, aes(x=median, y=lambda.slope.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Rate of Increase in Lambda")+
   scale_x_continuous(name="Median Slope")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -141,17 +141,17 @@ ggsave("Graphs/Selection_demo/Slope_summary/4_median_slope_recovery_lambda.pdf",
 
 #Positive slope vs. lambda.slope.recovery
 ggplot(demo_pop, aes(x=pos_slope, y=lambda.slope.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Rate of Increase in Lambda")+
   scale_x_continuous(name="Positive Selection")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -161,17 +161,17 @@ ggsave("Graphs/Selection_demo/Slope_summary/5_pos_slope_recovery_lambda.pdf",wid
 
 #Total slope vs. lambda.slope.recovery
 ggplot(demo_pop, aes(x=abs_slope, y=lambda.slope.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Rate of Increase in Lambda")+
   scale_x_continuous(name="Total Selection")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots

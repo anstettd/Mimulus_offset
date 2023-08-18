@@ -106,13 +106,13 @@ dat_kitchen <- dat %>% filter(Paper_ID==15)
 plot_1 <- ggplot(dat_kitchen, aes(x=Year, y=lambda)) + geom_point(size=2) +
   geom_smooth(data=filter(dat_kitchen, Year<2015), method="lm", se=FALSE, col="red") +
   geom_smooth(data=filter(dat_kitchen, Year>2014), method="lm", se=FALSE, col="blue") +
-  scale_y_continuous(name="Lambda")+ scale_x_continuous(name="Year")+
+  scale_y_continuous(name="Lambda")+ scale_x_continuous(name="")+
   geom_hline(yintercept=1, linetype="dotted") + theme_classic() + theme(
     #facet_wrap(~Site.Lat, scale="free") + theme_classic() + theme(
-    axis.text.x = element_text(size=16,face="bold"),
-    axis.text.y = element_text(size=16,face="bold"),
+    axis.text.x = element_text(size=18,face="bold"),
+    axis.text.y = element_text(size=18,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5))
+    axis.title.y = element_text(color="black", size=22,vjust = 2, face="bold",hjust=0.5))
 ggsave("Graphs/Demography/sites/01_kitchen.pdf",width=6, height = 4, units = "in")
 
 #Wawona
@@ -120,13 +120,13 @@ dat_Wawona <- dat %>% filter(Paper_ID==5)
 plot_2 <- ggplot(dat_Wawona, aes(x=Year, y=lambda)) + geom_point(size=2) +
   geom_smooth(data=filter(dat_Wawona, Year<2015), method="lm", se=FALSE, col="red") +
   geom_smooth(data=filter(dat_Wawona, Year>2014), method="lm", se=FALSE, col="blue") +
-  scale_y_continuous(name="Lambda")+ scale_x_continuous(name="Year")+
+  scale_y_continuous(name="Lambda")+ scale_x_continuous(name="")+
   geom_hline(yintercept=1, linetype="dotted") + theme_classic() + theme(
     #facet_wrap(~Site.Lat, scale="free") + theme_classic() + theme(
-    axis.text.x = element_text(size=16,face="bold"),
-    axis.text.y = element_text(size=16,face="bold"),
+    axis.text.x = element_text(size=18,face="bold"),
+    axis.text.y = element_text(size=18,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5))
+    axis.title.y = element_text(color="black", size=22,vjust = 2, face="bold",hjust=0.5))
 ggsave("Graphs/Demography/sites/02_wawona.pdf",width=6, height = 4, units = "in")
 
 #Little Jamison
@@ -134,13 +134,13 @@ dat_little <- dat %>% filter(Paper_ID==7)
 plot_3 <- ggplot(dat_little, aes(x=Year, y=lambda)) + geom_point(size=2) +
   geom_smooth(data=filter(dat_little, Year<2015), method="lm", se=FALSE, col="red") +
   geom_smooth(data=filter(dat_little, Year>2014), method="lm", se=FALSE, col="blue") +
-  scale_y_continuous(name="Lambda")+ scale_x_continuous(name="Year")+
+  scale_y_continuous(name="Lambda")+ scale_x_continuous(name="")+
   geom_hline(yintercept=1, linetype="dotted") + theme_classic() + theme(
     #facet_wrap(~Site.Lat, scale="free") + theme_classic() + theme(
-    axis.text.x = element_text(size=16,face="bold"),
-    axis.text.y = element_text(size=16,face="bold"),
+    axis.text.x = element_text(size=18,face="bold"),
+    axis.text.y = element_text(size=18,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5))
+    axis.title.y = element_text(color="black", size=22,vjust = 2, face="bold",hjust=0.5))
 ggsave("Graphs/Demography/sites/03_little_jamison.pdf",width=6, height = 4, units = "in")
 
 #Coast Fork of Willamette
@@ -148,13 +148,13 @@ dat_coast <- dat %>% filter(Paper_ID==55)
 plot_4 <- ggplot(dat_coast, aes(x=Year, y=lambda)) + geom_point(size=2) +
   geom_smooth(data=filter(dat_coast, Year<2015), method="lm", se=FALSE, col="red") +
   geom_smooth(data=filter(dat_coast, Year>2014), method="lm", se=FALSE, col="blue") +
-  scale_y_continuous(name="Lambda")+ scale_x_continuous(name="Year")+
+  scale_y_continuous(name="Lambda")+ scale_x_continuous(name="")+
   geom_hline(yintercept=1, linetype="dotted") + theme_classic() + theme(
     #facet_wrap(~Site.Lat, scale="free") + theme_classic() + theme(
-    axis.text.x = element_text(size=16,face="bold"),
-    axis.text.y = element_text(size=16,face="bold"),
+    axis.text.x = element_text(size=18,face="bold"),
+    axis.text.y = element_text(size=18,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5))
+    axis.title.y = element_text(color="black", size=22,vjust = 2, face="bold",hjust=0.5))
 ggsave("Graphs/Demography/sites/04_coast_fork.pdf",width=6, height = 4, units = "in")
 
 

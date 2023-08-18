@@ -170,17 +170,17 @@ ggsave("Graphs/Selection_demo/Cumul/2_cumul_all_recovery_lambda.pdf",width=8, he
 
 #Directional Positive Selection
 ggplot(demo_pop, aes(x=cumul_pos, y=lambda.mean.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black", lty="dashed", se=FALSE)+
   scale_y_continuous(name="Mean Lambda after Drought")+
   scale_x_continuous(name="Directional Selection")+
                     # ,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -191,17 +191,17 @@ ggsave("Graphs/Selection_demo/Cumul/3_cumul_pos_recovery_mean.pdf",width=8, heig
 
 #Total Selection
 ggplot(demo_pop, aes(x=cumul_all, y=lambda.mean.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black", lty="dashed", se=FALSE)+
   scale_y_continuous(name="Mean Lambda after Drought")+
   scale_x_continuous(name="Total Selection")+
                      #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -212,17 +212,17 @@ ggsave("Graphs/Selection_demo/Cumul/4_cumul_all_recovery_mean.pdf",width=8, heig
 
 #Population decline and drought anomaly
 ggplot(demo_pop, aes(x=PPT_sm_1215, y=lambda.mean.drought)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Mean Lambda during Drought")+
   scale_x_continuous(name="Summer precipitation anomaly")+
   #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -233,17 +233,17 @@ ggsave("Graphs/Selection_demo/ppt_anom_decline_mean.pdf",width=8, height = 6, un
 
 #Population recovery and climate anomalies
 a <- ggplot(demo_pop, aes(x=PPT_sm_1619, y=lambda.mean.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm, color="black", lty="dashed", se=FALSE)+
   scale_y_continuous(name="Mean Lambda after Drought")+
   scale_x_continuous(name="Summer precipitation anomaly")+
   #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=16, vjust = 0.5),
-    axis.title.y = element_text(color="black", size=16,vjust = 2, hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
