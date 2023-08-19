@@ -9,6 +9,7 @@
 library(tidyverse)
 library(GGally)
 library(Hmisc)
+library(RColorBrewer)
 
 
 #Import data & Prepare data frame
@@ -48,17 +49,17 @@ color.list <- lat_cols(n.sites)
 
 #Population recovery and climate anomalies
 a <- ggplot(demo_pop, aes(x=MAP_1215, y=lambda.mean.drought)) + 
-  geom_point(aes(fill=as.factor(round(Latitude.x, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude.x, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
-  scale_y_continuous(name="Mean Population Growth Rate During Drought")+
-  scale_x_continuous(name="Mean Annual Precipitation anomaly")+
+  scale_y_continuous(name="Mean Lambda During Drought")+
+  scale_x_continuous(name="Mean Annual Precipitation Anomaly")+
   #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=16, vjust = 0.5),
-    axis.title.y = element_text(color="black", size=16,vjust = 2, hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -67,17 +68,17 @@ a <- ggplot(demo_pop, aes(x=MAP_1215, y=lambda.mean.drought)) +
 ggsave("Graphs/Climate/1_mean_lambda_MAP.pdf",width=8, height = 6, units = "in")
 
 b <- ggplot(demo_pop, aes(x=Tave_sm_1215, y=lambda.mean.drought)) + 
-  geom_point(aes(fill=as.factor(round(Latitude.x, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude.x, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
-  scale_y_continuous(name="Mean Population Growth Rate During Drought")+
+  scale_y_continuous(name="Mean Lambda During Drought")+
   scale_x_continuous(name="Summer Temperature Anomaly")+
   #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=16, vjust = 0.5),
-    axis.title.y = element_text(color="black", size=16,vjust = 2, hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -86,17 +87,17 @@ b <- ggplot(demo_pop, aes(x=Tave_sm_1215, y=lambda.mean.drought)) +
 ggsave("Graphs/Climate/2_mean_lambda_Tave_sm.pdf",width=8, height = 6, units = "in")
 
 c <- ggplot(demo_pop, aes(x=PPT_wt_1215, y=lambda.mean.drought)) + 
-  geom_point(aes(fill=as.factor(round(Latitude.x, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude.x, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
-  scale_y_continuous(name="Mean Population Growth Rate During Drought")+
+  scale_y_continuous(name="Mean Lambda During Drought")+
   scale_x_continuous(name="Winter Precipitation Anomaly")+
   #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=16, vjust = 0.5),
-    axis.title.y = element_text(color="black", size=16,vjust = 2, hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
@@ -105,17 +106,17 @@ c <- ggplot(demo_pop, aes(x=PPT_wt_1215, y=lambda.mean.drought)) +
 ggsave("Graphs/Climate/3_mean_lambda_PPT_wt.pdf",width=8, height = 6, units = "in")
 
 d <- ggplot(demo_pop, aes(x=PPT_sm_1215, y=lambda.mean.drought)) + 
-  geom_point(aes(fill=as.factor(round(Latitude.x, 1))),shape=21,size =4.5)+
+  geom_point(aes(fill=as.factor(round(Latitude.x, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
-  scale_y_continuous(name="Mean Population Growth Rate During Drought")+
+  scale_y_continuous(name="Mean Lambda During Drought")+
   scale_x_continuous(name="Summer Precipitation Anomaly")+
   #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
-    axis.text.x = element_text(size=14, face="bold"),
-    axis.text.y = element_text(size=14,face="bold"),
-    axis.title.x = element_text(color="black", size=16, vjust = 0.5),
-    axis.title.y = element_text(color="black", size=16,vjust = 2, hjust=0.5),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
     legend.title = element_blank(),
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots

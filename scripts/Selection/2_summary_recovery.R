@@ -60,7 +60,7 @@ ggplot(demo_pop, aes(x=median, y=lambda.mean.recovery)) +
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Mean Population Growth Rate")+
-  scale_x_continuous(name="Median Slope")+
+  scale_x_continuous(name="Median Selection")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
@@ -81,7 +81,7 @@ ggplot(demo_pop, aes(x=pos_slope, y=lambda.mean.recovery)) +
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black")+
   scale_y_continuous(name="Mean Population Growth Rate")+
-  scale_x_continuous(name="Positive Selection")+
+  scale_x_continuous(name="Positive Directional Selection")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
