@@ -222,11 +222,11 @@ env9_united <- env9_united %>% mutate(CHR=as.numeric(gsub("CE10_chr","",Chromoso
 
 #ENV 1 - MAT 
 ggplot(env1_united, aes(x=BP/1e6, y=BF)) +
-  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.5) +
+  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=1.4) +
   scale_color_manual(values = rep(c("black", "darkgoldenrod"), 22 )) +
   geom_hline(yintercept=10, linetype="dashed",color = "red",lty = 2, lwd = 1) +
-  geom_hline(yintercept=30, linetype="dashed",color = "skyblue", lty = 2, lwd = 1) +
-  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40), limits=c(-20,60))+
+  geom_hline(yintercept=30, linetype="dashed",color = "deepskyblue", lty = 2, lwd = 1) +
+  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40,50,60), limits=c(-20,60))+
   labs( y = "-log10(BF)", x = "Position (Mbp)")+
   theme_classic() +
   theme(
@@ -238,11 +238,11 @@ ggplot(env1_united, aes(x=BP/1e6, y=BF)) +
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5))
-ggsave("Graphs/Manhattan_BF/bf_manhattan_1.png",width=9, height=6)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5))
+ggsave("Graphs/Manhattan_BF/bf_manhattan_1.png",width=13, height=4.5)
 
 #ENV 2 - MAP 
 ggplot(env2_united, aes(x=BP/1e6, y=BF)) +
@@ -271,11 +271,11 @@ ggsave("Graphs/Manhattan_BF/bf_manhattan_2.png",width=13, height=4.5)
 
 #ENV 3 - PAS 
 ggplot(env3_united, aes(x=BP/1e6, y=BF)) +
-  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.5) +
-  scale_color_manual(values = rep(c("black", "skyblue"), 22 )) +
+  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=1.4) +
+  scale_color_manual(values = rep(c("black", "deepskyblue"), 22 )) +
   geom_hline(yintercept=10, linetype="dashed",color = "red",lty = 2, lwd = 1) +
-  geom_hline(yintercept=30, linetype="dashed",color = "skyblue", lty = 2, lwd = 1) +
-  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40))+
+  geom_hline(yintercept=30, linetype="dashed",color = "deepskyblue", lty = 2, lwd = 1) +
+  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40,50,60), limits=c(-20,60))+
   labs( y = "-log10(BF)", x = "Position (Mbp)")+
   theme_classic() +
   theme(
@@ -287,20 +287,20 @@ ggplot(env3_united, aes(x=BP/1e6, y=BF)) +
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5))
-ggsave("Graphs/Manhattan_BF/bf_manhattan_3.png",width=9, height=6)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5))
+ggsave("Graphs/Manhattan_BF/bf_manhattan_3.png",width=13, height=4.5)
 
 
 #ENV 4 - EXT 
 ggplot(env4_united, aes(x=BP/1e6, y=BF)) +
-  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.5) +
+  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=1.4) +
   scale_color_manual(values = rep(c("black", "darkgoldenrod"), 22 )) +
   geom_hline(yintercept=10, linetype="dashed",color = "red",lty = 2, lwd = 1) +
-  geom_hline(yintercept=30, linetype="dashed",color = "skyblue", lty = 2, lwd = 1) +
-  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40))+
+  geom_hline(yintercept=30, linetype="dashed",color = "deepskyblue", lty = 2, lwd = 1) +
+  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40,50,60), limits=c(-20,60))+
   labs( y = "-log10(BF)", x = "Position (Mbp)")+
   theme_classic() +
   theme(
@@ -312,19 +312,19 @@ ggplot(env4_united, aes(x=BP/1e6, y=BF)) +
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5))
-ggsave("Graphs/Manhattan_BF/bf_manhattan_4.png",width=9, height=6)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5))
+ggsave("Graphs/Manhattan_BF/bf_manhattan_4.png",width=13, height=4.5)
 
 #ENV 5 - CMD 
 ggplot(env5_united, aes(x=BP/1e6, y=BF)) +
-  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.7) +
+  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=1.4) +
   scale_color_manual(values = rep(c("black", "magenta3"), 22 )) +
   geom_hline(yintercept=10, linetype="dashed",color = "red",lty = 2, lwd = 1) +
-  geom_hline(yintercept=30, linetype="dashed",color = "skyblue", lty = 2, lwd = 1) +
-  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40))+
+  geom_hline(yintercept=30, linetype="dashed",color = "deepskyblue", lty = 2, lwd = 1) +
+  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40,50,60), limits=c(-20,60))+
   labs( y = "-log10(BF)", x = "Position (Mbp)")+
   theme_classic() +
   theme(
@@ -336,20 +336,20 @@ ggplot(env5_united, aes(x=BP/1e6, y=BF)) +
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=18, face="bold"),
-    axis.text.y = element_text(size=18,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5))
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5))
 ggsave("Graphs/Manhattan_BF/bf_manhattan_5.png",width=13, height=4.5)
 
 
 #ENV 6 - Tave_wt 
 ggplot(env6_united, aes(x=BP/1e6, y=BF)) +
-  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.5) +
+  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=1.4) +
   scale_color_manual(values = rep(c("black", "darkgoldenrod"), 22 )) +
   geom_hline(yintercept=10, linetype="dashed",color = "red",lty = 2, lwd = 1) +
-  geom_hline(yintercept=30, linetype="dashed",color = "skyblue", lty = 2, lwd = 1) +
-  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40))+
+  geom_hline(yintercept=30, linetype="dashed",color = "deepskyblue", lty = 2, lwd = 1) +
+  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40,50,60), limits=c(-20,60))+
   labs( y = "-log10(BF)", x = "Position (Mbp)")+
   theme_classic() +
   theme(
@@ -361,20 +361,20 @@ ggplot(env6_united, aes(x=BP/1e6, y=BF)) +
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5))
-ggsave("Graphs/Manhattan_BF/bf_manhattan_6.png",width=9, height=6)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5))
+ggsave("Graphs/Manhattan_BF/bf_manhattan_6.png",width=13, height=4.5)
 
 
 #ENV 7 - Tave_sm 
 ggplot(env7_united, aes(x=BP/1e6, y=BF)) +
-  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.5) +
+  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=1.4) +
   scale_color_manual(values = rep(c("black", "darkgoldenrod"), 22 )) +
   geom_hline(yintercept=10, linetype="dashed",color = "red",lty = 2, lwd = 1) +
-  geom_hline(yintercept=30, linetype="dashed",color = "skyblue", lty = 2, lwd = 1) +
-  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40))+
+  geom_hline(yintercept=30, linetype="dashed",color = "deepskyblue", lty = 2, lwd = 1) +
+  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40,50,60), limits=c(-20,60))+
   labs( y = "-log10(BF)", x = "Position (Mbp)")+
   theme_classic() +
   theme(
@@ -386,20 +386,20 @@ ggplot(env7_united, aes(x=BP/1e6, y=BF)) +
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5))
-ggsave("Graphs/Manhattan_BF/bf_manhattan_7.png",width=9, height=6)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5))
+ggsave("Graphs/Manhattan_BF/bf_manhattan_7.png",width=13, height=4.5)
 
 
 #ENV 8 - PPT_wt 
 ggplot(env8_united, aes(x=BP/1e6, y=BF)) +
-  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.5) +
-  scale_color_manual(values = rep(c("black", "skyblue"), 22 )) +
+  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=1.4) +
+  scale_color_manual(values = rep(c("black", "deepskyblue"), 22 )) +
   geom_hline(yintercept=10, linetype="dashed",color = "red",lty = 2, lwd = 1) +
-  geom_hline(yintercept=30, linetype="dashed",color = "skyblue", lty = 2, lwd = 1) +
-  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40))+
+  geom_hline(yintercept=30, linetype="dashed",color = "deepskyblue", lty = 2, lwd = 1) +
+  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40,50,60), limits=c(-20,60))+
   labs( y = "-log10(BF)", x = "Position (Mbp)")+
   theme_classic() +
   theme(
@@ -411,21 +411,21 @@ ggplot(env8_united, aes(x=BP/1e6, y=BF)) +
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5))
-ggsave("Graphs/Manhattan_BF/bf_manhattan_8.png",width=9, height=6)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5))
+ggsave("Graphs/Manhattan_BF/bf_manhattan_8.png",width=13, height=4.5)
 
 
 
 #ENV 9 - PPT_sm 
 ggplot(env9_united, aes(x=BP/1e6, y=BF)) +
-  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=0.5) +
-  scale_color_manual(values = rep(c("black", "skyblue"), 22 )) +
+  geom_point(aes(color=as.factor(CHR)), alpha=0.8,size=1.4) +
+  scale_color_manual(values = rep(c("black", "deepskyblue"), 22 )) +
   geom_hline(yintercept=10, linetype="dashed",color = "red",lty = 2, lwd = 1) +
-  geom_hline(yintercept=30, linetype="dashed",color = "skyblue", lty = 2, lwd = 1) +
-  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40))+
+  geom_hline(yintercept=30, linetype="dashed",color = "deepskyblue", lty = 2, lwd = 1) +
+  scale_y_continuous (breaks = c(-20,-10,0,10,20,30,40,50,60), limits=c(-20,60))+
   labs( y = "-log10(BF)", x = "Position (Mbp)")+
   theme_classic() +
   theme(
@@ -437,11 +437,11 @@ ggplot(env9_united, aes(x=BP/1e6, y=BF)) +
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5))
-ggsave("Graphs/Manhattan_BF/bf_manhattan_9.png",width=9, height=6)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5))
+ggsave("Graphs/Manhattan_BF/bf_manhattan_9.png",width=13, height=4.5)
 
 
 

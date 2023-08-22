@@ -32,7 +32,7 @@ wza_win_env9 <- read_csv("data/genomic_data/WZA_win_env9_bf.csv")
 #ENV1
 wza_empri_mat <- ggplot(data = wza_win_env1, aes( x = pos/1e6, y = -log10(Z_pVal)))+
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
-  scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,10))+
+  scale_y_continuous("-log10(p-value)", limits=c(0,10))+
   scale_x_continuous("Position (Mbp)")+
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_env1)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "darkgoldenrod"), 22 )) +
@@ -46,13 +46,13 @@ wza_empri_mat <- ggplot(data = wza_win_env1, aes( x = pos/1e6, y = -log10(Z_pVal
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5)
   )
 wza_empri_mat
-ggsave("Graphs/WZA/wza_env1_bf.png", wza_empri_mat, width=10, height = 5, units = "in")
+ggsave("Graphs/WZA/wza_env1_bf.png", wza_empri_mat, width=13, height = 4.5, units = "in")
 
 
 #ENV2
@@ -72,8 +72,8 @@ wza_empri_map <- ggplot(data = wza_win_env2, aes( x = pos/1e6, y = -log10(Z_pVal
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=18, face="bold"),
-    axis.text.y = element_text(size=18,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5)
   )
@@ -83,7 +83,7 @@ ggsave("Graphs/WZA/wza_env2_bf.png", wza_empri_map, width=13, height = 4.5, unit
 #ENV3
 wza_empri_map <- ggplot(data = wza_win_env3, aes( x = pos/1e6, y = -log10(Z_pVal)))+
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
-  scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,10))+
+  scale_y_continuous("-log10(p-value)", limits=c(0,10))+
   scale_x_continuous("Position (Mbp)")+
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_env3)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "deepskyblue"), 22 )) +
@@ -97,18 +97,18 @@ wza_empri_map <- ggplot(data = wza_win_env3, aes( x = pos/1e6, y = -log10(Z_pVal
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5)
   )
 wza_empri_map
-ggsave("Graphs/WZA/wza_env3_bf.png", wza_empri_map, width=10, height = 5, units = "in")
+ggsave("Graphs/WZA/wza_env3_bf.png", wza_empri_map, width=13, height = 4.5, units = "in")
 
 #ENV4
 wza_empri_map <- ggplot(data = wza_win_env4, aes( x = pos/1e6, y = -log10(Z_pVal)))+
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
-  scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,10))+
+  scale_y_continuous("-log10(p-value)", limits=c(0,10))+
   scale_x_continuous("Position (Mbp)")+
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_env4)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "darkgoldenrod"), 22 )) +
@@ -122,19 +122,19 @@ wza_empri_map <- ggplot(data = wza_win_env4, aes( x = pos/1e6, y = -log10(Z_pVal
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5)
   )
 wza_empri_map
-ggsave("Graphs/WZA/wza_env4_bf.png", wza_empri_map, width=10, height = 5, units = "in")
+ggsave("Graphs/WZA/wza_env4_bf.png", wza_empri_map, width=13, height = 4.5, units = "in")
 
 
 #ENV5
 wza_empri_cmd <- ggplot(data = wza_win_env5, aes( x = pos/1e6, y = -log10(Z_pVal)))+
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
-  scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,10))+
+  scale_y_continuous("-log10(p-value)", limits=c(0,10))+
   scale_x_continuous("Position (Mbp)")+
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_env5)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "magenta3"), 22 )) +
@@ -148,18 +148,18 @@ wza_empri_cmd <- ggplot(data = wza_win_env5, aes( x = pos/1e6, y = -log10(Z_pVal
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5)
   )
 wza_empri_cmd
-ggsave("Graphs/WZA/wza_env5_bf.png", wza_empri_cmd, width=10, height = 5, units = "in")
+ggsave("Graphs/WZA/wza_env5_bf.png", wza_empri_cmd, width=13, height = 4.5, units = "in")
 
 #ENV6
 wza_empri_map <- ggplot(data = wza_win_env6, aes( x = pos/1e6, y = -log10(Z_pVal)))+
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
-  scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,10))+
+  scale_y_continuous("-log10(p-value)", limits=c(0,10))+
   scale_x_continuous("Position (Mbp)")+
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_env6)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "darkgoldenrod"), 22 )) +
@@ -173,18 +173,18 @@ wza_empri_map <- ggplot(data = wza_win_env6, aes( x = pos/1e6, y = -log10(Z_pVal
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5)
   )
 wza_empri_map
-ggsave("Graphs/WZA/wza_env6_bf.png", wza_empri_map, width=10, height = 5, units = "in")
+ggsave("Graphs/WZA/wza_env6_bf.png", wza_empri_map, width=13, height = 4.5, units = "in")
 
 #ENV7
 wza_empri_map <- ggplot(data = wza_win_env7, aes( x = pos/1e6, y = -log10(Z_pVal)))+
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
-  scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,10))+
+  scale_y_continuous("-log10(p-value)", limits=c(0,10))+
   scale_x_continuous("Position (Mbp)")+
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_env7)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "darkgoldenrod"), 22 )) +
@@ -198,18 +198,18 @@ wza_empri_map <- ggplot(data = wza_win_env7, aes( x = pos/1e6, y = -log10(Z_pVal
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5)
   )
 wza_empri_map
-ggsave("Graphs/WZA/wza_env7_bf.png", wza_empri_map, width=10, height = 5, units = "in")
+ggsave("Graphs/WZA/wza_env7_bf.png", wza_empri_map, width=13, height = 4.5, units = "in")
 
 #ENV8
 wza_empri_map <- ggplot(data = wza_win_env8, aes( x = pos/1e6, y = -log10(Z_pVal)))+
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
-  scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,10))+
+  scale_y_continuous("-log10(p-value)", limits=c(0,10))+
   scale_x_continuous("Position (Mbp)")+
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_env8)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "deepskyblue"), 22 )) +
@@ -223,18 +223,18 @@ wza_empri_map <- ggplot(data = wza_win_env8, aes( x = pos/1e6, y = -log10(Z_pVal
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5)
   )
 wza_empri_map
-ggsave("Graphs/WZA/wza_env8_bf.png", wza_empri_map, width=10, height = 5, units = "in")
+ggsave("Graphs/WZA/wza_env8_bf.png", wza_empri_map, width=13, height = 4.5, units = "in")
 
 #ENV9
 wza_empri_map <- ggplot(data = wza_win_env9, aes( x = pos/1e6, y = -log10(Z_pVal)))+
   geom_point(aes(color=as.factor(chr), alpha=0.9))+
-  scale_y_continuous("-log10(WZA Empirical p-value)", limits=c(0,10))+
+  scale_y_continuous("-log10(p-value)", limits=c(0,10))+
   scale_x_continuous("Position (Mbp)")+
   geom_hline(aes(yintercept = -log10(0.05/dim(wza_win_env9)[1])), col = "red", lty = 2, lwd = 1)+
   scale_color_manual(values = rep(c("black", "deepskyblue"), 22 )) +
@@ -248,11 +248,11 @@ wza_empri_map <- ggplot(data = wza_win_env9, aes( x = pos/1e6, y = -log10(Z_pVal
     plot.title = element_text(hjust = 0.8),
     strip.background = element_blank(),
     strip.placement = "outside",
-    axis.text.x = element_text(size=15, face="bold"),
-    axis.text.y = element_text(size=15,face="bold"),
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=18,vjust = 1.4, face="bold",hjust=0.5)
+    axis.title.y = element_text(color="black", size=24,vjust = 1.4, face="bold",hjust=0.5)
   )
 wza_empri_map
-ggsave("Graphs/WZA/wza_env9_bf.png", wza_empri_map, width=10, height = 5, units = "in")
+ggsave("Graphs/WZA/wza_env9_bf.png", wza_empri_map, width=13, height = 4.5, units = "in")
 
