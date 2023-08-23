@@ -172,7 +172,7 @@ ggsave("Graphs/Selection_demo/Cumul/2_cumul_all_recovery_lambda.pdf",width=8, he
 ggplot(demo_pop, aes(x=cumul_pos, y=lambda.mean.recovery)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black", lty="dashed", se=FALSE)+
-  scale_y_continuous(name="Mean Lambda after Drought")+
+  scale_y_continuous(name="Mean Lambda After Drought")+
   scale_x_continuous(name="Positive Directional Selection")+
                     # ,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
@@ -193,7 +193,7 @@ ggsave("Graphs/Selection_demo/Cumul/3_cumul_pos_recovery_mean.pdf",width=8, heig
 ggplot(demo_pop, aes(x=cumul_all, y=lambda.mean.recovery)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
   geom_smooth(method=lm,color="black", lty="dashed", se=FALSE)+
-  scale_y_continuous(name="Mean Lambda after Drought")+
+  scale_y_continuous(name="Mean Lambda After Drought")+
   scale_x_continuous(name="Total Selection")+
                      #,breaks=c(0.04,0.045,0.05,0.055,0.06))+
   scale_fill_manual(values=color.list) +
