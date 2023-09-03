@@ -1,9 +1,9 @@
 ##################################################################################
-## Pi Latitude Plots
+## Plot lambda mean against slope summaries
 ## Author Daniel Anstett
 ## 
 ## 
-## Last Modified Jan 20, 2023
+## Last Modified Aug 14, 2023
 ###################################################################################
 #Library install and import
 library(tidyverse) 
@@ -11,49 +11,44 @@ library(car)
 library(ggrepel)
 library(RColorBrewer)
 
-###################################################################################
 #Import data & Prepare data frame
-#Baseline & Timeseries
-all_pop <- read_csv("data/genomic_data/Baseline_Timeseries_pops_final2.csv")%>% filter(Paper_ID<56)
+offset_pop <- read_csv("data/genomic_data/offset_pop_beagle.csv") %>% dplyr::select(Site, Paper_ID) #just to get translation of pop names <--> numbers
+offset_pop[20,1] <- "Mill Creek"
+offset_pop[20,2] <- 12
+demog_recovery <- read_csv("data/demography data/siteYear.lambda_responses_2010-2019.csv")
+demog_recovery <- left_join(demog_recovery,offset_pop,by=c("Site"="Site")) %>% rename(Site_Name=Site)
 
-#Pi
-pi_df <- read_csv("data/genomic_data/baseline_pi.csv")
-pi_all_pop <-left_join(all_pop,pi_df,by=c("Paper_ID"="Site"))
-###################################################################################
+slope.summary <- read_csv("/Users/daniel_anstett/Dropbox/AM_Workshop/snp_change/data/binomial_data_half/mean_median_S.csv") %>%
+  select(Site,Median,Mean)
+
+demo_pop <- left_join(slope.summary,demog_recovery,by=c("Site"="Paper_ID")) %>% filter(Site!=10) %>% filter(Site!=12) 
+
 
 #stats
-lm1 <- lm(pi_snp_set~Lat,data=pi_all_pop)
+lm1 <- lm(lambda.mean.recovery~Median,data=demo_pop)
 summary(lm1)
 Anova(lm1,type="III")
 
-lm2 <- lm(pi_snp_set~poly(Lat,2),data=pi_all_pop)
+lm2 <- lm(lambda.mean.recovery~Mean,data=demo_pop)
 summary(lm2)
 Anova(lm2,type="III")
 
-lm3 <- lm(pi_all_snps~Lat,data=pi_all_pop)
-summary(lm3)
-Anova(lm3,type="III")
-
-
-
-
-
 
 ###########################################################################################################
-#Make Latitude-pi graphs
-
 # N-S color gradient
 lat_cols=colorRampPalette(brewer.pal(10,"Spectral"))
-n.sites <- length(unique(pi_all_pop$Site_Name))
+n.sites <- length(unique(demo_pop$Site))
 color.list <- lat_cols(n.sites)
 
 
-#Median slope vs. lambda.mean.recovery
-ggplot(pi_all_pop, aes(x=Lat, y=pi_snp_set)) + 
-  geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =6)+
-  stat_smooth(method =lm,color="black",formula = y ~ I(x^2))+
-  scale_y_continuous(name="PI (Climate Associated)")+
-  scale_x_continuous(name="Latitude")+
+###########################################################################################################
+
+#Median slope vs. lambda.slope.recovery
+ggplot(demo_pop, aes(x=Median, y=lambda.mean.recovery)) + 
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
+  geom_smooth(method=lm,color="black")+
+  scale_y_continuous(name="Rate of Increase in Lambda")+
+  scale_x_continuous(name="Median Slope")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
@@ -66,15 +61,14 @@ ggplot(pi_all_pop, aes(x=Lat, y=pi_snp_set)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce height
   )
-ggsave("Graphs/Pi_latitude/1_lat_pi_snp_set.pdf",width=10, height = 6, units = "in")
+ggsave("Graphs/Selection_demo/Mean_median/1_median_slope_recovery_lambda.pdf",width=8, height = 6, units = "in")
 
-
-#Median slope vs. lambda.mean.recovery
-ggplot(pi_all_pop, aes(x=Lat, y=pi_all_snps)) + 
-  geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =6)+
-  stat_smooth(method =lm,color="black")+
-  scale_y_continuous(name="PI (Genome-Wide)")+
-  scale_x_continuous(name="Latitude")+
+#Median slope vs. lambda.slope.recovery
+ggplot(demo_pop, aes(x=Mean, y=lambda.mean.recovery)) + 
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
+  geom_smooth(method=lm,color="black")+
+  scale_y_continuous(name="Rate of Increase in Lambda")+
+  scale_x_continuous(name="Mean Slope")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
   theme_classic() + theme(
@@ -87,5 +81,6 @@ ggplot(pi_all_pop, aes(x=Lat, y=pi_all_snps)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce height
   )
-ggsave("Graphs/Pi_latitude/2_lat_pi_global.pdf",width=10, height = 6, units = "in")
+ggsave("Graphs/Selection_demo/Mean_median/2_mean_slope_recovery_lambda.pdf",width=8, height = 6, units = "in")
+
 
