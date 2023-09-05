@@ -103,7 +103,7 @@ seasonal_final <- left_join(seasonal,seasonal_8110,by="Site") %>%
   select(-Elevation,-Tave_wt, -Tave_sm, -PPT_wt, -PPT_sm, -Tave_wt.clim, -Tave_sm.clim, -PPT_wt.clim, -PPT_sm.clim)
 
 #Merge all datatests
-c <- left_join(wna_final,annual_final,by=c("Site","Paper_ID","Latitude","Longitude","Year"))
+anomaly <- left_join(wna_final,annual_final,by=c("Site","Paper_ID","Latitude","Longitude","Year"))
 anomaly_final <- left_join(anomaly,seasonal_final,by=c("Site","Paper_ID","Latitude","Longitude","Year"))
 
 #Export Anomaly

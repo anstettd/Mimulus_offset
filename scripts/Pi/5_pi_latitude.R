@@ -48,11 +48,11 @@ n.sites <- length(unique(pi_all_pop$Site_Name))
 color.list <- lat_cols(n.sites)
 
 
-#Median slope vs. lambda.mean.recovery
+#Pi  
 ggplot(pi_all_pop, aes(x=Lat, y=pi_snp_set)) + 
   geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =6)+
-  stat_smooth(method =lm,color="black",formula = y ~ I(x^2))+
-  scale_y_continuous(name="PI (Climate Associated)")+
+  stat_smooth(method =lm,color="black",formula = y ~ x+I(x^2))+
+  scale_y_continuous(name="Pi (Climate Associated)")+
   scale_x_continuous(name="Latitude")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
@@ -73,7 +73,7 @@ ggsave("Graphs/Pi_latitude/1_lat_pi_snp_set.pdf",width=10, height = 6, units = "
 ggplot(pi_all_pop, aes(x=Lat, y=pi_all_snps)) + 
   geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =6)+
   stat_smooth(method =lm,color="black")+
-  scale_y_continuous(name="PI (Genome-Wide)")+
+  scale_y_continuous(name="Pi (Genome-Wide)")+
   scale_x_continuous(name="Latitude")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +

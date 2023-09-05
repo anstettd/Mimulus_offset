@@ -6,10 +6,10 @@
 ###################################################################################
 theme_ci <- function(){ 
   theme_classic() %+replace%    #replace elements we want to change
-    theme(axis.text.x = element_text(size = 14, face = "bold", angle = 0,hjust = 0.4, vjust = 0.7), 
+    theme(axis.text.x = element_text(size = 12, face = "bold", angle = 0,hjust = 0.4, vjust = 0.7), 
           axis.title = element_text(size = 18, face = "bold"), 
-          axis.text.y = element_text(size = 16, face = "bold"),
-          strip.background = element_blank(),strip.text.x = element_text(size = 16, face = "bold"))
+          axis.text.y = element_text(size = 12, face = "bold"))
+          #strip.background = element_blank(),strip.text.x = element_text(size = 16, face = "bold"))
 }
 ###################################################################################
 #Load Libraries
@@ -57,36 +57,24 @@ ggplot(anom, aes(x=Year, y=MAP.anom))+
   geom_point()+ geom_line()+ ylab("Mean Annual Precipitation Anomaly") +
   scale_x_continuous(breaks=c(2010,2012,2014,2016,2018))+
   geom_hline(yintercept=0, linetype="dotted") +
-  facet_wrap(~Lat.Site, scale="free", nrow=5) + theme_classic() #+
-#theme_ci()#+
+  facet_wrap(~Lat.Site, scale="free", nrow=5) + #theme_classic() #+
+theme_ci()#+
 #theme(strip.background = element_blank(), strip.text.x = element_blank(),
 #     legend.title = element_blank())
 
+ggsave("graphs/Climate/MAP_time.pdf",width=12, height = 8, units = "in")
 
-#Plot CMD anomaly
-ggplot(anom, aes(x=Year, y=MAT.anom))+
-  geom_point()+ geom_line()+ ylab("Summer Precipitation") +
+
+#Plot PPT_wt anomaly
+ggplot(anom, aes(x=Year, y=PPT_wt.anom))+
+  geom_point()+ geom_line()+ ylab("Winter Precipitation Anomaly") +
   scale_x_continuous(breaks=c(2010,2012,2014,2016,2018))+
   geom_hline(yintercept=0, linetype="dotted") +
-  facet_wrap(~Lat.Site, scale="free", nrow=5) + theme_classic() #+
+  facet_wrap(~Lat.Site, scale="free", nrow=5) + #theme_classic() #+
+  theme_ci()#+
+ggsave("graphs/Climate/PPT_wt_time.pdf",width=12, height = 8, units = "in")
 
 
-#Plot CMD anomaly
-ggplot(anom, aes(x=Year, y=Tave_wt.anom))+
-  geom_point()+ geom_line()+ ylab("Summer Precipitation") +
-  scale_x_continuous(breaks=c(2010,2012,2014,2016,2018))+
-  geom_hline(yintercept=0, linetype="dotted") +
-  facet_wrap(~Lat.Site, scale="free", nrow=5) + theme_classic() #+
-
-
-
-
-
-
-
-
-
-ggsave("graphs/mean_median_s/1_median.pdf",width=12, height = 8, units = "in")
 
 
 

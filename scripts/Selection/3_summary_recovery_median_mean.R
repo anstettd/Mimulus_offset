@@ -33,15 +33,24 @@ lm2 <- lm(lambda.mean.recovery~Mean,data=demo_pop)
 summary(lm2)
 Anova(lm2,type="III")
 
+lm3 <- lm(Median~Latitude,data=demo_pop)
+summary(lm3)
+Anova(lm3,type="III")
+
 
 ###########################################################################################################
 # N-S color gradient
-lat_cols=colorRampPalette(brewer.pal(10,"Spectral"))
-n.sites <- length(unique(demo_pop$Site))
-color.list <- lat_cols(n.sites)
+#lat_cols=colorRampPalette(brewer.pal(10,"Spectral"))
+#n.sites <- length(unique(demo_pop$Site))
+#color.list <- lat_cols(n.sites)
 
 
 ###########################################################################################################
+
+# N-S color gradient
+lat_cols=c("#DC494C","#F88D51","#FDD380","#FEEB9E","#FFFFBF","#D7EF9B","#B2E0A2","#88CFA4","#5FBAA8","#3F96B7")
+
+
 
 #Median slope vs. lambda.slope.recovery
 ggplot(demo_pop, aes(x=Median, y=lambda.mean.recovery)) + 
@@ -50,7 +59,7 @@ ggplot(demo_pop, aes(x=Median, y=lambda.mean.recovery)) +
   scale_y_continuous(name="Rate of Increase in Lambda")+
   scale_x_continuous(name="Median Slope")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
-  scale_fill_manual(values=color.list) +
+  scale_fill_manual(values=lat_cols) +
   theme_classic() + theme(
     axis.text.x = element_text(size=20, face="bold"),
     axis.text.y = element_text(size=20,face="bold"),
@@ -70,7 +79,7 @@ ggplot(demo_pop, aes(x=Mean, y=lambda.mean.recovery)) +
   scale_y_continuous(name="Rate of Increase in Lambda")+
   scale_x_continuous(name="Mean Slope")+
   #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
-  scale_fill_manual(values=color.list) +
+  scale_fill_manual(values=lat_cols) +
   theme_classic() + theme(
     axis.text.x = element_text(size=20, face="bold"),
     axis.text.y = element_text(size=20,face="bold"),
@@ -82,5 +91,31 @@ ggplot(demo_pop, aes(x=Mean, y=lambda.mean.recovery)) +
     legend.key.height = unit(1.6, "lines") #Reduce height
   )
 ggsave("Graphs/Selection_demo/Mean_median/2_mean_slope_recovery_lambda.pdf",width=8, height = 6, units = "in")
+
+
+#Median slope vs. lambda.slope.recovery
+ggplot(demo_pop, aes(x=Latitude, y=Median)) + 
+  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
+  geom_smooth(method=lm,color="black", lty="dashed", se=FALSE)+
+  scale_y_continuous(name="Median")+
+  scale_x_continuous(name="Latitude")+
+  #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
+  scale_fill_manual(values=lat_cols) +
+  theme_classic() + theme(
+    axis.text.x = element_text(size=20, face="bold"),
+    axis.text.y = element_text(size=20,face="bold"),
+    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
+    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),  # Increase the size of the legend text
+    legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
+    legend.key.height = unit(1.6, "lines") #Reduce height
+  )
+
+ggsave("Graphs/Selection_demo/Mean_median/3_median_latitude.pdf",width=8, height = 6, units = "in")
+
+
+
+
 
 

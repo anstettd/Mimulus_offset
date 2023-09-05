@@ -34,8 +34,8 @@ ggpairs(drought.period)
 demo_decline_anom <- rcorr(as.matrix(drought.period))
 
 
-#write.csv(demo_decline_anom$r,"data/climate_data/rcorr_demo_decline_anom_r.csv") 
-#write.csv(demo_decline_anom$P,"data/climate_data/rcorr_demo_decline_anom_p.csv") 
+write.csv(demo_decline_anom$r,"data/climate_data/rcorr_demo_decline_anom_r.csv") 
+write.csv(demo_decline_anom$P,"data/climate_data/rcorr_demo_decline_anom_p.csv") 
 
 
 ###################################################################################
