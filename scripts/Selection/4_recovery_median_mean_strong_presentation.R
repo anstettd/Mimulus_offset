@@ -49,29 +49,12 @@ Anova(lm3,type="III")
 ###########################################################################################################
 
 # N-S color gradient
-lat_cols=c("#DC494C","#F88D51","#FDD380","#FEEB9E","#FFFFBF","#D7EF9B","#B2E0A2","#88CFA4","#5FBAA8","#3F96B7")
+#lat_cols=c("#DC494C","#F88D51","#FDD380","#FEEB9E","#FFFFBF","#D7EF9B","#B2E0A2","#88CFA4","#5FBAA8","#3F96B7")
+# N-S color gradient
+lat_cols=colorRampPalette(brewer.pal(10,"Spectral"))
+n.sites <- length(unique(demo_pop$Paper_ID))
+color.list <- lat_cols(n.sites)
 
-
-
-#Median slope vs. lambda.slope.recovery
-ggplot(demo_pop, aes(x=Median, y=lambda.mean.recovery)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
-  geom_smooth(method=lm,color="black")+
-  scale_y_continuous(name="Mean Lambda")+
-  scale_x_continuous(name="Median Slope")+
-  #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
-  scale_fill_manual(values=lat_cols) +
-  theme_classic() + theme(
-    axis.text.x = element_text(size=20, face="bold"),
-    axis.text.y = element_text(size=20,face="bold"),
-    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
-    legend.title = element_blank(),
-    legend.text = element_text(size = 14),  # Increase the size of the legend text
-    legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
-    legend.key.height = unit(1.6, "lines") #Reduce height
-  )
-ggsave("Graphs/Selection_demo/Strong_median_mean/1_median_slope_recovery_lambda.pdf",width=8, height = 6, units = "in")
 
 #Median slope vs. lambda.slope.recovery
 ggplot(demo_pop, aes(x=Mean, y=lambda.mean.recovery)) + 
@@ -91,32 +74,5 @@ ggplot(demo_pop, aes(x=Mean, y=lambda.mean.recovery)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce height
   )
-ggsave("Graphs/Selection_demo/Strong_median_mean/2_mean_slope_recovery_lambda.pdf",width=8, height = 6, units = "in")
-
-
-#Median slope vs. lambda.slope.recovery
-ggplot(demo_pop, aes(x=Latitude, y=Median)) + 
-  geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =6)+
-  geom_smooth(method=lm,color="black", lty="dashed", se=FALSE)+
-  scale_y_continuous(name="Median")+
-  scale_x_continuous(name="Latitude")+
-  #,breaks=c(0.025,0.03,0.035,0.04,0.045))+
-  scale_fill_manual(values=lat_cols) +
-  theme_classic() + theme(
-    axis.text.x = element_text(size=20, face="bold"),
-    axis.text.y = element_text(size=20,face="bold"),
-    axis.title.x = element_text(color="black", size=24, vjust = 0.5, face="bold"),
-    axis.title.y = element_text(color="black", size=24,vjust = 1.7, face="bold",hjust=0.5),
-    legend.title = element_blank(),
-    legend.text = element_text(size = 14),  # Increase the size of the legend text
-    legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
-    legend.key.height = unit(1.6, "lines") #Reduce height
-  )
-
-ggsave("Graphs/Selection_demo/Strong_median_mean/3_median_latitude.pdf",width=8, height = 6, units = "in")
-
-
-
-
-
+ggsave("Graphs/Selection_demo/Strong_median_mean/2_mean_slope_recovery_lambda_present.pdf",width=8, height = 6, units = "in")
 

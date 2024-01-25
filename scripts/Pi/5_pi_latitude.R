@@ -50,7 +50,8 @@ color.list <- lat_cols(n.sites)
 
 #Pi  
 ggplot(pi_all_pop, aes(x=Lat, y=pi_snp_set)) + 
-  geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =6)+
+  #geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =6)+
+  geom_point(aes(x=Lat,y=pi_snp_set),shape=19,size =4)+
   stat_smooth(method =lm,color="black",formula = y ~ x+I(x^2))+
   scale_y_continuous(name="Pi (Climate Associated)")+
   scale_x_continuous(name="Latitude")+
@@ -66,12 +67,13 @@ ggplot(pi_all_pop, aes(x=Lat, y=pi_snp_set)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce height
   )
-ggsave("Graphs/Pi_latitude/1_lat_pi_snp_set.pdf",width=10, height = 6, units = "in")
+ggsave("Graphs/Pi_latitude/1_lat_pi_snp_set.pdf",width=6, height = 5.5, units = "in")
 
 
 #Median slope vs. lambda.mean.recovery
 ggplot(pi_all_pop, aes(x=Lat, y=pi_all_snps)) + 
-  geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =6)+
+  #geom_point(aes(fill=as.factor(round(Lat, 1))),shape=21,size =6)+
+  geom_point(aes(x=Lat,y=pi_all_snps),shape=19,size =4)+
   stat_smooth(method =lm,color="black")+
   scale_y_continuous(name="Pi (Genome-Wide)")+
   scale_x_continuous(name="Latitude")+
@@ -87,5 +89,5 @@ ggplot(pi_all_pop, aes(x=Lat, y=pi_all_snps)) +
     legend.key.size = unit(2, "lines"),  # Increase the size of the legend dots
     legend.key.height = unit(1.6, "lines") #Reduce height
   )
-ggsave("Graphs/Pi_latitude/2_lat_pi_global.pdf",width=10, height = 6, units = "in")
+ggsave("Graphs/Pi_latitude/2_lat_pi_global.pdf",width=6, height = 5.5, units = "in")
 
