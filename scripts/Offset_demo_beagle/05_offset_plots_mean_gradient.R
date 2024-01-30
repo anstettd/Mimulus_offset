@@ -52,7 +52,7 @@ color.list <- lat_cols(n.sites)
 #2012-2015 offset plotted against lambda
 ggplot(offset_pop, aes(x=offset_1215, y=lambda.mean.drought)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
-  geom_smooth(method=lm,color="black")+
+  geom_smooth(method=lm,color="black",lty="dashed", se=FALSE)+
   scale_y_continuous(name="Mean Lambda")+
   scale_x_continuous(name="2012-2015 Genetic Offset",breaks=c(0.025,0.03,0.035,0.04,0.045))+
   scale_fill_manual(values=color.list) +
@@ -84,7 +84,7 @@ ggplot(offset_pop, aes(x=offset_SSP245, y=lambda.mean.drought)) +
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
   )
-ggsave("Graphs/lambda_gradient/6_offset_mean_ssp245.pdf",width=8, height = 6, units = "in")
+#ggsave("Graphs/lambda_gradient/6_offset_mean_ssp245.pdf",width=8, height = 6, units = "in")
 
 #SSP 585 offset plotted against lambda
 ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.mean.drought)) + 
@@ -102,7 +102,7 @@ ggplot(offset_pop, aes(x=offset_SSP585, y=lambda.mean.drought)) +
     legend.text = element_text(size = 14),  # Increase the size of the legend text
     legend.key.size = unit(2, "lines")  # Increase the size of the legend dots
   )
-ggsave("Graphs/lambda_gradient/7_offset_mean_ssp585.pdf",width=8, height = 6, units = "in")
+#ggsave("Graphs/lambda_gradient/7_offset_mean_ssp585.pdf",width=8, height = 6, units = "in")
 
 
 
@@ -112,7 +112,7 @@ ggsave("Graphs/lambda_gradient/7_offset_mean_ssp585.pdf",width=8, height = 6, un
 #climate distance plotted against lambda
 ggplot(offset_pop, aes(x=offset_climate, y=lambda.mean.drought)) + 
   geom_point(aes(fill=as.factor(round(Latitude, 1))),shape=21,size =4.5)+
-  geom_smooth(method=lm,color="black")+
+  geom_smooth(method=lm,color="black",lty="dashed", se=FALSE)+
   scale_y_continuous(name="Mean Lambda")+
   scale_x_continuous(name="2012-2015 Climate Distance")+
   scale_fill_manual(values=color.list) +
